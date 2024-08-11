@@ -15,6 +15,7 @@ dependencies:
     sdk: flutter
   flutter_screenutil: ^5.9.3
   google_fonts: ^6.2.0
+  persistent_bottom_nav_bar: ^6.2.1
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -36,6 +37,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/
+    - assets/icons/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
@@ -48,10 +50,10 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
+  fonts:
+    - family: BentonSans
+      fonts:
+        - asset: assets/fonts/BentonSans-Bold.ttf
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro
@@ -62,3 +64,5 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+
+
