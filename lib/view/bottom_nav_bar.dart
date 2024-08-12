@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:foody_licious/view/home_view.dart';
+import 'package:foody_licious/view/post_auth/home_view.dart';
 import 'package:foody_licious/view/pre_auth/login_view.dart';
 import 'package:foody_licious/view/pre_auth/onboarding_view.dart';
 import 'package:foody_licious/view/pre_auth/signup_view.dart';
