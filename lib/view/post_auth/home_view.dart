@@ -141,7 +141,7 @@ class _HomeViewState extends State<HomeView> {
                   itemBuilder: (BuildContext context, int index) {
                     return Padding(
                       padding: EdgeInsets.only(bottom: 12.h),
-                      child: const MenuItemCard(
+                      child:  MenuItemCard(
                           itemImageUrl: "assets/images/MenuPhoto1.png",
                           itemName: "Herbal Pancake",
                           hotelName: "Warung Herbal",
@@ -161,30 +161,45 @@ class MenuItemCard extends StatefulWidget {
   final String itemName;
   final String hotelName;
   final num itemPrice;
-  final bool showCheckBox = false;
-  const MenuItemCard(
-      {super.key,
-      required this.itemImageUrl,
-      required this.itemName,
-      required this.hotelName,
-      required this.itemPrice});
-  MenuItemCard.checkbox({
+  bool showCheckBox = false;
+  bool? isChecked = false;
+
+  MenuItemCard({
     super.key,
     required this.itemImageUrl,
     required this.itemName,
     required this.hotelName,
     required this.itemPrice,
-    showCheckBox = true,
   });
+
+  // Named constructor with showCheckBox set to true
+  MenuItemCard.checkBox({
+    super.key,
+    required this.itemImageUrl,
+    required this.itemName,
+    required this.hotelName,
+    required this.itemPrice,
+    this.isChecked = false,
+  }) : showCheckBox = true;
+
 
   @override
   State<MenuItemCard> createState() => _MenuItemCardState();
 }
 
 class _MenuItemCardState extends State<MenuItemCard> {
-  List<bool> isCheckedList = List<bool>.generate(15, (index) => false);
   @override
   Widget build(BuildContext context) {
+    Color getColor(Set<MaterialState> states) {
+      const Set<MaterialState> interactiveStates = <MaterialState>{
+        MaterialState.selected,
+      };
+      if (states.any(interactiveStates.contains)) {
+        return Color(0xFFE85353);
+      }
+      return Colors.white;
+    }
+
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -217,16 +232,18 @@ class _MenuItemCardState extends State<MenuItemCard> {
                 Text(
                   widget.itemName,
                   style: GoogleFonts.yeonSung(
-                      color: Color(0xFF000000),
-                      fontSize: 15,
-                      fontWeight: FontWeight.normal),
+                    color: Color(0xFF000000),
+                    fontSize: 15,
+                    fontWeight: FontWeight.normal,
+                  ),
                 ),
                 Text(
                   widget.hotelName,
                   style: GoogleFonts.lato(
-                      color: Color(0xFF3B3B3B),
-                      fontSize: 14,
-                      fontWeight: FontWeight.normal),
+                    color: Color(0xFF3B3B3B),
+                    fontSize: 14,
+                    fontWeight: FontWeight.normal,
+                  ),
                 ),
               ],
             ),
@@ -235,29 +252,41 @@ class _MenuItemCardState extends State<MenuItemCard> {
             ),
             widget.showCheckBox
                 ? Column(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Text(
-                        "\$${widget.itemPrice}",
-                        style: TextStyle(
-                            fontFamily: 'BentonSans',
-                            color: Color(0xFFE85353),
-                            fontSize: 24),
-                      ),
-                      CustomCheckBox()
-                    ],
-                  )
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Text(
+                  "\$${widget.itemPrice}",
+                  style: TextStyle(
+                    fontFamily: 'BentonSans',
+                    color: Color(0xFFE85353),
+                    fontSize: 24,
+                  ),
+                ),
+                Checkbox(
+                  checkColor: Colors.white,
+                  fillColor: MaterialStateProperty.resolveWith(getColor),
+                  value: widget.isChecked ?? false, // Ensure value is not null
+                  onChanged: (bool? value) {
+                    setState(() {
+                      widget.isChecked = value;
+                    });
+                  },
+                ),
+              ],
+            )
                 : Text(
-                    "\$${widget.itemPrice}",
-                    style: TextStyle(
-                        fontFamily: 'BentonSans',
-                        color: Color(0xFFE85353),
-                        fontSize: 28),
-                  )
+              "\$${widget.itemPrice}",
+              style: TextStyle(
+                fontFamily: 'BentonSans',
+                color: Color(0xFFE85353),
+                fontSize: 28,
+              ),
+            ),
           ],
         ),
       ),
     );
   }
 }
+
