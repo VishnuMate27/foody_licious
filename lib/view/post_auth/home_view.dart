@@ -6,6 +6,8 @@ import 'package:foody_licious/utils/custom_widgets.dart';
 import 'package:foody_licious/view/post_auth/food_details_view.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'notification_view.dart';
+
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
 
@@ -33,11 +35,21 @@ class _HomeViewState extends State<HomeView> {
                     style: GoogleFonts.yeonSung(
                         color: Color(0xFFE85353), fontSize: 24),
                   ),
-                  Icon(
-                    CupertinoIcons.bell,
-                    size: 24,
-                    color: Color(0xFF6CCB94),
-                  )
+                  IconButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const NotificationView(),
+                        ),
+                      );
+                    },
+                    icon: const Icon(
+                      CupertinoIcons.bell,
+                      size: 24,
+                      color: Color(0xFF6CCB94),
+                    ),
+                  ),
                 ],
               ),
               SizedBox(
@@ -141,7 +153,7 @@ class _HomeViewState extends State<HomeView> {
                   itemBuilder: (BuildContext context, int index) {
                     return Padding(
                       padding: EdgeInsets.only(bottom: 12.h),
-                      child:  MenuItemCard(
+                      child: MenuItemCard(
                           itemImageUrl: "assets/images/MenuPhoto1.png",
                           itemName: "Herbal Pancake",
                           hotelName: "Warung Herbal",
@@ -181,7 +193,6 @@ class MenuItemCard extends StatefulWidget {
     required this.itemPrice,
     this.isChecked = false,
   }) : showCheckBox = true;
-
 
   @override
   State<MenuItemCard> createState() => _MenuItemCardState();
@@ -252,41 +263,41 @@ class _MenuItemCardState extends State<MenuItemCard> {
             ),
             widget.showCheckBox
                 ? Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Text(
-                  "\$${widget.itemPrice}",
-                  style: TextStyle(
-                    fontFamily: 'BentonSans',
-                    color: Color(0xFFE85353),
-                    fontSize: 24,
-                  ),
-                ),
-                Checkbox(
-                  checkColor: Colors.white,
-                  fillColor: MaterialStateProperty.resolveWith(getColor),
-                  value: widget.isChecked ?? false, // Ensure value is not null
-                  onChanged: (bool? value) {
-                    setState(() {
-                      widget.isChecked = value;
-                    });
-                  },
-                ),
-              ],
-            )
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Text(
+                        "\$${widget.itemPrice}",
+                        style: TextStyle(
+                          fontFamily: 'BentonSans',
+                          color: Color(0xFFE85353),
+                          fontSize: 24,
+                        ),
+                      ),
+                      Checkbox(
+                        checkColor: Colors.white,
+                        fillColor: MaterialStateProperty.resolveWith(getColor),
+                        value: widget.isChecked ??
+                            false, // Ensure value is not null
+                        onChanged: (bool? value) {
+                          setState(() {
+                            widget.isChecked = value;
+                          });
+                        },
+                      ),
+                    ],
+                  )
                 : Text(
-              "\$${widget.itemPrice}",
-              style: TextStyle(
-                fontFamily: 'BentonSans',
-                color: Color(0xFFE85353),
-                fontSize: 28,
-              ),
-            ),
+                    "\$${widget.itemPrice}",
+                    style: TextStyle(
+                      fontFamily: 'BentonSans',
+                      color: Color(0xFFE85353),
+                      fontSize: 28,
+                    ),
+                  ),
           ],
         ),
       ),
     );
   }
 }
-

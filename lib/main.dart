@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:foody_licious/view/bottom_nav_bar.dart';
 import 'package:foody_licious/view/post_auth/home_view.dart';
@@ -7,9 +8,15 @@ import 'package:foody_licious/view/pre_auth/onboarding_view.dart';
 import 'package:foody_licious/view/pre_auth/set_location_view.dart';
 import 'package:foody_licious/view/pre_auth/signup_view.dart';
 
+import 'cubit/navigation_cubit.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    BlocProvider(
+      create: (_) => NavigationCubit(),
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -23,12 +30,14 @@ class MyApp extends StatelessWidget {
       minTextAdapt: true,
       splitScreenMode: true,
       child: MaterialApp(
-        title: 'Flutter Demo',
+        title: 'Foody Licious',
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
         ),
-        home: ProvidedStylesExample(menuScreenContext: context,),
+        home: ProvidedStylesExample(
+          menuScreenContext: context,
+        ),
       ),
     );
   }
