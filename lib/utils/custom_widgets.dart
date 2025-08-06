@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:foody_licious/core/constant/colors.dart';
 
 class CustomCheckBox extends StatefulWidget {
   bool? isChecked;
 
-  CustomCheckBox({super.key,this.isChecked});
+  CustomCheckBox({super.key, this.isChecked});
 
   @override
   State<CustomCheckBox> createState() => _CustomCheckBoxState();
@@ -17,12 +18,13 @@ class _CustomCheckBoxState extends State<CustomCheckBox> {
         MaterialState.selected
       };
       if (states.any(interactiveStates.contains)) {
-        return Color(0xFFE85353);
+        return kRedColor;
       }
-      return Colors.white;
+      return kFullWhite;
     }
+
     return Checkbox(
-      checkColor: Colors.white,
+      checkColor: kFullWhite,
       fillColor: MaterialStateProperty.resolveWith(getColor),
       value: widget.isChecked,
       onChanged: (bool? value) {

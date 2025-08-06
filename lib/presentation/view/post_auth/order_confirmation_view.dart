@@ -1,0 +1,68 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:foody_licious/core/constant/colors.dart';
+import 'package:foody_licious/core/constant/images.dart';
+import 'package:google_fonts/google_fonts.dart';
+
+import '../../../cubit/navigation_cubit.dart';
+import '../bottom_nav_bar.dart';
+import 'home_view.dart';
+
+class OrderConfirmationView extends StatefulWidget {
+  const OrderConfirmationView({super.key});
+
+  @override
+  State<OrderConfirmationView> createState() => _OrderConfirmationViewState();
+}
+
+class _OrderConfirmationViewState extends State<OrderConfirmationView> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Padding(
+        padding: EdgeInsets.only(top: 120.h),
+        child: Center(
+          child: Column(
+            children: [
+              Text(
+                "Congrats\nYour Order Placed",
+                style: GoogleFonts.yeonSung(
+                  color: kRedFontColor4,
+                  fontSize: 24,
+                  fontWeight: FontWeight.normal,
+                  letterSpacing: 0.5,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: 48.h),
+              Image.asset(kOrderPlacedTickIcon),
+              SizedBox(height: 58.h),
+              GestureDetector(
+                onTap: () {
+                  context.read<NavigationCubit>().changeTab(0);
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15),
+                      gradient: LinearGradient(
+                        colors: [kGradientColor1, kGradientColor2],
+                        stops: [0.0, 1.0],
+                      )),
+                  width: 157.w,
+                  height: 57.h,
+                  child: Center(
+                      child: Text(
+                    "Go Home",
+                    style:
+                        GoogleFonts.yeonSung(color: kFullWhite, fontSize: 20),
+                  )),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

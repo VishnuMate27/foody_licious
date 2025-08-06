@@ -1,0 +1,61 @@
+/*
+class AppRouter {
+  //main menu
+  static const String home = '/';
+  //authentication
+  static const String signIn = '/sign-in';
+  static const String signUp = '/sign-up';
+  //products
+  static const String productDetails = '/product-details';
+  //other
+  static const String userProfile = '/user-profile';
+  static const String orderCheckout = '/order-checkout';
+  static const String deliveryDetails = '/delivery-details';
+  static const String orders = '/orders';
+  static const String settings = '/settings';
+  static const String notifications = '/notifications';
+  static const String about = '/about';
+  static const String filter = '/filter';
+
+  static Route<dynamic> onGenerateRoute(RouteSettings routeSettings) {
+    switch (routeSettings.name) {
+      case home:
+        return MaterialPageRoute(builder: (_) => const MainView());
+      case signIn:
+        return MaterialPageRoute(builder: (_) => const SignInView());
+      case signUp:
+        return MaterialPageRoute(builder: (_) => const SignUpScreen());
+      case productDetails:
+        Product product = routeSettings.arguments as Product;
+        return MaterialPageRoute(
+            builder: (_) => ProductDetailsView(product: product));
+      case userProfile:
+        User user = routeSettings.arguments as User;
+        return MaterialPageRoute(
+            builder: (_) => UserProfileScreen(
+                  user: user,
+                ));
+      case orderCheckout:
+        List<CartItem> items = routeSettings.arguments as List<CartItem>;
+        return MaterialPageRoute(
+            builder: (_) => OrderCheckoutView(
+                  items: items,
+                ));
+      case deliveryDetails:
+        return MaterialPageRoute(builder: (_) => const DeliveryInfoView());
+      case orders:
+        return MaterialPageRoute(builder: (_) => const OrderView());
+      case settings:
+        return MaterialPageRoute(builder: (_) => const SettingsView());
+      case notifications:
+        return MaterialPageRoute(builder: (_) => const NotificationView());
+      case about:
+        return MaterialPageRoute(builder: (_) => const AboutView());
+      case filter:
+        return MaterialPageRoute(builder: (_) => const FilterView());
+      default:
+        throw const RouteException('Route not found!');
+    }
+  }
+}
+*/
