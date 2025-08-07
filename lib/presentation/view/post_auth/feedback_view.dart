@@ -20,7 +20,7 @@ class _FeedbackViewState extends State<FeedbackView> {
         title: Text(
           "Write Your Feedback Here",
           style: GoogleFonts.yeonSung(
-            color: kRedFont,
+            color: kTextRed,
             fontSize: 24,
           ),
         ),
@@ -43,53 +43,52 @@ class _FeedbackViewState extends State<FeedbackView> {
             // expands: true,
             keyboardType: TextInputType.name,
             decoration: InputDecoration(
-              fillColor: kFillColor,
+              fillColor: kCardBackground,
               labelText: 'Address',
               labelStyle: GoogleFonts.yeonSung(
-                  color: kFullBlack,
+                  color: kBlack,
                   fontSize: 20,
                   fontWeight: FontWeight.normal,
                   letterSpacing: 0.5),
               hintText: 'Enter full address',
               hintStyle: GoogleFonts.lato(
-                  color: kFullBlack,
+                  color: kBlack,
                   fontSize: 14,
                   fontWeight: FontWeight.normal,
                   letterSpacing: 0.5),
-              suffixIcon: Icon(CupertinoIcons.create, color: kFullBlack),
+              suffixIcon: Icon(CupertinoIcons.create, color: kBlack),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.0),
                 borderSide: BorderSide(
-                  color: kBorderSideColor2, // Make the border transparent
+                  color: kBorderLight, // Make the border transparent
                   width: 1, // Set the border width to 0
                 ),
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.0),
                 borderSide: BorderSide(
-                  color:
-                      kBorderSideColor, // Transparent border when not focused
+                  color: kBorder, // Transparent border when not focused
                   width: 1.sp,
                 ),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.0),
                 borderSide: BorderSide(
-                  color: kBorderSideColor, // Transparent border when focused
+                  color: kBorder, // Transparent border when focused
                   width: 1,
                 ),
               ),
               errorBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.0),
                 borderSide: BorderSide(
-                  color: kRedFontColor4, // Transparent border for error state
+                  color: kError, // Transparent border for error state
                   width: 1,
                 ),
               ),
               disabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.0),
                 borderSide: BorderSide(
-                  color: kBorderSideColor, // Transparent border when disabled
+                  color: kBorder, // Transparent border when disabled
                   width: 1,
                 ),
               ),

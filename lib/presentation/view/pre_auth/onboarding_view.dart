@@ -11,7 +11,7 @@ class OnboardingView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: kFullWhite,
+      backgroundColor: kWhite,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -30,7 +30,7 @@ class OnboardingView extends StatelessWidget {
           ),
           Text(
             "Enjoy Restaurant Quality Meals at Home",
-            style: GoogleFonts.yeonSung(color: kRedFontColor2, fontSize: 20),
+            style: GoogleFonts.yeonSung(color: kTextRedDark, fontSize: 20),
           ),
           SizedBox(
             height: 160.h,
@@ -41,7 +41,7 @@ class OnboardingView extends StatelessWidget {
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(15),
                   gradient: LinearGradient(
-                    colors: [kGradientColor1, kGradientColor2],
+                    colors: [kGradientStart, kGradientEnd],
                     stops: [0.0, 1.0],
                   )),
               width: 157.w,
@@ -49,7 +49,7 @@ class OnboardingView extends StatelessWidget {
               child: Center(
                   child: Text(
                 "Next",
-                style: GoogleFonts.yeonSung(color: kFullWhite, fontSize: 20),
+                style: GoogleFonts.yeonSung(color: kWhite, fontSize: 20),
               )),
             ),
           )

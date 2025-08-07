@@ -33,7 +33,8 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Foody Licious',
         theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: kDeepPurple),
+          scaffoldBackgroundColor: kWhite,
+          appBarTheme: AppBarTheme(backgroundColor: kWhite),
           useMaterial3: true,
         ),
         home: ProvidedStylesExample(

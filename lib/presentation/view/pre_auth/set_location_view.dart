@@ -16,7 +16,7 @@ class _SetLocationViewState extends State<SetLocationView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: kFullWhite,
+      backgroundColor: kWhite,
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
@@ -28,8 +28,7 @@ class _SetLocationViewState extends State<SetLocationView> {
               ),
               Text(
                 "Choose Your Location",
-                style:
-                    GoogleFonts.yeonSung(color: kRedFontColor2, fontSize: 25),
+                style: GoogleFonts.yeonSung(color: kTextRedDark, fontSize: 25),
                 textAlign: TextAlign.start,
               ),
               SizedBox(
@@ -39,45 +38,41 @@ class _SetLocationViewState extends State<SetLocationView> {
                 trailingIcon: Icon(
                   Icons.arrow_circle_down,
                   size: 30,
-                  color: kFullBlack,
+                  color: kBlack,
                 ),
                 inputDecorationTheme: InputDecorationTheme(
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
                     borderSide: BorderSide(
-                      color: kBorderSideColor2, // Make the border transparent
+                      color: kBorderLight, // Make the border transparent
                       width: 1, // Set the border width to 0
                     ),
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
                     borderSide: BorderSide(
-                      color: Color(
-                          0x51FF8080), // Transparent border when not focused
+                      color: kBorder, // Transparent border when not focused
                       width: 1.sp,
                     ),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
                     borderSide: BorderSide(
-                      color:
-                          kBorderSideColor, // Transparent border when focused
+                      color: kBorder, // Transparent border when focused
                       width: 1,
                     ),
                   ),
                   errorBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
                     borderSide: BorderSide(
-                      color: Color(
-                          0xCCFF0000), // Transparent border for error state
+                      color: kError, // Transparent border for error state
                       width: 1,
                     ),
                   ),
                   disabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
                     borderSide: BorderSide(
-                      color:
-                          kBorderSideColor, // Transparent border when disabled
+                      color: kBorder, // Transparent border when disabled
                       width: 1,
                     ),
                   ),
@@ -100,7 +95,7 @@ class _SetLocationViewState extends State<SetLocationView> {
               ),
               Text(
                 "To provide you with the best dining experience, we need your permission to access your device's location. By enabling location services, we can offer personalized restaurant recommendations, accurate delivery estimates, and ensure a seamless food delivery experience.",
-                style: GoogleFonts.lato(color: kFullBlack, fontSize: 16),
+                style: GoogleFonts.lato(color: kBlack, fontSize: 16),
                 textAlign: TextAlign.start,
               ),
             ],

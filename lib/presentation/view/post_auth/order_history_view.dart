@@ -18,22 +18,18 @@ class _OrderHistoryViewState extends State<OrderHistoryView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: kWhite,
       appBar: AppBar(
         title: Text(
           "Order History",
           style: GoogleFonts.yeonSung(
-            color: kRedFont,
+            color: kTextRed,
             fontSize: 24,
           ),
         ),
         centerTitle: true,
+        backgroundColor: kWhite,
       ),
-      // body: Center(
-      //   child: Text(
-      //     "No orders yet!",
-      //     style: TextStyle(fontSize: 20, color: kGrey),
-      //   ),
-      // ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: Column(
@@ -42,10 +38,10 @@ class _OrderHistoryViewState extends State<OrderHistoryView> {
             Container(
               height: 230.h,
               decoration: BoxDecoration(
-                color: kWhite,
+                color: kCardBackground,
                 borderRadius: BorderRadius.circular(25.r),
                 border: Border.all(
-                  color: kBorderSideColor,
+                  color: kBorder,
                   width: 1.5,
                 ),
               ),
@@ -58,7 +54,7 @@ class _OrderHistoryViewState extends State<OrderHistoryView> {
                     Text(
                       "Call For Information",
                       style: GoogleFonts.yeonSung(
-                        color: kRedFont,
+                        color: kTextRed,
                         fontSize: 17,
                       ),
                     ),
@@ -75,7 +71,7 @@ class _OrderHistoryViewState extends State<OrderHistoryView> {
                         child: Container(
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(15),
-                              color: kFullWhite),
+                              color: kWhite),
                           width: 260.w,
                           height: 68.h,
                           child: Center(
@@ -84,14 +80,14 @@ class _OrderHistoryViewState extends State<OrderHistoryView> {
                             children: [
                               Icon(
                                 CupertinoIcons.phone_fill,
-                                color: kGreen2,
+                                color: kGreen,
                                 size: 24,
                               ),
                               SizedBox(width: 8.w),
                               Text(
                                 "Call",
                                 style: GoogleFonts.yeonSung(
-                                    color: kGreen2, fontSize: 18),
+                                    color: kGreen, fontSize: 18),
                               ),
                             ],
                           )),
@@ -155,7 +151,7 @@ class _OrderHistoryItemCardState extends State<OrderHistoryItemCard> {
         height: 87.h,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(22),
-          border: Border.all(color: kBorderSideColor),
+          border: Border.all(color: kBorder),
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -171,21 +167,21 @@ class _OrderHistoryItemCardState extends State<OrderHistoryItemCard> {
                   Text(
                     widget.itemName,
                     style: GoogleFonts.yeonSung(
-                      color: kFullBlack,
+                      color: kBlack,
                       fontSize: 15,
                     ),
                   ),
                   Text(
                     widget.restaurantName,
                     style: GoogleFonts.lato(
-                      color: kBlackishFontColor2,
+                      color: kTextSecondary,
                       fontSize: 14,
                     ),
                   ),
                   Text(
                     "\$ ${widget.itemPrice}",
                     style: GoogleFonts.lato(
-                      color: kRedFont,
+                      color: kTextRed,
                       fontSize: 19,
                       fontWeight: FontWeight.w600,
                     ),
@@ -200,7 +196,7 @@ class _OrderHistoryItemCardState extends State<OrderHistoryItemCard> {
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(5.r),
                     gradient: LinearGradient(
-                      colors: [kGradientColor1, kGradientColor2],
+                      colors: [kGradientStart, kGradientEnd],
                       stops: [0.0, 1.0],
                     )),
                 width: 84.w,
@@ -208,7 +204,7 @@ class _OrderHistoryItemCardState extends State<OrderHistoryItemCard> {
                 child: Center(
                     child: Text(
                   "Buy Again",
-                  style: GoogleFonts.yeonSung(color: kFullWhite, fontSize: 12),
+                  style: GoogleFonts.yeonSung(color: kWhite, fontSize: 12),
                 )),
               ),
             ),
@@ -246,9 +242,9 @@ class _CallerInfoCardState extends State<CallerInfoCard> {
         MaterialState.selected,
       };
       if (states.any(interactiveStates.contains)) {
-        return kRedColor;
+        return kTextRed;
       }
-      return kFullWhite;
+      return kWhite;
     }
 
     return Container(
@@ -256,7 +252,7 @@ class _CallerInfoCardState extends State<CallerInfoCard> {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(22),
         border: Border.all(
-          color: kBorderSideColor,
+          color: kBorder,
         ),
       ),
       child: Row(
@@ -277,7 +273,7 @@ class _CallerInfoCardState extends State<CallerInfoCard> {
               Text(
                 widget.callerName,
                 style: GoogleFonts.yeonSung(
-                  color: kFullBlack,
+                  color: kBlack,
                   fontSize: 15,
                   fontWeight: FontWeight.normal,
                 ),
@@ -285,7 +281,7 @@ class _CallerInfoCardState extends State<CallerInfoCard> {
               Text(
                 widget.hotelDistance,
                 style: GoogleFonts.lato(
-                  color: kBlackishFontColor2,
+                  color: kTextSecondary,
                   fontSize: 14,
                   fontWeight: FontWeight.normal,
                 ),

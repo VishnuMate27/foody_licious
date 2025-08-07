@@ -10,7 +10,7 @@ class SplashView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: kFullWhite,
+      backgroundColor: kWhite,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -27,7 +27,7 @@ class SplashView extends StatelessWidget {
           ),
           Text(
             "Foody Licious",
-            style: GoogleFonts.yeonSung(color: kRedFont, fontSize: 40),
+            style: GoogleFonts.yeonSung(color: kTextRed, fontSize: 40),
           ),
           SizedBox(
             height: 40.h,
@@ -35,7 +35,7 @@ class SplashView extends StatelessWidget {
           Text(
             "Deliever Favorite Food",
             style: GoogleFonts.lato(
-                color: kRedFont, fontSize: 14, fontWeight: FontWeight.bold),
+                color: kTextRed, fontSize: 14, fontWeight: FontWeight.bold),
           ),
         ],
       ),

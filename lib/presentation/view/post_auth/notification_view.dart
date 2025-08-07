@@ -20,7 +20,7 @@ class _NotificationViewState extends State<NotificationView> {
         title: Text(
           "Notifications",
           style: GoogleFonts.yeonSung(
-            color: kRedFont,
+            color: kTextRed,
             fontSize: 24,
           ),
         ),
@@ -38,21 +38,6 @@ class _NotificationViewState extends State<NotificationView> {
       body: Center(
         child: Column(
           children: [
-            // Text(
-            //   "No Notifications",
-            //   style: TextStyle(
-            //     color: kRedFontColor4,
-            //     fontSize: 24,
-            //     fontWeight: FontWeight.normal,
-            //     letterSpacing: 0.5,
-            //   ),
-            //   textAlign: TextAlign.center,
-            // ),
-            // Icon(
-            //   CupertinoIcons.bell_slash_fill,
-            //   size: 50,
-            //   color: kGrey,
-            // ),
             SizedBox(
               height: 20.h,
             ),
@@ -96,7 +81,7 @@ class NotificationEntry extends StatelessWidget {
         ),
         Text(
           "title",
-          style: GoogleFonts.lato(color: kRedFont, fontSize: 15),
+          style: GoogleFonts.lato(color: kTextRed, fontSize: 15),
         ),
       ],
     );

@@ -11,7 +11,7 @@ class LoginView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: kFullWhite,
+      backgroundColor: kWhite,
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -30,7 +30,7 @@ class LoginView extends StatelessWidget {
               ),
               Text(
                 "Foody Licious",
-                style: GoogleFonts.yeonSung(color: kRedFont, fontSize: 40),
+                style: GoogleFonts.yeonSung(color: kTextRed, fontSize: 40),
               ),
               SizedBox(
                 height: 10.h,
@@ -38,7 +38,7 @@ class LoginView extends StatelessWidget {
               Text(
                 "Deliever Favorite Food",
                 style: GoogleFonts.lato(
-                    color: kRedFontColor2,
+                    color: kTextRedDark,
                     fontSize: 14,
                     fontWeight: FontWeight.bold),
               ),
@@ -48,7 +48,7 @@ class LoginView extends StatelessWidget {
               Text(
                 "Login To Your Account",
                 style: GoogleFonts.lato(
-                    color: kRedFontColor2,
+                    color: kTextRedDark,
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                     letterSpacing: 1.0),
@@ -59,10 +59,10 @@ class LoginView extends StatelessWidget {
               TextFormField(
                 keyboardType: TextInputType.emailAddress,
                 decoration: InputDecoration(
-                  fillColor: kFillColor,
+                  fillColor: kCardBackground,
                   labelText: 'Email or Phone Number',
                   labelStyle: GoogleFonts.lato(
-                      color: kBlackishFontColor2,
+                      color: kTextSecondary,
                       fontSize: 14,
                       fontWeight: FontWeight.normal,
                       letterSpacing: 0.5),
@@ -70,39 +70,35 @@ class LoginView extends StatelessWidget {
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
                     borderSide: BorderSide(
-                      color: kBorderSideColor2, // Make the border transparent
+                      color: kBorderLight, // Make the border transparent
                       width: 1, // Set the border width to 0
                     ),
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
                     borderSide: BorderSide(
-                      color: Color(
-                          0x51FF8080), // Transparent border when not focused
+                      color: kBorder, // Transparent border when not focused
                       width: 1.sp,
                     ),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
                     borderSide: BorderSide(
-                      color:
-                          kBorderSideColor, // Transparent border when focused
+                      color: kBorder, // Transparent border when focused
                       width: 1,
                     ),
                   ),
                   errorBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
                     borderSide: BorderSide(
-                      color: Color(
-                          0xCCFF0000), // Transparent border for error state
+                      color: kError, // Transparent border for error state
                       width: 1,
                     ),
                   ),
                   disabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
                     borderSide: BorderSide(
-                      color:
-                          kBorderSideColor, // Transparent border when disabled
+                      color: kBorder, // Transparent border when disabled
                       width: 1,
                     ),
                   ),
@@ -121,10 +117,10 @@ class LoginView extends StatelessWidget {
               TextFormField(
                 keyboardType: TextInputType.visiblePassword,
                 decoration: InputDecoration(
-                  fillColor: kFillColor,
+                  fillColor: kCardBackground,
                   labelText: 'Password',
                   labelStyle: GoogleFonts.lato(
-                      color: kBlackishFontColor2,
+                      color: kTextSecondary,
                       fontSize: 14,
                       fontWeight: FontWeight.normal,
                       letterSpacing: 0.5),
@@ -132,39 +128,35 @@ class LoginView extends StatelessWidget {
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
                     borderSide: BorderSide(
-                      color: kBorderSideColor, // Make the border transparent
+                      color: kBorder, // Make the border transparent
                       width: 1, // Set the border width to 0
                     ),
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
                     borderSide: BorderSide(
-                      color: Color(
-                          0x51FF8080), // Transparent border when not focused
+                      color: kBorder, // Transparent border when not focused
                       width: 1,
                     ),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
                     borderSide: BorderSide(
-                      color:
-                          kBorderSideColor, // Transparent border when focused
+                      color: kBorder, // Transparent border when focused
                       width: 1,
                     ),
                   ),
                   errorBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
                     borderSide: BorderSide(
-                      color: Color(
-                          0xCCFF0000), // Transparent border for error state
+                      color: kError, // Transparent border for error state
                       width: 1,
                     ),
                   ),
                   disabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
                     borderSide: BorderSide(
-                      color:
-                          kBorderSideColor, // Transparent border when disabled
+                      color: kBorder, // Transparent border when disabled
                       width: 1,
                     ),
                   ),
@@ -183,14 +175,14 @@ class LoginView extends StatelessWidget {
               Text(
                 "Or",
                 style: GoogleFonts.yeonSung(
-                    color: kBlackishFontColor,
+                    color: kTextPrimary,
                     fontSize: 16,
                     fontWeight: FontWeight.normal),
               ),
               Text(
                 "Continue With",
                 style: GoogleFonts.yeonSung(
-                    color: kBlackishFontColor,
+                    color: kTextPrimary,
                     fontSize: 20,
                     fontWeight: FontWeight.normal),
               ),
@@ -206,7 +198,7 @@ class LoginView extends StatelessWidget {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(15),
                         border: Border.all(
-                            color: kBorderSideColor,
+                            color: kBorder,
                             width: 1.0,
                             style: BorderStyle.solid),
                       ),
@@ -227,7 +219,7 @@ class LoginView extends StatelessWidget {
                           Text(
                             "Facebook",
                             style: GoogleFonts.lato(
-                                color: kBlackishFontColor, fontSize: 14),
+                                color: kTextPrimary, fontSize: 14),
                           ),
                         ],
                       ),
@@ -239,7 +231,7 @@ class LoginView extends StatelessWidget {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(15),
                         border: Border.all(
-                            color: kBorderSideColor,
+                            color: kBorder,
                             width: 1.0,
                             style: BorderStyle.solid),
                       ),
@@ -260,7 +252,7 @@ class LoginView extends StatelessWidget {
                           Text(
                             "Google",
                             style: GoogleFonts.lato(
-                                color: kBlackishFontColor, fontSize: 14),
+                                color: kTextPrimary, fontSize: 14),
                           ),
                         ],
                       ),
@@ -277,7 +269,7 @@ class LoginView extends StatelessWidget {
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(15),
                       gradient: LinearGradient(
-                        colors: [kGradientColor1, kGradientColor2],
+                        colors: [kGradientStart, kGradientEnd],
                         stops: [0.0, 1.0],
                       )),
                   width: 157.w,
@@ -285,8 +277,7 @@ class LoginView extends StatelessWidget {
                   child: Center(
                       child: Text(
                     "Login",
-                    style:
-                        GoogleFonts.yeonSung(color: kFullWhite, fontSize: 20),
+                    style: GoogleFonts.yeonSung(color: kWhite, fontSize: 20),
                   )),
                 ),
               ),
@@ -296,7 +287,7 @@ class LoginView extends StatelessWidget {
               Text(
                 "Don’t Have Account?",
                 style: GoogleFonts.lato(
-                    color: kRedFontColor2,
+                    color: kTextRedDark,
                     fontSize: 10,
                     fontWeight: FontWeight.bold,
                     letterSpacing: 1.0),

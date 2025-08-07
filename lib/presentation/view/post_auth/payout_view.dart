@@ -18,9 +18,9 @@ class _PayoutViewState extends State<PayoutView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: kFullWhite,
+      backgroundColor: kWhite,
       appBar: AppBar(
-        backgroundColor: kFullWhite,
+        backgroundColor: kWhite,
         elevation: 0,
         leading: IconButton(
           icon: ImageIcon(
@@ -41,7 +41,7 @@ class _PayoutViewState extends State<PayoutView> {
               Text(
                 "Edit",
                 style: GoogleFonts.yeonSung(
-                    color: kRedFont, fontSize: 24, letterSpacing: 1.0),
+                    color: kTextRed, fontSize: 24, letterSpacing: 1.0),
               ),
               SizedBox(
                 height: 20.h,
@@ -49,56 +49,52 @@ class _PayoutViewState extends State<PayoutView> {
               TextFormField(
                 keyboardType: TextInputType.name,
                 decoration: InputDecoration(
-                  fillColor: kFillColor,
+                  fillColor: kCardBackground,
                   labelText: 'Name',
                   labelStyle: GoogleFonts.yeonSung(
-                      color: kFullBlack,
+                      color: kBlack,
                       fontSize: 20,
                       fontWeight: FontWeight.normal,
                       letterSpacing: 0.5),
                   hintText: 'Enter name',
                   hintStyle: GoogleFonts.lato(
-                      color: kFullBlack,
+                      color: kBlack,
                       fontSize: 14,
                       fontWeight: FontWeight.normal,
                       letterSpacing: 0.5),
-                  suffixIcon: Icon(CupertinoIcons.create, color: kFullBlack),
+                  suffixIcon: Icon(CupertinoIcons.create, color: kBlack),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
                     borderSide: BorderSide(
-                      color: kBorderSideColor2, // Make the border transparent
+                      color: kBorderLight, // Make the border transparent
                       width: 1, // Set the border width to 0
                     ),
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
                     borderSide: BorderSide(
-                      color: Color(
-                          0x51FF8080), // Transparent border when not focused
+                      color: kBorder, // Transparent border when not focused
                       width: 1.sp,
                     ),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
                     borderSide: BorderSide(
-                      color:
-                          kBorderSideColor, // Transparent border when focused
+                      color: kBorder, // Transparent border when focused
                       width: 1,
                     ),
                   ),
                   errorBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
                     borderSide: BorderSide(
-                      color: Color(
-                          0xCCFF0000), // Transparent border for error state
+                      color: kError, // Transparent border for error state
                       width: 1,
                     ),
                   ),
                   disabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
                     borderSide: BorderSide(
-                      color:
-                          kBorderSideColor, // Transparent border when disabled
+                      color: kBorder, // Transparent border when disabled
                       width: 1,
                     ),
                   ),
@@ -120,56 +116,52 @@ class _PayoutViewState extends State<PayoutView> {
                 // expands: true,
                 keyboardType: TextInputType.name,
                 decoration: InputDecoration(
-                  fillColor: kFillColor,
+                  fillColor: kCardBackground,
                   labelText: 'Address',
                   labelStyle: GoogleFonts.yeonSung(
-                      color: kFullBlack,
+                      color: kBlack,
                       fontSize: 20,
                       fontWeight: FontWeight.normal,
                       letterSpacing: 0.5),
                   hintText: 'Enter full address',
                   hintStyle: GoogleFonts.lato(
-                      color: kFullBlack,
+                      color: kBlack,
                       fontSize: 14,
                       fontWeight: FontWeight.normal,
                       letterSpacing: 0.5),
-                  suffixIcon: Icon(CupertinoIcons.create, color: kFullBlack),
+                  suffixIcon: Icon(CupertinoIcons.create, color: kBlack),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
                     borderSide: BorderSide(
-                      color: kBorderSideColor2, // Make the border transparent
+                      color: kBorderLight, // Make the border transparent
                       width: 1, // Set the border width to 0
                     ),
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
                     borderSide: BorderSide(
-                      color: Color(
-                          0x51FF8080), // Transparent border when not focused
+                      color: kBorder, // Transparent border when not focused
                       width: 1.sp,
                     ),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
                     borderSide: BorderSide(
-                      color:
-                          kBorderSideColor, // Transparent border when focused
+                      color: kBorder, // Transparent border when focused
                       width: 1,
                     ),
                   ),
                   errorBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
                     borderSide: BorderSide(
-                      color: Color(
-                          0xCCFF0000), // Transparent border for error state
+                      color: kError, // Transparent border for error state
                       width: 1,
                     ),
                   ),
                   disabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
                     borderSide: BorderSide(
-                      color:
-                          kBorderSideColor, // Transparent border when disabled
+                      color: kBorder, // Transparent border when disabled
                       width: 1,
                     ),
                   ),
@@ -188,56 +180,52 @@ class _PayoutViewState extends State<PayoutView> {
               TextFormField(
                 keyboardType: TextInputType.name,
                 decoration: InputDecoration(
-                  fillColor: kFillColor,
+                  fillColor: kCardBackground,
                   labelText: 'Phone',
                   labelStyle: GoogleFonts.yeonSung(
-                      color: kFullBlack,
+                      color: kBlack,
                       fontSize: 20,
                       fontWeight: FontWeight.normal,
                       letterSpacing: 0.5),
                   hintText: 'Enter your 10 digit phone number',
                   hintStyle: GoogleFonts.lato(
-                      color: kFullBlack,
+                      color: kBlack,
                       fontSize: 14,
                       fontWeight: FontWeight.normal,
                       letterSpacing: 0.5),
-                  suffixIcon: Icon(CupertinoIcons.create, color: kFullBlack),
+                  suffixIcon: Icon(CupertinoIcons.create, color: kBlack),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
                     borderSide: BorderSide(
-                      color: kBorderSideColor2, // Make the border transparent
+                      color: kBorderLight, // Make the border transparent
                       width: 1, // Set the border width to 0
                     ),
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
                     borderSide: BorderSide(
-                      color: Color(
-                          0x51FF8080), // Transparent border when not focused
+                      color: kBorder, // Transparent border when not focused
                       width: 1.sp,
                     ),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
                     borderSide: BorderSide(
-                      color:
-                          kBorderSideColor, // Transparent border when focused
+                      color: kBorder, // Transparent border when focused
                       width: 1,
                     ),
                   ),
                   errorBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
                     borderSide: BorderSide(
-                      color: Color(
-                          0xCCFF0000), // Transparent border for error state
+                      color: kError, // Transparent border for error state
                       width: 1,
                     ),
                   ),
                   disabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
                     borderSide: BorderSide(
-                      color:
-                          kBorderSideColor, // Transparent border when disabled
+                      color: kBorder, // Transparent border when disabled
                       width: 1,
                     ),
                   ),
@@ -257,14 +245,14 @@ class _PayoutViewState extends State<PayoutView> {
                 height: 80.h,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(18.0),
-                    border: Border.all(color: kRedBorderColor, width: 0.5)),
+                    border: Border.all(color: kBorder, width: 0.5)),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     Text(
                       "Payment Method",
                       style: GoogleFonts.yeonSung(
-                        color: kBlackishFontColor2,
+                        color: kTextSecondary,
                         fontSize: 14,
                         fontWeight: FontWeight.normal,
                         letterSpacing: 0.5,
@@ -294,14 +282,14 @@ class _PayoutViewState extends State<PayoutView> {
                 child: Container(
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(15),
-                      color: kFontColor,
-                      border: Border.all(color: kRedBorderColor, width: 0.5)),
+                      color: kTextOnPrimary,
+                      border: Border.all(color: kBorder, width: 0.5)),
                   height: 57.h,
                   child: Center(
                     child: Text(
                       "Place My Order",
                       style: GoogleFonts.yeonSung(
-                          color: kRedFontColor2, fontSize: 14),
+                          color: kTextRedDark, fontSize: 14),
                     ),
                   ),
                 ),

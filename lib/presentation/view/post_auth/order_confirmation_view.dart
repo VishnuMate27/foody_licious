@@ -28,7 +28,7 @@ class _OrderConfirmationViewState extends State<OrderConfirmationView> {
               Text(
                 "Congrats\nYour Order Placed",
                 style: GoogleFonts.yeonSung(
-                  color: kRedFontColor4,
+                  color: kTextRed,
                   fontSize: 24,
                   fontWeight: FontWeight.normal,
                   letterSpacing: 0.5,
@@ -46,7 +46,7 @@ class _OrderConfirmationViewState extends State<OrderConfirmationView> {
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(15),
                       gradient: LinearGradient(
-                        colors: [kGradientColor1, kGradientColor2],
+                        colors: [kGradientStart, kGradientEnd],
                         stops: [0.0, 1.0],
                       )),
                   width: 157.w,
@@ -54,8 +54,7 @@ class _OrderConfirmationViewState extends State<OrderConfirmationView> {
                   child: Center(
                       child: Text(
                     "Go Home",
-                    style:
-                        GoogleFonts.yeonSung(color: kFullWhite, fontSize: 20),
+                    style: GoogleFonts.yeonSung(color: kWhite, fontSize: 20),
                   )),
                 ),
               ),

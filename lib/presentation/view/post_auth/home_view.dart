@@ -22,7 +22,7 @@ class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: kFullWhite,
+      backgroundColor: kWhite,
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 60.h),
@@ -34,7 +34,7 @@ class _HomeViewState extends State<HomeView> {
                 children: [
                   Text(
                     "Explore Your Favorite Food",
-                    style: GoogleFonts.yeonSung(color: kRedFont, fontSize: 24),
+                    style: GoogleFonts.yeonSung(color: kTextRed, fontSize: 24),
                   ),
                   IconButton(
                     onPressed: () {
@@ -45,7 +45,7 @@ class _HomeViewState extends State<HomeView> {
                         ),
                       );
                     },
-                    icon:  Icon(
+                    icon: Icon(
                       CupertinoIcons.bell,
                       size: 24,
                       color: kGreen,
@@ -66,8 +66,8 @@ class _HomeViewState extends State<HomeView> {
                       fontWeight: FontWeight.normal,
                       letterSpacing: 0.5),
                 ),
-                shadowColor: MaterialStatePropertyAll<Color>(kFullBlack),
-                backgroundColor: MaterialStatePropertyAll<Color>(kWhiteBgColor),
+                shadowColor: MaterialStatePropertyAll<Color>(kBlack),
+                backgroundColor: MaterialStatePropertyAll<Color>(kBackground),
                 shape: MaterialStatePropertyAll<OutlinedBorder>(
                   RoundedRectangleBorder(
                     borderRadius:
@@ -125,7 +125,7 @@ class _HomeViewState extends State<HomeView> {
                     Text(
                       "Popular",
                       style: GoogleFonts.yeonSung(
-                          color: kRedFont,
+                          color: kTextRed,
                           fontSize: 18,
                           fontWeight: FontWeight.normal,
                           letterSpacing: 0.5),
@@ -133,7 +133,7 @@ class _HomeViewState extends State<HomeView> {
                     Text(
                       "View More",
                       style: GoogleFonts.lato(
-                          color: kRedFont,
+                          color: kTextRed,
                           fontSize: 14,
                           fontWeight: FontWeight.normal,
                           letterSpacing: 0.5),
@@ -206,9 +206,9 @@ class _MenuItemCardState extends State<MenuItemCard> {
         MaterialState.selected,
       };
       if (states.any(interactiveStates.contains)) {
-        return kRedColor;
+        return kTextRed;
       }
-      return kFullWhite;
+      return kWhite;
     }
 
     return GestureDetector(
@@ -223,7 +223,7 @@ class _MenuItemCardState extends State<MenuItemCard> {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(22),
           border: Border.all(
-            color: kBorderSideColor,
+            color: kBorder,
           ),
         ),
         child: Row(
@@ -243,7 +243,7 @@ class _MenuItemCardState extends State<MenuItemCard> {
                 Text(
                   widget.itemName,
                   style: GoogleFonts.yeonSung(
-                    color: kFullBlack,
+                    color: kBlack,
                     fontSize: 15,
                     fontWeight: FontWeight.normal,
                   ),
@@ -251,7 +251,7 @@ class _MenuItemCardState extends State<MenuItemCard> {
                 Text(
                   widget.hotelName,
                   style: GoogleFonts.lato(
-                    color: kBlackishFontColor2,
+                    color: kTextSecondary,
                     fontSize: 14,
                     fontWeight: FontWeight.normal,
                   ),
@@ -270,12 +270,12 @@ class _MenuItemCardState extends State<MenuItemCard> {
                         "\$${widget.itemPrice}",
                         style: TextStyle(
                           fontFamily: 'BentonSans',
-                          color: kRedFont,
+                          color: kTextRed,
                           fontSize: 24,
                         ),
                       ),
                       Checkbox(
-                        checkColor: kFullWhite,
+                        checkColor: kWhite,
                         fillColor: MaterialStateProperty.resolveWith(getColor),
                         value: widget.isChecked ??
                             false, // Ensure value is not null
@@ -291,7 +291,7 @@ class _MenuItemCardState extends State<MenuItemCard> {
                     "\$${widget.itemPrice}",
                     style: TextStyle(
                       fontFamily: 'BentonSans',
-                      color: kRedFont,
+                      color: kTextRed,
                       fontSize: 28,
                     ),
                   ),

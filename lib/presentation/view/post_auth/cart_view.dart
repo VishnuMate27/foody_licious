@@ -19,7 +19,7 @@ class _CartViewState extends State<CartView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: kFullWhite,
+      backgroundColor: kWhite,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -33,7 +33,7 @@ class _CartViewState extends State<CartView> {
                     Text(
                       "Explore Your Favorite Food",
                       style: GoogleFonts.yeonSung(
-                        color: kRedFont,
+                        color: kTextRed,
                         fontSize: 24,
                       ),
                     ),
@@ -65,9 +65,8 @@ class _CartViewState extends State<CartView> {
                       letterSpacing: 0.5,
                     ),
                   ),
-                  shadowColor: MaterialStatePropertyAll<Color>(kFullBlack),
-                  backgroundColor:
-                      MaterialStatePropertyAll<Color>(kWhiteBgColor),
+                  shadowColor: MaterialStatePropertyAll<Color>(kBlack),
+                  backgroundColor: MaterialStatePropertyAll<Color>(kBackground),
                   shape: MaterialStatePropertyAll<OutlinedBorder>(
                     RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15.0),
@@ -89,7 +88,7 @@ class _CartViewState extends State<CartView> {
                 Text(
                   "Cart",
                   style: GoogleFonts.yeonSung(
-                    color: kRedFont,
+                    color: kTextRed,
                     fontSize: 24,
                   ),
                 ),
@@ -128,15 +127,14 @@ class _CartViewState extends State<CartView> {
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(15),
                         gradient: LinearGradient(
-                          colors: [kGradientColor1, kGradientColor2],
+                          colors: [kGradientStart, kGradientEnd],
                           stops: [0.0, 1.0],
                         )),
                     height: 57.h,
                     child: Center(
                         child: Text(
                       "Continue",
-                      style:
-                          GoogleFonts.yeonSung(color: kFullWhite, fontSize: 20),
+                      style: GoogleFonts.yeonSung(color: kWhite, fontSize: 20),
                     )),
                   ),
                 ),
@@ -169,11 +167,13 @@ class _CartViewState extends State<CartView> {
                   children: [
                     Text(
                       "Sub-Total",
-                      style: GoogleFonts.lato(color: kFontColor, fontSize: 14),
+                      style:
+                          GoogleFonts.lato(color: kTextOnPrimary, fontSize: 14),
                     ),
                     Text(
                       "120\$",
-                      style: GoogleFonts.lato(color: kFontColor, fontSize: 14),
+                      style:
+                          GoogleFonts.lato(color: kTextOnPrimary, fontSize: 14),
                     ),
                   ],
                 ),
@@ -182,11 +182,13 @@ class _CartViewState extends State<CartView> {
                   children: [
                     Text(
                       "Delivery Charge",
-                      style: GoogleFonts.lato(color: kFontColor, fontSize: 14),
+                      style:
+                          GoogleFonts.lato(color: kTextOnPrimary, fontSize: 14),
                     ),
                     Text(
                       "10\$",
-                      style: GoogleFonts.lato(color: kFontColor, fontSize: 14),
+                      style:
+                          GoogleFonts.lato(color: kTextOnPrimary, fontSize: 14),
                     ),
                   ],
                 ),
@@ -195,11 +197,13 @@ class _CartViewState extends State<CartView> {
                   children: [
                     Text(
                       "Discount",
-                      style: GoogleFonts.lato(color: kFontColor, fontSize: 14),
+                      style:
+                          GoogleFonts.lato(color: kTextOnPrimary, fontSize: 14),
                     ),
                     Text(
                       "20\$",
-                      style: GoogleFonts.lato(color: kFontColor, fontSize: 14),
+                      style:
+                          GoogleFonts.lato(color: kTextOnPrimary, fontSize: 14),
                     ),
                   ],
                 ),
@@ -211,13 +215,13 @@ class _CartViewState extends State<CartView> {
                   children: [
                     Text(
                       "Total",
-                      style:
-                          GoogleFonts.yeonSung(color: kFontColor, fontSize: 18),
+                      style: GoogleFonts.yeonSung(
+                          color: kTextOnPrimary, fontSize: 18),
                     ),
                     Text(
                       "150\$",
-                      style:
-                          GoogleFonts.yeonSung(color: kFontColor, fontSize: 18),
+                      style: GoogleFonts.yeonSung(
+                          color: kTextOnPrimary, fontSize: 18),
                     ),
                   ],
                 ),
@@ -226,14 +230,14 @@ class _CartViewState extends State<CartView> {
                   child: Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(15),
-                      color: kFontColor,
+                      color: kTextOnPrimary,
                     ),
                     height: 57.h,
                     child: Center(
                         child: Text(
                       "Proceed",
-                      style: GoogleFonts.yeonSung(
-                          color: kRedFont, fontSize: 20),
+                      style:
+                          GoogleFonts.yeonSung(color: kTextRed, fontSize: 20),
                     )),
                   ),
                 ),
@@ -275,7 +279,7 @@ class _CartItemCardState extends State<CartItemCard> {
         height: 87.h,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(22),
-          border: Border.all(color: kBorderSideColor),
+          border: Border.all(color: kBorder),
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -291,21 +295,21 @@ class _CartItemCardState extends State<CartItemCard> {
                   Text(
                     widget.itemName,
                     style: GoogleFonts.yeonSung(
-                      color: kFullBlack,
+                      color: kBlack,
                       fontSize: 15,
                     ),
                   ),
                   Text(
                     widget.restaurantName,
                     style: GoogleFonts.lato(
-                      color: kBlackishFontColor2,
+                      color: kTextSecondary,
                       fontSize: 14,
                     ),
                   ),
                   Text(
                     "\$ ${widget.itemPrice}",
                     style: GoogleFonts.lato(
-                      color: kRedFont,
+                      color: kTextRed,
                       fontSize: 19,
                       fontWeight: FontWeight.w600,
                     ),
@@ -326,14 +330,14 @@ class _CartItemCardState extends State<CartItemCard> {
                       },
                       child: Container(
                         decoration: BoxDecoration(
-                          color: kWhite2,
+                          color: kGreen.withAlpha(51),
                           borderRadius: BorderRadius.circular(8.r),
                         ),
                         width: 26.w,
                         height: 26.h,
                         child: Icon(
                           CupertinoIcons.minus,
-                          color: kRed2,
+                          color: kTextRed,
                           size: 20,
                         ),
                       ),
@@ -342,7 +346,7 @@ class _CartItemCardState extends State<CartItemCard> {
                     Text(
                       "${widget.itemQuantity}",
                       style: GoogleFonts.lato(
-                        color: kBlackishFontColor3,
+                        color: kTextSecondary,
                         fontSize: 16,
                       ),
                     ),
@@ -353,14 +357,17 @@ class _CartItemCardState extends State<CartItemCard> {
                       },
                       child: Container(
                         decoration: BoxDecoration(
-                          color: kRed2,
                           borderRadius: BorderRadius.circular(8.r),
+                          gradient: LinearGradient(
+                            colors: [kGradientStart, kGradientEnd],
+                            stops: [0.0, 1.0],
+                          ),
                         ),
                         width: 26.w,
                         height: 26.h,
                         child: Icon(
                           CupertinoIcons.plus,
-                          color: kFullWhite,
+                          color: kWhite,
                           size: 20,
                         ),
                       ),
@@ -374,8 +381,8 @@ class _CartItemCardState extends State<CartItemCard> {
                       onPressed: () {
                         print("Delete button pressed");
                       },
-                      icon: Icon(CupertinoIcons.delete,
-                          color: kFullBlack, size: 20),
+                      icon:
+                          Icon(CupertinoIcons.delete, color: kBlack, size: 20),
                     ),
                   ],
                 ),

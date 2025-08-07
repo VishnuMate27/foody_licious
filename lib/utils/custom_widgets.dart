@@ -18,13 +18,13 @@ class _CustomCheckBoxState extends State<CustomCheckBox> {
         MaterialState.selected
       };
       if (states.any(interactiveStates.contains)) {
-        return kRedColor;
+        return kTextRed;
       }
-      return kFullWhite;
+      return kWhite;
     }
 
     return Checkbox(
-      checkColor: kFullWhite,
+      checkColor: kWhite,
       fillColor: MaterialStateProperty.resolveWith(getColor),
       value: widget.isChecked,
       onChanged: (bool? value) {

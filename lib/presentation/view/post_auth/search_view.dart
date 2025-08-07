@@ -17,7 +17,7 @@ class _SearchViewState extends State<SearchView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: kFullWhite,
+      backgroundColor: kWhite,
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 60.h),
@@ -37,8 +37,8 @@ class _SearchViewState extends State<SearchView> {
                       fontWeight: FontWeight.normal,
                       letterSpacing: 0.5),
                 ),
-                shadowColor: MaterialStatePropertyAll<Color>(kFullBlack),
-                backgroundColor: MaterialStatePropertyAll<Color>(kWhiteBgColor),
+                shadowColor: MaterialStatePropertyAll<Color>(kBlack),
+                backgroundColor: MaterialStatePropertyAll<Color>(kBackground),
                 shape: MaterialStatePropertyAll<OutlinedBorder>(
                   RoundedRectangleBorder(
                     borderRadius:
@@ -65,7 +65,7 @@ class _SearchViewState extends State<SearchView> {
               ),
               Text(
                 "Popular",
-                style: GoogleFonts.yeonSung(color: kRedFont, fontSize: 24),
+                style: GoogleFonts.yeonSung(color: kTextRed, fontSize: 24),
               ),
               SizedBox(
                 height: 15.h,

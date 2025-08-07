@@ -66,20 +66,18 @@ class _ProvidedStylesExampleState extends State<ProvidedStylesExample> {
               _navBarStyle == NavBarStyle.style16 ||
               _navBarStyle == NavBarStyle.style17 ||
               _navBarStyle == NavBarStyle.style18
-          ? kFullWhite
+          ? kWhite
           : null;
 
   List<PersistentBottomNavBarItem> _navBarsItems() => [
         PersistentBottomNavBarItem(
           icon: Image.asset(kHomeIcon),
           title: "Home",
-          textStyle: GoogleFonts.lato(
-              color: kBlackIcon, fontSize: 12, fontWeight: FontWeight.normal),
           opacity: 0.7,
-          activeColorPrimary: kBlue,
+          activeColorPrimary: kTeal,
           activeColorSecondary: _navBarStyle == NavBarStyle.style7 ||
                   _navBarStyle == NavBarStyle.style10
-              ? kFullWhite
+              ? kWhite
               : null,
           inactiveColorPrimary: kGrey,
           scrollController: _scrollControllers.first,
@@ -94,7 +92,7 @@ class _ProvidedStylesExampleState extends State<ProvidedStylesExample> {
         PersistentBottomNavBarItem(
           icon: Image.asset(kCartIcon),
           title: "Cart",
-          activeColorPrimary: kBlueAccent,
+          activeColorPrimary: kTeal,
           inactiveColorPrimary: kGrey,
           activeColorSecondary: _getSecondaryItemColorForSpecificStyles(),
         ),
@@ -104,28 +102,28 @@ class _ProvidedStylesExampleState extends State<ProvidedStylesExample> {
           activeColorPrimary: kTeal,
           activeColorSecondary: _navBarStyle == NavBarStyle.style7 ||
                   _navBarStyle == NavBarStyle.style10
-              ? kFullWhite
+              ? kWhite
               : null,
           inactiveColorPrimary: kGrey,
         ),
         PersistentBottomNavBarItem(
           icon: Image.asset(kHistoryIcon),
           title: "History",
-          activeColorPrimary: kDeepOrange,
+          activeColorPrimary: kTeal,
           inactiveColorPrimary: kGrey,
           activeColorSecondary: _navBarStyle == NavBarStyle.style7 ||
                   _navBarStyle == NavBarStyle.style10
-              ? kFullWhite
+              ? kWhite
               : null,
         ),
         PersistentBottomNavBarItem(
           icon: Image.asset(kProfileIcon),
           title: "Profile",
-          activeColorPrimary: kIndigo,
+          activeColorPrimary: kTeal,
           inactiveColorPrimary: kGrey,
           activeColorSecondary: _navBarStyle == NavBarStyle.style7 ||
                   _navBarStyle == NavBarStyle.style10
-              ? kFullWhite
+              ? kWhite
               : null,
           scrollController: _scrollControllers.last,
         ),
@@ -167,7 +165,7 @@ class _ProvidedStylesExampleState extends State<ProvidedStylesExample> {
             builder: (final context) => Container(
               height: 50,
               width: 50,
-              color: kFullWhite,
+              color: kWhite,
               child: ElevatedButton(
                 child: const Text("Close"),
                 onPressed: () {
@@ -181,7 +179,7 @@ class _ProvidedStylesExampleState extends State<ProvidedStylesExample> {
         // selectedTabScreenContext: (final context) {
         //   testContext = context;
         // },
-        backgroundColor: kFullWhite,
+        backgroundColor: kWhite,
         isVisible: !_hideNavBar,
         animationSettings: const NavBarAnimationSettings(
           navBarItemAnimation: ItemAnimationSettings(

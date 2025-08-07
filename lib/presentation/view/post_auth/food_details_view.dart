@@ -19,7 +19,7 @@ class _FoodDetailsViewState extends State<FoodDetailsView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: kFullWhite,
+      backgroundColor: kWhite,
       appBar: AppBar(
         leading: IconButton(
             onPressed: () {
@@ -37,8 +37,7 @@ class _FoodDetailsViewState extends State<FoodDetailsView> {
               Center(
                 child: Text(
                   "Restaurant Name",
-                  style: GoogleFonts.yeonSung(
-                      color: kRedFont, fontSize: 28),
+                  style: GoogleFonts.yeonSung(color: kTextRed, fontSize: 28),
                 ),
               ),
               SizedBox(
@@ -55,8 +54,7 @@ class _FoodDetailsViewState extends State<FoodDetailsView> {
               ),
               Text(
                 "Short description",
-                style: GoogleFonts.yeonSung(
-                    color: kFullBlack, fontSize: 20),
+                style: GoogleFonts.yeonSung(color: kBlack, fontSize: 20),
               ),
               SizedBox(
                 height: 6.h,
@@ -64,17 +62,14 @@ class _FoodDetailsViewState extends State<FoodDetailsView> {
               Text(
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad",
                 style: GoogleFonts.lato(
-                    color: kFullBlack,
-                    fontSize: 14,
-                    letterSpacing: 0.5),
+                    color: kBlack, fontSize: 14, letterSpacing: 0.5),
               ),
               SizedBox(
                 height: 20.h,
               ),
               Text(
                 "Menu",
-                style: GoogleFonts.yeonSung(
-                    color: kFullBlack, fontSize: 20),
+                style: GoogleFonts.yeonSung(color: kBlack, fontSize: 20),
               ),
               SizedBox(
                 height: 6.h,
@@ -82,7 +77,8 @@ class _FoodDetailsViewState extends State<FoodDetailsView> {
               SizedBox(
                 height: 200.h,
                 child: ListView.builder(
-                  physics: ScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+                    physics:
+                        ScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
                     shrinkWrap: true,
                     itemCount: 15,
                     itemBuilder: (BuildContext context, int index) {
@@ -103,7 +99,7 @@ class _FoodDetailsViewState extends State<FoodDetailsView> {
 class MenuItem extends StatefulWidget {
   final String itemName;
   bool? isChecked = false;
-  MenuItem({super.key, required this.itemName,required this.isChecked});
+  MenuItem({super.key, required this.itemName, required this.isChecked});
 
   @override
   State<MenuItem> createState() => _MenuItemState();
@@ -118,16 +114,17 @@ class _MenuItemState extends State<MenuItem> {
         MaterialState.selected
       };
       if (states.any(interactiveStates.contains)) {
-        return kRedColor;
+        return kTextRed;
       }
-      return kFullWhite;
+      return kWhite;
     }
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
           "\u2022 ${widget.itemName}",
-          style: GoogleFonts.lato(color: kFullBlack, fontSize: 16),
+          style: GoogleFonts.lato(color: kBlack, fontSize: 16),
         ),
         Row(
           children: [
@@ -135,11 +132,11 @@ class _MenuItemState extends State<MenuItem> {
               onPressed: () {},
               child: Text(
                 "See Details",
-                style: GoogleFonts.lato(color: kRedFont, fontSize: 14),
+                style: GoogleFonts.lato(color: kTextRed, fontSize: 14),
               ),
             ),
             Checkbox(
-              checkColor: kFullWhite,
+              checkColor: kWhite,
               fillColor: MaterialStateProperty.resolveWith(getColor),
               value: widget.isChecked,
               onChanged: (bool? value) {
@@ -154,5 +151,3 @@ class _MenuItemState extends State<MenuItem> {
     );
   }
 }
-
-
