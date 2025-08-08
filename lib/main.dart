@@ -8,6 +8,7 @@ import 'package:foody_licious/presentation/view/pre_auth/login_view.dart';
 import 'package:foody_licious/presentation/view/pre_auth/onboarding_view.dart';
 import 'package:foody_licious/presentation/view/pre_auth/set_location_view.dart';
 import 'package:foody_licious/presentation/view/pre_auth/signup_view.dart';
+import 'package:foody_licious/presentation/view/pre_auth/splash_view.dart';
 
 import 'cubit/navigation_cubit.dart';
 
@@ -37,9 +38,7 @@ class MyApp extends StatelessWidget {
           appBarTheme: AppBarTheme(backgroundColor: kWhite),
           useMaterial3: true,
         ),
-        home: ProvidedStylesExample(
-          menuScreenContext: context,
-        ),
+        home: SignUpView(),
       ),
     );
   }
