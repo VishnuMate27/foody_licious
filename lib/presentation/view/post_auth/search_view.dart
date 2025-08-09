@@ -4,6 +4,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:foody_licious/core/constant/colors.dart';
 import 'package:foody_licious/core/constant/images.dart';
 import 'package:foody_licious/presentation/view/post_auth/home_view.dart';
+import 'package:foody_licious/presentation/widgets/menu_item_card.dart';
+import 'package:foody_licious/presentation/widgets/search_bar_field.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class SearchView extends StatefulWidget {
@@ -14,6 +16,7 @@ class SearchView extends StatefulWidget {
 }
 
 class _SearchViewState extends State<SearchView> {
+  final TextEditingController _searchController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,38 +30,8 @@ class _SearchViewState extends State<SearchView> {
               SizedBox(
                 height: 18.h,
               ),
-              SearchBar(
-                // controller: controller,
-                hintText: "What do you want to order?",
-                hintStyle: MaterialStatePropertyAll<TextStyle>(
-                  GoogleFonts.lato(
-                      color: kRed,
-                      fontSize: 14,
-                      fontWeight: FontWeight.normal,
-                      letterSpacing: 0.5),
-                ),
-                shadowColor: MaterialStatePropertyAll<Color>(kBlack),
-                backgroundColor: MaterialStatePropertyAll<Color>(kBackground),
-                shape: MaterialStatePropertyAll<OutlinedBorder>(
-                  RoundedRectangleBorder(
-                    borderRadius:
-                        BorderRadius.circular(15.0), // Rounded corners
-                  ),
-                ),
-                padding: const MaterialStatePropertyAll<EdgeInsets>(
-                    EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0)),
-                onTap: () {
-                  // controller.openView();
-                },
-                onChanged: (_) {
-                  // controller.openView();
-                },
-                leading: Icon(
-                  CupertinoIcons.search,
-                  color: kRed,
-                  size: 28,
-                  weight: 800,
-                ),
+              SearchBarField(
+                searchController: _searchController,
               ),
               SizedBox(
                 height: 15.h,
@@ -87,7 +60,7 @@ class _SearchViewState extends State<SearchView> {
                         itemName: "Herbal Pancake",
                         hotelName: "Warung Herbal",
                         itemPrice: 7,
-                        isChecked: false,
+                        isInitiallyChecked: false,
                       ),
                     );
                   }),

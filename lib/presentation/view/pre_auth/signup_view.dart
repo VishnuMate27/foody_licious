@@ -81,7 +81,7 @@ class SignUpView extends StatelessWidget {
                     textController: _emailOrPhoneController,
                     labelText: "Email or Phone Number",
                     hintText: "Enter email or phone Number",
-                    iconData: Icons.person_2_outlined,
+                    iconData: Icons.mail_outlined,
                     keyboardType: TextInputType.emailAddress,
                     validatorText:
                         "Please enter your valid email or phone Number"),
@@ -92,7 +92,7 @@ class SignUpView extends StatelessWidget {
                     textController: _passwordController,
                     labelText: "Password",
                     hintText: "Enter password",
-                    iconData: Icons.person_2_outlined,
+                    iconData: Icons.lock_outline,
                     keyboardType: TextInputType.text,
                     validatorText: "Please set your Password",
                     obscureText: true),
@@ -120,13 +120,15 @@ class SignUpView extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     SocialAuthButton(
-                        authProviderName: "Facebook",
-                        authProviderlogoImagePath: kFacebookIcon,
-                        onTap: () {}),
+                      authProviderName: "Facebook",
+                      authProviderlogoImagePath: kFacebookIcon,
+                      onTap: () {},
+                    ),
                     SocialAuthButton(
-                        authProviderName: "Google",
-                        authProviderlogoImagePath: kGoogleIcon,
-                        onTap: () {}),
+                      authProviderName: "Google",
+                      authProviderlogoImagePath: kGoogleIcon,
+                      onTap: () {},
+                    ),
                   ],
                 ),
                 SizedBox(
@@ -152,8 +154,7 @@ class SignUpView extends StatelessWidget {
     );
   }
 }
-  void _onSignUp(BuildContext context, GlobalKey<FormState> key) {
-    if (key.currentState!.validate()) {
-      
-    }
-  }
+
+void _onSignUp(BuildContext context, GlobalKey<FormState> key) {
+  if (key.currentState!.validate()) {}
+}

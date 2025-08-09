@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:foody_licious/core/constant/colors.dart';
 import 'package:foody_licious/core/constant/images.dart';
+import 'package:foody_licious/presentation/widgets/gradient_button.dart';
+import 'package:foody_licious/presentation/widgets/input_text_form_field.dart';
+import 'package:foody_licious/presentation/widgets/social_auth_button.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class LoginView extends StatelessWidget {
@@ -10,6 +13,9 @@ class LoginView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final TextEditingController _emailOrPhoneController =
+        TextEditingController();
+    final TextEditingController _passwordController = TextEditingController();
     return Scaffold(
       backgroundColor: kWhite,
       body: SingleChildScrollView(
@@ -56,119 +62,25 @@ class LoginView extends StatelessWidget {
               SizedBox(
                 height: 28.h,
               ),
-              TextFormField(
-                keyboardType: TextInputType.emailAddress,
-                decoration: InputDecoration(
-                  fillColor: kCardBackground,
-                  labelText: 'Email or Phone Number',
-                  labelStyle: GoogleFonts.lato(
-                      color: kTextSecondary,
-                      fontSize: 14,
-                      fontWeight: FontWeight.normal,
-                      letterSpacing: 0.5),
-                  hintText: 'Enter email',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                    borderSide: BorderSide(
-                      color: kBorderLight, // Make the border transparent
-                      width: 1, // Set the border width to 0
-                    ),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                    borderSide: BorderSide(
-                      color: kBorder, // Transparent border when not focused
-                      width: 1.sp,
-                    ),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                    borderSide: BorderSide(
-                      color: kBorder, // Transparent border when focused
-                      width: 1,
-                    ),
-                  ),
-                  errorBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                    borderSide: BorderSide(
-                      color: kError, // Transparent border for error state
-                      width: 1,
-                    ),
-                  ),
-                  disabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                    borderSide: BorderSide(
-                      color: kBorder, // Transparent border when disabled
-                      width: 1,
-                    ),
-                  ),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your name';
-                  }
-                  return null;
-                },
-                onSaved: (value) {},
-              ),
+              InputTextFormField(
+                  textController: _emailOrPhoneController,
+                  labelText: "Email or Phone Number",
+                  hintText: "Enter email or phone Number",
+                  iconData: Icons.mail_outlined,
+                  keyboardType: TextInputType.emailAddress,
+                  validatorText:
+                      "Please enter your valid email or phone Number"),
               SizedBox(
                 height: 12.h,
               ),
-              TextFormField(
-                keyboardType: TextInputType.visiblePassword,
-                decoration: InputDecoration(
-                  fillColor: kCardBackground,
-                  labelText: 'Password',
-                  labelStyle: GoogleFonts.lato(
-                      color: kTextSecondary,
-                      fontSize: 14,
-                      fontWeight: FontWeight.normal,
-                      letterSpacing: 0.5),
-                  hintText: 'Enter Password',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                    borderSide: BorderSide(
-                      color: kBorder, // Make the border transparent
-                      width: 1, // Set the border width to 0
-                    ),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                    borderSide: BorderSide(
-                      color: kBorder, // Transparent border when not focused
-                      width: 1,
-                    ),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                    borderSide: BorderSide(
-                      color: kBorder, // Transparent border when focused
-                      width: 1,
-                    ),
-                  ),
-                  errorBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                    borderSide: BorderSide(
-                      color: kError, // Transparent border for error state
-                      width: 1,
-                    ),
-                  ),
-                  disabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                    borderSide: BorderSide(
-                      color: kBorder, // Transparent border when disabled
-                      width: 1,
-                    ),
-                  ),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your name';
-                  }
-                  return null;
-                },
-                onSaved: (value) {},
-              ),
+              InputTextFormField(
+                  textController: _passwordController,
+                  labelText: "Password",
+                  hintText: "Enter password",
+                  iconData: Icons.lock_outline,
+                  keyboardType: TextInputType.text,
+                  validatorText: "Please set your Password",
+                  obscureText: true),
               SizedBox(
                 height: 28.h,
               ),
@@ -192,105 +104,35 @@ class LoginView extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  GestureDetector(
+                  SocialAuthButton(
+                    authProviderName: "Facebook",
+                    authProviderlogoImagePath: kFacebookIcon,
                     onTap: () {},
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
-                        border: Border.all(
-                            color: kBorder,
-                            width: 1.0,
-                            style: BorderStyle.solid),
-                      ),
-                      width: 152.w,
-                      height: 57.h,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Image.asset(
-                            kFacebookIcon,
-                            width: 25.w,
-                            height: 25.h,
-                          ),
-                          SizedBox(
-                            width: 12.w,
-                          ),
-                          Text(
-                            "Facebook",
-                            style: GoogleFonts.lato(
-                                color: kTextPrimary, fontSize: 14),
-                          ),
-                        ],
-                      ),
-                    ),
                   ),
-                  GestureDetector(
+                  SocialAuthButton(
+                    authProviderName: "Google",
+                    authProviderlogoImagePath: kGoogleIcon,
                     onTap: () {},
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
-                        border: Border.all(
-                            color: kBorder,
-                            width: 1.0,
-                            style: BorderStyle.solid),
-                      ),
-                      width: 152.w,
-                      height: 57.h,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Image.asset(
-                            kGoogleIcon,
-                            width: 25.w,
-                            height: 25.h,
-                          ),
-                          SizedBox(
-                            width: 12.w,
-                          ),
-                          Text(
-                            "Google",
-                            style: GoogleFonts.lato(
-                                color: kTextPrimary, fontSize: 14),
-                          ),
-                        ],
-                      ),
-                    ),
                   ),
                 ],
               ),
               SizedBox(
                 height: 20.h,
               ),
-              GestureDetector(
-                onTap: () {},
-                child: Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                      gradient: LinearGradient(
-                        colors: [kGradientStart, kGradientEnd],
-                        stops: [0.0, 1.0],
-                      )),
-                  width: 157.w,
-                  height: 57.h,
-                  child: Center(
-                      child: Text(
-                    "Login",
-                    style: GoogleFonts.yeonSung(color: kWhite, fontSize: 20),
-                  )),
-                ),
-              ),
+              GradientButton(buttonText: "Login", onTap: () {}),
               SizedBox(
                 height: 10.h,
               ),
-              Text(
-                "Don’t Have Account?",
-                style: GoogleFonts.lato(
-                    color: kTextRedDark,
-                    fontSize: 10,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 1.0),
+              TextButton(
+                onPressed: () {},
+                child: Text(
+                  "Don’t Have Account?",
+                  style: GoogleFonts.lato(
+                      color: kTextRedDark,
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 1.0),
+                ),
               ),
             ],
           ),

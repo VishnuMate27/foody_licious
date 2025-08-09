@@ -2,13 +2,12 @@ name: foody_licious
 description: "A new Flutter project."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 version: 1.0.0+1
 
 environment:
-  sdk: '>=3.3.0 <4.0.0'
-
+  sdk: ">=3.3.0 <4.0.0"
 
 dependencies:
   flutter:
@@ -16,7 +15,7 @@ dependencies:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.6  
+  cupertino_icons: ^1.0.6
 
   #state management
   bloc: ^8.1.2
@@ -27,6 +26,9 @@ dependencies:
   equatable: ^2.0.5
   dartz: ^0.10.1
   internet_connection_checker: ^1.0.0+1
+  pinput: ^5.0.1
+  smart_auth: ^3.2.0
+  carousel_slider: ^5.1.1
 
   #ui
   flutter_screenutil: ^5.9.3
@@ -39,7 +41,6 @@ dev_dependencies:
   flutter_lints: ^5.0.0
 
 flutter:
-
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
@@ -75,5 +76,3 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
-
-
