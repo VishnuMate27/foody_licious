@@ -3,6 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:foody_licious/core/constant/colors.dart';
 import 'package:foody_licious/core/constant/images.dart';
+import 'package:foody_licious/presentation/view/post_auth/restaurant_details_view.dart';
+import 'package:foody_licious/presentation/widgets/caller_info_card.dart';
+import 'package:foody_licious/presentation/widgets/gradient_button.dart';
+import 'package:foody_licious/presentation/widgets/menu_item_card.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'cart_view.dart';
@@ -107,11 +111,20 @@ class _OrderHistoryViewState extends State<OrderHistoryView> {
               itemBuilder: (BuildContext context, int index) {
                 return Padding(
                   padding: EdgeInsets.only(bottom: 12.h),
-                  child: OrderHistoryItemCard(
+                  child: MenuItemCard.historyItem(
                     itemImageUrl: kMenuPhoto1,
                     itemName: "Herbal Pancake",
-                    restaurantName: "Warung Herbal",
+                    hotelName: "Warung Herbal",
                     itemPrice: 7,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const RestaurantDetailsView(),
+                        ),
+                      );
+                    },
+                    onBuyAgainTap: () {},
                   ),
                 );
               },
@@ -119,179 +132,6 @@ class _OrderHistoryViewState extends State<OrderHistoryView> {
             SizedBox(height: 12.h),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class OrderHistoryItemCard extends StatefulWidget {
-  final String itemImageUrl;
-  final String itemName;
-  final String restaurantName;
-  final num itemPrice;
-
-  OrderHistoryItemCard({
-    super.key,
-    required this.itemImageUrl,
-    required this.itemName,
-    required this.restaurantName,
-    required this.itemPrice,
-  });
-
-  @override
-  State<OrderHistoryItemCard> createState() => _OrderHistoryItemCardState();
-}
-
-class _OrderHistoryItemCardState extends State<OrderHistoryItemCard> {
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {},
-      child: Container(
-        height: 87.h,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(22),
-          border: Border.all(color: kBorder),
-        ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            SizedBox(width: 10.w),
-            Image.asset(widget.itemImageUrl, width: 64.h, height: 64.h),
-            SizedBox(width: 20.w),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    widget.itemName,
-                    style: GoogleFonts.yeonSung(
-                      color: kBlack,
-                      fontSize: 15,
-                    ),
-                  ),
-                  Text(
-                    widget.restaurantName,
-                    style: GoogleFonts.lato(
-                      color: kTextSecondary,
-                      fontSize: 14,
-                    ),
-                  ),
-                  Text(
-                    "\$ ${widget.itemPrice}",
-                    style: GoogleFonts.lato(
-                      color: kTextRed,
-                      fontSize: 19,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(width: 10.w),
-            GestureDetector(
-              onTap: () {},
-              child: Container(
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5.r),
-                    gradient: LinearGradient(
-                      colors: [kGradientStart, kGradientEnd],
-                      stops: [0.0, 1.0],
-                    )),
-                width: 84.w,
-                height: 28.h,
-                child: Center(
-                    child: Text(
-                  "Buy Again",
-                  style: GoogleFonts.yeonSung(color: kWhite, fontSize: 12),
-                )),
-              ),
-            ),
-            SizedBox(width: 10.w),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class CallerInfoCard extends StatefulWidget {
-  final String callerImageUrl;
-  final String callerName;
-  final String hotelDistance;
-  final num contactNumber; // Example contact number
-
-  CallerInfoCard({
-    super.key,
-    required this.callerImageUrl,
-    required this.callerName,
-    required this.hotelDistance,
-    required this.contactNumber,
-  });
-
-  @override
-  State<CallerInfoCard> createState() => _CallerInfoCardState();
-}
-
-class _CallerInfoCardState extends State<CallerInfoCard> {
-  @override
-  Widget build(BuildContext context) {
-    Color getColor(Set<MaterialState> states) {
-      const Set<MaterialState> interactiveStates = <MaterialState>{
-        MaterialState.selected,
-      };
-      if (states.any(interactiveStates.contains)) {
-        return kTextRed;
-      }
-      return kWhite;
-    }
-
-    return Container(
-      height: 87.h,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(22),
-        border: Border.all(
-          color: kBorder,
-        ),
-      ),
-      child: Row(
-        children: [
-          SizedBox(
-            width: 10.w,
-          ),
-          Image.asset(widget.callerImageUrl, width: 64.h, height: 64.h),
-          SizedBox(
-            width: 20.w,
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
-                height: 20.h,
-              ),
-              Text(
-                widget.callerName,
-                style: GoogleFonts.yeonSung(
-                  color: kBlack,
-                  fontSize: 15,
-                  fontWeight: FontWeight.normal,
-                ),
-              ),
-              Text(
-                widget.hotelDistance,
-                style: GoogleFonts.lato(
-                  color: kTextSecondary,
-                  fontSize: 14,
-                  fontWeight: FontWeight.normal,
-                ),
-              ),
-            ],
-          ),
-          SizedBox(
-            width: 60.w,
-          ),
-        ],
       ),
     );
   }

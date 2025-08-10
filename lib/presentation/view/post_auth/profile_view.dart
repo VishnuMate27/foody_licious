@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:foody_licious/core/constant/colors.dart';
+import 'package:foody_licious/presentation/widgets/input_text_form_field.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ProfileView extends StatefulWidget {
@@ -12,6 +13,14 @@ class ProfileView extends StatefulWidget {
 }
 
 class _ProfileViewState extends State<ProfileView> {
+  final TextEditingController _nameController =
+      TextEditingController(text: "Old Name");
+  final TextEditingController _addressController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,325 +50,90 @@ class _ProfileViewState extends State<ProfileView> {
               SizedBox(
                 height: 20.h,
               ),
-              TextFormField(
-                keyboardType: TextInputType.name,
-                decoration: InputDecoration(
-                  fillColor: kCardBackground,
-                  labelText: 'Name',
-                  labelStyle: GoogleFonts.yeonSung(
-                      color: kBlack,
-                      fontSize: 20,
-                      fontWeight: FontWeight.normal,
-                      letterSpacing: 0.5),
-                  hintText: 'Enter name',
-                  hintStyle: GoogleFonts.lato(
-                      color: kBlack,
-                      fontSize: 14,
-                      fontWeight: FontWeight.normal,
-                      letterSpacing: 0.5),
-                  suffixIcon: Icon(CupertinoIcons.create, color: kBlack),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                    borderSide: BorderSide(
-                      color: kBorderLight, // Make the border transparent
-                      width: 1, // Set the border width to 0
-                    ),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                    borderSide: BorderSide(
-                      color: kBorder, // Transparent border when not focused
-                      width: 1.sp,
-                    ),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                    borderSide: BorderSide(
-                      color: kBorder, // Transparent border when focused
-                      width: 1,
-                    ),
-                  ),
-                  errorBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                    borderSide: BorderSide(
-                      color: kError, // Transparent border for error state
-                      width: 1,
-                    ),
-                  ),
-                  disabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                    borderSide: BorderSide(
-                      color: kBorder, // Transparent border when disabled
-                      width: 1,
-                    ),
-                  ),
+              InputTextFormField(
+                textController: _nameController,
+                labelText: "Name",
+                labelStyle: GoogleFonts.yeonSung(
+                  color: kBlack,
+                  fontSize: 20,
+                  fontWeight: FontWeight.normal,
                 ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your name';
-                  }
-                  return null;
-                },
-                onSaved: (value) {},
+                hintStyle: GoogleFonts.lato(
+                  color: kBlack,
+                  fontSize: 14,
+                  fontWeight: FontWeight.normal,
+                  letterSpacing: 0.5,
+                ),
+                suffixIcon: Icon(CupertinoIcons.create, color: kBlack),
+                hintText: "Enter name",
+                keyboardType: TextInputType.name,
+                validatorText: "Please enter your name",
               ),
               SizedBox(
                 height: 12.h,
               ),
-              TextFormField(
+              InputTextFormField(
+                textController: _addressController,
+                labelText: "Address",
+                labelStyle: GoogleFonts.yeonSung(
+                  color: kBlack,
+                  fontSize: 20,
+                  fontWeight: FontWeight.normal,
+                ),
+                hintStyle: GoogleFonts.lato(
+                  color: kBlack,
+                  fontSize: 14,
+                  fontWeight: FontWeight.normal,
+                  letterSpacing: 0.5,
+                ),
+                suffixIcon: Icon(CupertinoIcons.create, color: kBlack),
+                hintText: "Enter full address",
+                keyboardType: TextInputType.streetAddress,
+                validatorText: "Please enter your full address",
                 minLines: 2,
                 maxLines: 5,
-                // expands: true,
-                keyboardType: TextInputType.name,
-                decoration: InputDecoration(
-                  fillColor: kCardBackground,
-                  labelText: 'Address',
-                  labelStyle: GoogleFonts.yeonSung(
-                      color: kBlack,
-                      fontSize: 20,
-                      fontWeight: FontWeight.normal,
-                      letterSpacing: 0.5),
-                  hintText: 'Enter full address',
-                  hintStyle: GoogleFonts.lato(
-                      color: kBlack,
-                      fontSize: 14,
-                      fontWeight: FontWeight.normal,
-                      letterSpacing: 0.5),
-                  suffixIcon: Icon(CupertinoIcons.create, color: kBlack),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                    borderSide: BorderSide(
-                      color: kBorderLight, // Make the border transparent
-                      width: 1, // Set the border width to 0
-                    ),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                    borderSide: BorderSide(
-                      color: kBorder, // Transparent border when not focused
-                      width: 1.sp,
-                    ),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                    borderSide: BorderSide(
-                      color: kBorder, // Transparent border when focused
-                      width: 1,
-                    ),
-                  ),
-                  errorBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                    borderSide: BorderSide(
-                      color: kError, // Transparent border for error state
-                      width: 1,
-                    ),
-                  ),
-                  disabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                    borderSide: BorderSide(
-                      color: kBorder, // Transparent border when disabled
-                      width: 1,
-                    ),
-                  ),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your name';
-                  }
-                  return null;
-                },
-                onSaved: (value) {},
               ),
               SizedBox(
                 height: 12.h,
               ),
-              TextFormField(
+              InputTextFormField(
+                textController: _emailController,
+                labelText: "Email",
+                labelStyle: GoogleFonts.yeonSung(
+                  color: kBlack,
+                  fontSize: 20,
+                  fontWeight: FontWeight.normal,
+                ),
+                hintStyle: GoogleFonts.lato(
+                    color: kBlack,
+                    fontSize: 14,
+                    fontWeight: FontWeight.normal,
+                    letterSpacing: 0.5),
+                suffixIcon: Icon(CupertinoIcons.create, color: kBlack),
+                hintText: "Enter your email address",
                 keyboardType: TextInputType.emailAddress,
-                decoration: InputDecoration(
-                  fillColor: kCardBackground,
-                  labelText: 'Email',
-                  labelStyle: GoogleFonts.yeonSung(
-                      color: kBlack,
-                      fontSize: 20,
-                      fontWeight: FontWeight.normal,
-                      letterSpacing: 0.5),
-                  hintText: 'Enter your email address',
-                  hintStyle: GoogleFonts.lato(
-                      color: kBlack,
-                      fontSize: 14,
-                      fontWeight: FontWeight.normal,
-                      letterSpacing: 0.5),
-                  suffixIcon: Icon(CupertinoIcons.create, color: kBlack),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                    borderSide: BorderSide(
-                      color: kBorderLight, // Make the border transparent
-                      width: 1, // Set the border width to 0
-                    ),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                    borderSide: BorderSide(
-                      color: kBorder, // Transparent border when not focused
-                      width: 1.sp,
-                    ),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                    borderSide: BorderSide(
-                      color: kBorder, // Transparent border when focused
-                      width: 1,
-                    ),
-                  ),
-                  errorBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                    borderSide: BorderSide(
-                      color: kError, // Transparent border for error state
-                      width: 1,
-                    ),
-                  ),
-                  disabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                    borderSide: BorderSide(
-                      color: kBorder, // Transparent border when disabled
-                      width: 1,
-                    ),
-                  ),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your name';
-                  }
-                  return null;
-                },
-                onSaved: (value) {},
+                validatorText: "Please enter your valid email",
               ),
               SizedBox(
                 height: 12.h,
               ),
-              TextFormField(
+              InputTextFormField(
+                textController: _phoneController,
+                labelText: "Phone",
+                labelStyle: GoogleFonts.yeonSung(
+                  color: kBlack,
+                  fontSize: 20,
+                  fontWeight: FontWeight.normal,
+                ),
+                hintStyle: GoogleFonts.lato(
+                    color: kBlack,
+                    fontSize: 14,
+                    fontWeight: FontWeight.normal,
+                    letterSpacing: 0.5),
+                suffixIcon: Icon(CupertinoIcons.create, color: kBlack),
+                hintText: "Enter your 10 digit phone number",
                 keyboardType: TextInputType.phone,
-                decoration: InputDecoration(
-                  fillColor: kCardBackground,
-                  labelText: 'Phone',
-                  labelStyle: GoogleFonts.yeonSung(
-                      color: kBlack,
-                      fontSize: 20,
-                      fontWeight: FontWeight.normal,
-                      letterSpacing: 0.5),
-                  hintText: 'Enter your 10 digit phone number',
-                  hintStyle: GoogleFonts.lato(
-                      color: kBlack,
-                      fontSize: 14,
-                      fontWeight: FontWeight.normal,
-                      letterSpacing: 0.5),
-                  suffixIcon: Icon(CupertinoIcons.create, color: kBlack),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                    borderSide: BorderSide(
-                      color: kBorderLight, // Make the border transparent
-                      width: 1, // Set the border width to 0
-                    ),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                    borderSide: BorderSide(
-                      color: kBorder, // Transparent border when not focused
-                      width: 1.sp,
-                    ),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                    borderSide: BorderSide(
-                      color: kBorder, // Transparent border when focused
-                      width: 1,
-                    ),
-                  ),
-                  errorBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                    borderSide: BorderSide(
-                      color: kError, // Transparent border for error state
-                      width: 1,
-                    ),
-                  ),
-                  disabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                    borderSide: BorderSide(
-                      color: kBorder, // Transparent border when disabled
-                      width: 1,
-                    ),
-                  ),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your name';
-                  }
-                  return null;
-                },
-                onSaved: (value) {},
-              ),
-              SizedBox(
-                height: 12.h,
-              ),
-              TextFormField(
-                keyboardType: TextInputType.visiblePassword,
-                decoration: InputDecoration(
-                  fillColor: kCardBackground,
-                  labelText: 'Password',
-                  labelStyle: GoogleFonts.yeonSung(
-                      color: kBlack,
-                      fontSize: 20,
-                      fontWeight: FontWeight.normal,
-                      letterSpacing: 0.5),
-                  hintText: 'Enter your password',
-                  hintStyle: GoogleFonts.lato(
-                      color: kBlack,
-                      fontSize: 14,
-                      fontWeight: FontWeight.normal,
-                      letterSpacing: 0.5),
-                  suffixIcon: Icon(CupertinoIcons.create, color: kBlack),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                    borderSide: BorderSide(
-                      color: kBorderLight, // Make the border transparent
-                      width: 1, // Set the border width to 0
-                    ),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                    borderSide: BorderSide(
-                      color: kBorder, // Transparent border when not focused
-                      width: 1.sp,
-                    ),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                    borderSide: BorderSide(
-                      color: kBorder, // Transparent border when focused
-                      width: 1,
-                    ),
-                  ),
-                  errorBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                    borderSide: BorderSide(
-                      color: kError, // Transparent border for error state
-                      width: 1,
-                    ),
-                  ),
-                  disabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                    borderSide: BorderSide(
-                      color: kBorder, // Transparent border when disabled
-                      width: 1,
-                    ),
-                  ),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your name';
-                  }
-                  return null;
-                },
-                onSaved: (value) {},
+                validatorText: "Please enter your valid phone number",
               ),
               SizedBox(
                 height: 24.h,
@@ -372,7 +146,17 @@ class _ProfileViewState extends State<ProfileView> {
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(15),
                       color: kTextOnPrimary,
-                      border: Border.all(color: kBorder, width: 0.5)),
+                      border: Border.all(
+                        color: kBorder,
+                        width: 1,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          offset: Offset(0, 4),
+                          color: kBlack.withAlpha(26),
+                          blurRadius: 4,
+                        )
+                      ]),
                   height: 57.h,
                   child: Center(
                     child: Text(

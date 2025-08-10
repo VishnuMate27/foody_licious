@@ -61,6 +61,7 @@ class _SearchViewState extends State<SearchView> {
                         hotelName: "Warung Herbal",
                         itemPrice: 7,
                         isInitiallyChecked: false,
+                        onTap: () {},
                       ),
                     );
                   }),

@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:foody_licious/core/constant/colors.dart';
 import 'package:foody_licious/core/constant/images.dart';
+import 'package:foody_licious/presentation/widgets/gradient_button.dart';
+import 'package:foody_licious/presentation/widgets/input_text_form_field.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class FeedbackView extends StatefulWidget {
@@ -13,6 +15,7 @@ class FeedbackView extends StatefulWidget {
 }
 
 class _FeedbackViewState extends State<FeedbackView> {
+  final TextEditingController _feedbackController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,73 +38,33 @@ class _FeedbackViewState extends State<FeedbackView> {
           },
         ),
       ),
-      body: Column(
-        children: [
-          TextFormField(
-            minLines: 2,
-            maxLines: 5,
-            // expands: true,
-            keyboardType: TextInputType.name,
-            decoration: InputDecoration(
-              fillColor: kCardBackground,
-              labelText: 'Address',
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 18.0),
+        child: Column(
+          children: [
+            SizedBox(height: 40.h),
+            InputTextFormField(
+              textController: _feedbackController,
+              labelText: "Feedback",
               labelStyle: GoogleFonts.yeonSung(
-                  color: kBlack,
-                  fontSize: 20,
-                  fontWeight: FontWeight.normal,
-                  letterSpacing: 0.5),
-              hintText: 'Enter full address',
-              hintStyle: GoogleFonts.lato(
-                  color: kBlack,
-                  fontSize: 14,
-                  fontWeight: FontWeight.normal,
-                  letterSpacing: 0.5),
+                color: kBlack,
+                fontSize: 20,
+                fontWeight: FontWeight.normal,
+              ),
               suffixIcon: Icon(CupertinoIcons.create, color: kBlack),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10.0),
-                borderSide: BorderSide(
-                  color: kBorderLight, // Make the border transparent
-                  width: 1, // Set the border width to 0
-                ),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10.0),
-                borderSide: BorderSide(
-                  color: kBorder, // Transparent border when not focused
-                  width: 1.sp,
-                ),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10.0),
-                borderSide: BorderSide(
-                  color: kBorder, // Transparent border when focused
-                  width: 1,
-                ),
-              ),
-              errorBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10.0),
-                borderSide: BorderSide(
-                  color: kError, // Transparent border for error state
-                  width: 1,
-                ),
-              ),
-              disabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10.0),
-                borderSide: BorderSide(
-                  color: kBorder, // Transparent border when disabled
-                  width: 1,
-                ),
-              ),
+              hintText: "Enter you feedback",
+              keyboardType: TextInputType.streetAddress,
+              validatorText: "Please enter your feedback",
+              minLines: 2,
+              maxLines: 5,
             ),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter your name';
-              }
-              return null;
-            },
-            onSaved: (value) {},
-          ),
-        ],
+            SizedBox(height: 40.h),
+            GradientButton(
+              onTap: () {},
+              buttonText: "Submit",
+            )
+          ],
+        ),
       ),
     );
   }

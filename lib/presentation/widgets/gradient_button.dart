@@ -6,11 +6,19 @@ import 'package:google_fonts/google_fonts.dart';
 class GradientButton extends StatelessWidget {
   final String buttonText;
   final Function()? onTap;
+  final double width;
+  final double height;
+  final double borderRadius;
+  final double fontSize;
 
   const GradientButton({
     super.key,
     required this.buttonText,
     required this.onTap,
+    this.width = 157,
+    this.height = 57,
+    this.borderRadius = 15,
+    this.fontSize = 20,
   });
 
   @override
@@ -19,17 +27,17 @@ class GradientButton extends StatelessWidget {
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15),
+            borderRadius: BorderRadius.circular(borderRadius),
             gradient: LinearGradient(
               colors: [kGradientStart, kGradientEnd],
               stops: [0.0, 1.0],
             )),
-        width: 157.w,
-        height: 57.h,
+        width: width.w,
+        height: height.h,
         child: Center(
             child: Text(
           buttonText,
-          style: GoogleFonts.yeonSung(color: kWhite, fontSize: 20),
+          style: GoogleFonts.yeonSung(color: kWhite, fontSize: fontSize),
         )),
       ),
     );

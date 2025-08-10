@@ -1,31 +1,32 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:foody_licious/core/constant/colors.dart';
 import 'package:foody_licious/core/constant/images.dart';
+import 'package:foody_licious/presentation/widgets/gradient_button.dart';
+import 'package:foody_licious/presentation/widgets/menu_item_card.dart';
 import 'package:foody_licious/utils/custom_widgets.dart';
 import 'package:foody_licious/utils/data.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class FoodDetailsView extends StatefulWidget {
-  const FoodDetailsView({super.key});
+class MenuItemDetailsView extends StatefulWidget {
+  const MenuItemDetailsView({super.key});
 
   @override
-  State<FoodDetailsView> createState() => _FoodDetailsViewState();
+  State<MenuItemDetailsView> createState() => _MenuItemDetailsViewState();
 }
 
-class _FoodDetailsViewState extends State<FoodDetailsView> {
-  List<bool> isItemCheckedList = List<bool>.generate(15, (index) => false);
+class _MenuItemDetailsViewState extends State<MenuItemDetailsView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: kWhite,
       appBar: AppBar(
         leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: Image.asset(kBackArrowIcon)),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Image.asset(kBackArrowIcon),
+        ),
         automaticallyImplyLeading: true,
       ),
       body: SingleChildScrollView(
@@ -36,7 +37,7 @@ class _FoodDetailsViewState extends State<FoodDetailsView> {
             children: [
               Center(
                 child: Text(
-                  "Restaurant Name",
+                  "Food Name",
                   style: GoogleFonts.yeonSung(color: kTextRed, fontSize: 28),
                 ),
               ),
@@ -45,7 +46,7 @@ class _FoodDetailsViewState extends State<FoodDetailsView> {
               ),
               Center(
                 child: Image.asset(
-                  kRestraurant,
+                  kMenuItemPhoto,
                   height: 200.h,
                 ),
               ),
@@ -68,86 +69,35 @@ class _FoodDetailsViewState extends State<FoodDetailsView> {
                 height: 20.h,
               ),
               Text(
-                "Menu",
+                "Ingredients",
                 style: GoogleFonts.yeonSung(color: kBlack, fontSize: 20),
               ),
               SizedBox(
-                height: 6.h,
-              ),
-              SizedBox(
-                height: 200.h,
                 child: ListView.builder(
                     physics:
                         ScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
                     shrinkWrap: true,
-                    itemCount: 15,
+                    itemCount: 3,
                     itemBuilder: (BuildContext context, int index) {
-                      return MenuItem(
-                        itemName: menuItemList[index],
-                        isChecked: isItemCheckedList[index],
+                      return Text(
+                        "\u2022 ${"Strawberry"}",
+                        style: GoogleFonts.lato(color: kBlack, fontSize: 16),
                       );
                     }),
               ),
+              SizedBox(
+                height: 20.h,
+              ),
+              Center(
+                child: GradientButton(
+                  buttonText: "Add to Cart",
+                  onTap: () {},
+                ),
+              )
             ],
           ),
         ),
       ),
-    );
-  }
-}
-
-class MenuItem extends StatefulWidget {
-  final String itemName;
-  bool? isChecked = false;
-  MenuItem({super.key, required this.itemName, required this.isChecked});
-
-  @override
-  State<MenuItem> createState() => _MenuItemState();
-}
-
-class _MenuItemState extends State<MenuItem> {
-  // bool isChecked = false;
-  @override
-  Widget build(BuildContext context) {
-    Color getColor(Set<MaterialState> states) {
-      const Set<MaterialState> interactiveStates = <MaterialState>{
-        MaterialState.selected
-      };
-      if (states.any(interactiveStates.contains)) {
-        return kTextRed;
-      }
-      return kWhite;
-    }
-
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          "\u2022 ${widget.itemName}",
-          style: GoogleFonts.lato(color: kBlack, fontSize: 16),
-        ),
-        Row(
-          children: [
-            TextButton(
-              onPressed: () {},
-              child: Text(
-                "See Details",
-                style: GoogleFonts.lato(color: kTextRed, fontSize: 14),
-              ),
-            ),
-            Checkbox(
-              checkColor: kWhite,
-              fillColor: MaterialStateProperty.resolveWith(getColor),
-              value: widget.isChecked,
-              onChanged: (bool? value) {
-                setState(() {
-                  widget.isChecked = value!;
-                });
-              },
-            )
-          ],
-        ),
-      ],
     );
   }
 }

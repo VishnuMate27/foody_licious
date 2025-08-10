@@ -71,7 +71,7 @@ class SignUpView extends StatelessWidget {
                     textController: _nameController,
                     labelText: "Name",
                     hintText: "Enter name",
-                    iconData: Icons.person_2_outlined,
+                    prefixIconData: Icons.person_2_outlined,
                     keyboardType: TextInputType.name,
                     validatorText: "Please enter your name"),
                 SizedBox(
@@ -81,7 +81,7 @@ class SignUpView extends StatelessWidget {
                     textController: _emailOrPhoneController,
                     labelText: "Email or Phone Number",
                     hintText: "Enter email or phone Number",
-                    iconData: Icons.mail_outlined,
+                    prefixIconData: Icons.mail_outlined,
                     keyboardType: TextInputType.emailAddress,
                     validatorText:
                         "Please enter your valid email or phone Number"),
@@ -92,7 +92,7 @@ class SignUpView extends StatelessWidget {
                     textController: _passwordController,
                     labelText: "Password",
                     hintText: "Enter password",
-                    iconData: Icons.lock_outline,
+                    prefixIconData: Icons.lock_outline,
                     keyboardType: TextInputType.text,
                     validatorText: "Please set your Password",
                     obscureText: true),

@@ -8,7 +8,7 @@ import 'package:foody_licious/core/constant/images.dart';
 import 'package:foody_licious/presentation/widgets/menu_item_card.dart';
 import 'package:foody_licious/presentation/widgets/search_bar_field.dart';
 import 'package:foody_licious/utils/custom_widgets.dart';
-import 'package:foody_licious/presentation/view/post_auth/food_details_view.dart';
+import 'package:foody_licious/presentation/view/post_auth/restaurant_details_view.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'notification_view.dart';
 
@@ -137,6 +137,15 @@ class _HomeViewState extends State<HomeView> {
                         itemName: "Herbal Pancake",
                         hotelName: "Warung Herbal",
                         itemPrice: 7,
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  const RestaurantDetailsView(),
+                            ),
+                          );
+                        },
                       ),
                     );
                   }),

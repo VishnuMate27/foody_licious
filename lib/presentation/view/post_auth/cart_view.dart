@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foody_licious/core/constant/colors.dart';
 import 'package:foody_licious/core/constant/images.dart';
+import 'package:foody_licious/presentation/view/post_auth/restaurant_details_view.dart';
 import 'package:foody_licious/presentation/view/post_auth/payout_view.dart';
 import 'package:foody_licious/presentation/widgets/gradient_button.dart';
 import 'package:foody_licious/presentation/widgets/menu_item_card.dart';
@@ -86,6 +87,14 @@ class _CartViewState extends State<CartView> {
                         itemQuantity: 1,
                         onDeleteButtonPressed: () {
                           debugPrint("Delete button tapped");
+                        },
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const RestaurantDetailsView()),
+                          );
                         },
                       ),
                     );

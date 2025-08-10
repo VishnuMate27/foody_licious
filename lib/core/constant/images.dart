@@ -18,6 +18,7 @@ const String kBottomSheetBackground =
     "assets/images/bottom_sheet_background.png";
 const String kBurger = "assets/images/burger.png";
 const String kProfilePhoto = "assets/images/profile_photo.png";
+const String kMenuItemPhoto = "assets/images/MenuItemPhoto.png";
 const String kMenuPhoto1 = "assets/images/MenuPhoto1.png";
 const String kBanner1 = "assets/images/banner1.png";
 const String kBanner2 = "assets/images/banner2.png";
