@@ -2,15 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:foody_licious/core/constant/colors.dart';
-import 'package:foody_licious/presentation/view/bottom_nav_bar.dart';
-import 'package:foody_licious/presentation/view/post_auth/feedback_view.dart';
-import 'package:foody_licious/presentation/view/post_auth/home_view.dart';
-import 'package:foody_licious/presentation/view/pre_auth/login_view.dart';
-import 'package:foody_licious/presentation/view/pre_auth/onboarding_view.dart';
-import 'package:foody_licious/presentation/view/pre_auth/set_location_view.dart';
-import 'package:foody_licious/presentation/view/pre_auth/signup_view.dart';
-import 'package:foody_licious/presentation/view/pre_auth/splash_view.dart';
-import 'package:foody_licious/presentation/view/pre_auth/verification_view.dart';
+import 'package:foody_licious/core/router/app_router.dart';
+import 'package:foody_licious/presentation/view/main/main_view.dart';
 
 import 'cubit/navigation_cubit.dart';
 
@@ -40,10 +33,8 @@ class MyApp extends StatelessWidget {
           appBarTheme: AppBarTheme(backgroundColor: kWhite),
           useMaterial3: true,
         ),
-        // home: ProvidedStylesExample(
-        //   menuScreenContext: context,
-        // ),
-        home: FeedbackView()
+        initialRoute: AppRouter.home,
+        onGenerateRoute: AppRouter.onGenerateRoute,
       ),
     );
   }

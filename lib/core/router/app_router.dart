@@ -1,61 +1,83 @@
-/*
+import 'package:flutter/material.dart';
+import 'package:foody_licious/presentation/view/authentication/login_view.dart';
+import 'package:foody_licious/presentation/view/authentication/signup_view.dart';
+import 'package:foody_licious/presentation/view/authentication/verification_view.dart';
+import 'package:foody_licious/presentation/view/feedback/feedback_view.dart';
+import 'package:foody_licious/presentation/view/main/main_view.dart';
+import 'package:foody_licious/presentation/view/notification/notification_view.dart';
+import 'package:foody_licious/presentation/view/onboarding/splash_view.dart';
+import 'package:foody_licious/presentation/view/product/menu_item_details_view.dart';
+import 'package:foody_licious/presentation/view/product/restaurant_details_view.dart';
+
+import '../../presentation/view/authentication/set_location_view.dart';
+import '../../presentation/view/onboarding/onboarding_view.dart';
+import '../../presentation/view/order/order_confirmation_view.dart';
+import '../../presentation/view/order/payout_view.dart';
+
 class AppRouter {
+  //splash & onboarding
+  static const String splash = '/splash';
+  static const String onboarding = '/onboarding';
   //main menu
   static const String home = '/';
   //authentication
-  static const String signIn = '/sign-in';
+  static const String login = '/login';
   static const String signUp = '/sign-up';
+  static const String verification = '/verification';
+  static const String setLocation = '/set-location';
   //products
-  static const String productDetails = '/product-details';
-  //other
-  static const String userProfile = '/user-profile';
-  static const String orderCheckout = '/order-checkout';
-  static const String deliveryDetails = '/delivery-details';
-  static const String orders = '/orders';
-  static const String settings = '/settings';
+  static const String menuItemDetails = '/menu-item-details';
+  static const String restaurantDetails = '/restaurant-details';
+  //order
+  static const String orderConfirmation = '/order-confirmation';
+  static const String payout = '/payout';
+  //feedback
+  static const String feedback = '/feedback';
+  //notification
   static const String notifications = '/notifications';
-  static const String about = '/about';
-  static const String filter = '/filter';
 
   static Route<dynamic> onGenerateRoute(RouteSettings routeSettings) {
     switch (routeSettings.name) {
+      //splash & onboarding
+      case splash:
+        return MaterialPageRoute(builder: (_) => const SplashView());
+      case onboarding:
+        return MaterialPageRoute(builder: (_) => const OnboardingView());
+      //main menu
       case home:
-        return MaterialPageRoute(builder: (_) => const MainView());
-      case signIn:
-        return MaterialPageRoute(builder: (_) => const SignInView());
+        return MaterialPageRoute(
+          builder: (BuildContext context) => MainView(
+            menuScreenContext: context,
+          ),
+        );
+      //authentication
+      case login:
+        return MaterialPageRoute(builder: (_) => const LoginView());
       case signUp:
-        return MaterialPageRoute(builder: (_) => const SignUpScreen());
-      case productDetails:
-        Product product = routeSettings.arguments as Product;
-        return MaterialPageRoute(
-            builder: (_) => ProductDetailsView(product: product));
-      case userProfile:
-        User user = routeSettings.arguments as User;
-        return MaterialPageRoute(
-            builder: (_) => UserProfileScreen(
-                  user: user,
-                ));
-      case orderCheckout:
-        List<CartItem> items = routeSettings.arguments as List<CartItem>;
-        return MaterialPageRoute(
-            builder: (_) => OrderCheckoutView(
-                  items: items,
-                ));
-      case deliveryDetails:
-        return MaterialPageRoute(builder: (_) => const DeliveryInfoView());
-      case orders:
-        return MaterialPageRoute(builder: (_) => const OrderView());
-      case settings:
-        return MaterialPageRoute(builder: (_) => const SettingsView());
+        return MaterialPageRoute(builder: (_) => const SignUpView());
+      case verification:
+        return MaterialPageRoute(builder: (_) => VerificationView());
+      case setLocation:
+        return MaterialPageRoute(builder: (_) => SetLocationView());
+      //products
+      case menuItemDetails:
+        return MaterialPageRoute(builder: (_) => MenuItemDetailsView());
+      case restaurantDetails:
+        return MaterialPageRoute(builder: (_) => RestaurantDetailsView());
+      //order
+      case orderConfirmation:
+        return MaterialPageRoute(builder: (_) => OrderConfirmationView());
+      case payout:
+        return MaterialPageRoute(builder: (_) => PayoutView());
+      //feedback
+      case feedback:
+        return MaterialPageRoute(builder: (_) => FeedbackView());
+      //notification
       case notifications:
-        return MaterialPageRoute(builder: (_) => const NotificationView());
-      case about:
-        return MaterialPageRoute(builder: (_) => const AboutView());
-      case filter:
-        return MaterialPageRoute(builder: (_) => const FilterView());
+        return MaterialPageRoute(builder: (_) => NotificationView());
       default:
-        throw const RouteException('Route not found!');
+        throw Exception("Route not found!");
+      // throw const RouteException('Route not found!');
     }
   }
 }
-*/

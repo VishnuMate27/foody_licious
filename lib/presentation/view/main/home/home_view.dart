@@ -8,9 +8,9 @@ import 'package:foody_licious/core/constant/images.dart';
 import 'package:foody_licious/presentation/widgets/menu_item_card.dart';
 import 'package:foody_licious/presentation/widgets/search_bar_field.dart';
 import 'package:foody_licious/utils/custom_widgets.dart';
-import 'package:foody_licious/presentation/view/post_auth/restaurant_details_view.dart';
+import 'package:foody_licious/presentation/view/product/restaurant_details_view.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'notification_view.dart';
+import '../../notification/notification_view.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});

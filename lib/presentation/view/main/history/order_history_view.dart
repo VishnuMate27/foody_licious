@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:foody_licious/core/constant/colors.dart';
 import 'package:foody_licious/core/constant/images.dart';
-import 'package:foody_licious/presentation/view/post_auth/restaurant_details_view.dart';
+import 'package:foody_licious/presentation/view/product/restaurant_details_view.dart';
 import 'package:foody_licious/presentation/widgets/caller_info_card.dart';
 import 'package:foody_licious/presentation/widgets/gradient_button.dart';
 import 'package:foody_licious/presentation/widgets/menu_item_card.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import 'cart_view.dart';
+import '../cart/cart_view.dart';
 
 class OrderHistoryView extends StatefulWidget {
   const OrderHistoryView({super.key});

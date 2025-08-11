@@ -4,22 +4,22 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:foody_licious/core/constant/colors.dart';
 import 'package:foody_licious/core/constant/images.dart';
-import 'package:foody_licious/presentation/view/post_auth/cart_view.dart';
-import 'package:foody_licious/presentation/view/post_auth/home_view.dart';
-import 'package:foody_licious/presentation/view/post_auth/order_history_view.dart';
-import 'package:foody_licious/presentation/view/post_auth/profile_view.dart';
-import 'package:foody_licious/presentation/view/post_auth/search_view.dart';
-import 'package:foody_licious/presentation/view/pre_auth/login_view.dart';
-import 'package:foody_licious/presentation/view/pre_auth/onboarding_view.dart';
-import 'package:foody_licious/presentation/view/pre_auth/signup_view.dart';
-import 'package:foody_licious/presentation/view/pre_auth/splash_view.dart';
+import 'package:foody_licious/presentation/view/main/cart/cart_view.dart';
+import 'package:foody_licious/presentation/view/main/home/home_view.dart';
+import 'package:foody_licious/presentation/view/main/history/order_history_view.dart';
+import 'package:foody_licious/presentation/view/main/profile/profile_view.dart';
+import 'package:foody_licious/presentation/view/main/search/search_view.dart';
+import 'package:foody_licious/presentation/view/authentication/login_view.dart';
+import 'package:foody_licious/presentation/view/onboarding/onboarding_view.dart';
+import 'package:foody_licious/presentation/view/authentication/signup_view.dart';
+import 'package:foody_licious/presentation/view/onboarding/splash_view.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 
-import '../../cubit/navigation_cubit.dart';
+import '../../../cubit/navigation_cubit.dart';
 
-class ProvidedStylesExample extends StatefulWidget {
-  const ProvidedStylesExample({
+class MainView extends StatefulWidget {
+  const MainView({
     required this.menuScreenContext,
     this.navigationTabIndex = 0,
     final Key? key,
@@ -28,10 +28,10 @@ class ProvidedStylesExample extends StatefulWidget {
   final int navigationTabIndex;
 
   @override
-  _ProvidedStylesExampleState createState() => _ProvidedStylesExampleState();
+  _MainViewState createState() => _MainViewState();
 }
 
-class _ProvidedStylesExampleState extends State<ProvidedStylesExample> {
+class _MainViewState extends State<MainView> {
   late PersistentTabController _controller;
   late bool _hideNavBar;
   final List<ScrollController> _scrollControllers = [

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:foody_licious/core/constant/colors.dart';
 import 'package:foody_licious/core/constant/images.dart';
-import 'package:foody_licious/presentation/view/post_auth/home_view.dart';
 import 'package:foody_licious/presentation/widgets/menu_item_card.dart';
 import 'package:foody_licious/presentation/widgets/search_bar_field.dart';
 import 'package:google_fonts/google_fonts.dart';

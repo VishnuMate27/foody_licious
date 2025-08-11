@@ -6,8 +6,8 @@ import 'package:foody_licious/core/constant/images.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../cubit/navigation_cubit.dart';
-import '../bottom_nav_bar.dart';
-import 'home_view.dart';
+import '../main/main_view.dart';
+import '../main/home/home_view.dart';
 
 class OrderConfirmationView extends StatefulWidget {
   const OrderConfirmationView({super.key});
