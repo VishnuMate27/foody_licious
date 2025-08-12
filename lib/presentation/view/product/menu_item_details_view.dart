@@ -4,8 +4,8 @@ import 'package:foody_licious/core/constant/colors.dart';
 import 'package:foody_licious/core/constant/images.dart';
 import 'package:foody_licious/presentation/widgets/gradient_button.dart';
 import 'package:foody_licious/presentation/widgets/menu_item_card.dart';
-import 'package:foody_licious/utils/custom_widgets.dart';
-import 'package:foody_licious/utils/data.dart';
+import 'package:foody_licious/presentation/widgets/custom_check_box.dart';
+import 'package:foody_licious/core/utils/data.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class MenuItemDetailsView extends StatefulWidget {

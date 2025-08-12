@@ -51,7 +51,7 @@ class _InputTextFormFieldState extends State<InputTextFormField> {
   Widget build(BuildContext context) {
     return TextFormField(
       minLines: widget.minLines,
-      maxLines: widget.maxLines,
+      maxLines: widget.obscureText == false ? widget.maxLines : 1,
       controller: widget.textController,
       keyboardType: widget.keyboardType,
       obscureText: _obscure,

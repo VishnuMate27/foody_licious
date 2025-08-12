@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:foody_licious/core/constant/colors.dart';
-import 'package:foody_licious/utils/constants.dart';
+import 'package:foody_licious/core/utils/data.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class SetLocationView extends StatefulWidget {

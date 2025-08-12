@@ -35,3 +35,21 @@ const List<String> availableCitiesList = <String>[
   'Guwahati',
   'Bhubaneswar',
 ];
+
+List<String> menuItemList = [
+  "Herbal Pancake",
+  "Fruit Salad",
+  "Green Noodle",
+  "Spicy Fresh Crab",
+  "Lemon Zest Waffles",
+  "Avocado Toast Delight",
+  "Quinoa Berry Bowl",
+  "Veggie Wrap Supreme",
+  "Grilled Citrus Salmon",
+  "Honey Glazed Chicken",
+  "Mediterranean Falafel Plate",
+  "Mango Tango Smoothie",
+  "Coconut Curry Soup",
+  "Spicy Tofu Stir-fry",
+  "Garlic Herb Breadsticks",
+];

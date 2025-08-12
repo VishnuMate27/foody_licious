@@ -7,7 +7,7 @@ import 'package:foody_licious/core/constant/colors.dart';
 import 'package:foody_licious/core/constant/images.dart';
 import 'package:foody_licious/presentation/widgets/menu_item_card.dart';
 import 'package:foody_licious/presentation/widgets/search_bar_field.dart';
-import 'package:foody_licious/utils/custom_widgets.dart';
+import 'package:foody_licious/presentation/widgets/custom_check_box.dart';
 import 'package:foody_licious/presentation/view/product/restaurant_details_view.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../notification/notification_view.dart';
