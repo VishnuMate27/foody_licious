@@ -1,24 +1,31 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:foody_licious/core/constant/colors.dart';
 import 'package:foody_licious/core/constant/images.dart';
+import 'package:foody_licious/domain/usecase/user/sign_up_usecase.dart';
+import 'package:foody_licious/presentation/bloc/user/user_bloc.dart';
 import 'package:foody_licious/presentation/widgets/gradient_button.dart';
 import 'package:foody_licious/presentation/widgets/input_text_form_field.dart';
 import 'package:foody_licious/presentation/widgets/social_auth_button.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class SignUpView extends StatelessWidget {
+class SignUpView extends StatefulWidget {
   const SignUpView({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final TextEditingController _nameController = TextEditingController();
-    final TextEditingController _emailOrPhoneController =
-        TextEditingController();
-    final TextEditingController _passwordController = TextEditingController();
-    final _formKey = GlobalKey<FormState>();
+  State<SignUpView> createState() => _SignUpViewState();
+}
 
+class _SignUpViewState extends State<SignUpView> {
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _emailOrPhoneController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: kWhite,
       body: SingleChildScrollView(
@@ -134,7 +141,16 @@ class SignUpView extends StatelessWidget {
                 SizedBox(
                   height: 20.h,
                 ),
-                GradientButton(buttonText: "Create Account", onTap: () {}),
+                GradientButton(
+                    buttonText: "Create Account",
+                    onTap: () {
+                      if (_formKey.currentState!.validate()) {
+                        if (_passwordController.text !=
+                            _emailOrPhoneController.text) {
+                          print("Email & password cannot be same");
+                        }
+                      }
+                    }),
                 TextButton(
                   onPressed: () {},
                   child: Text(
@@ -153,8 +169,14 @@ class SignUpView extends StatelessWidget {
       ),
     );
   }
-}
 
-void _onSignUp(BuildContext context, GlobalKey<FormState> key) {
-  if (key.currentState!.validate()) {}
+  void _onSignUp(BuildContext context, GlobalKey<FormState> key) {
+    if (key.currentState!.validate()) {
+      context.read<UserBloc>().add(SignUpUser(SignUpParams(
+            name: _nameController.value.text,
+            email: _emailOrPhoneController.text,
+            password: _passwordController.text,
+          )));
+    }
+  }
 }

@@ -1,4 +1,4 @@
-/*import 'package:equatable/equatable.dart';
+import 'package:equatable/equatable.dart';
 
 abstract class Failure extends Equatable {
   @override
@@ -17,4 +17,3 @@ class ExceptionFailure extends Failure {}
 class CredentialFailure extends Failure {}
 
 class AuthenticationFailure extends Failure {}
-*/
