@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:foody_licious/core/error/failures.dart';
 import 'package:foody_licious/data/models/user/authentication_response_model.dart';
 import 'package:foody_licious/domain/usecase/user/sign_in_usecase.dart';
@@ -10,15 +10,16 @@ import 'package:http/http.dart' as http;
 import '../../../../core/error/exceptions.dart';
 import '../../../core/constant/strings.dart';
 
-
 abstract class UserRemoteDataSource {
   Future<AuthenticationResponseModel> signIn(SignInParams params);
   Future<AuthenticationResponseModel> signUp(SignUpParams params);
 }
 
 class UserRemoteDataSourceImpl implements UserRemoteDataSource {
-  final http.Client client;
-  UserRemoteDataSourceImpl({required this.client});
+  // final http.Client client;
+  // UserRemoteDataSourceImpl({required this.client});
+  final FirebaseAuth firebaseAuth;
+  UserRemoteDataSourceImpl({required this.firebaseAuth});
 
   @override
   Future<AuthenticationResponseModel> signIn(SignInParams params) async {
@@ -43,6 +44,12 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
 
   @override
   Future<AuthenticationResponseModel> signUp(SignUpParams params) async {
+    if (params.authProvider == "email") {
+      final userCredential = await firebaseAuth.createUserWithEmailAndPassword(
+        email: params.email!, password: params.password);
+        final user = userCredential.user;
+        await user?.sendEmailVerification();
+    }
     // final response =
     //     await client.post(Uri.parse('$baseUrl/authentication/local/sign-up'),
     //         headers: {

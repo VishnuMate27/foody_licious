@@ -19,10 +19,12 @@ class SignUpParams {
   final String? email;
   final String? phone;
   final String password;
+  final String authProvider;
   const SignUpParams({
     required this.name,
     this.email,
     this.phone,
     required this.password,
+    required this.authProvider
   });
 }
