@@ -30,10 +30,10 @@ class _SignUpViewState extends State<SignUpView> {
   @override
   Widget build(BuildContext context) {
     return BlocListener<UserBloc, UserState>(
-        listener: (context, state) {
+      listener: (context, state) {
         EasyLoading.dismiss();
         if (state is UserLoading) {
-          EasyLoading.show(status: 'Loading...');
+          // EasyLoading.show(status: 'Loading...');
         } else if (state is UserLogged) {
           Navigator.of(context).pushNamedAndRemoveUntil(
             AppRouter.home,
@@ -152,12 +152,24 @@ class _SignUpViewState extends State<SignUpView> {
                       SocialAuthButton(
                         authProviderName: "Facebook",
                         authProviderlogoImagePath: kFacebookIcon,
-                        onTap: () {},
+                        onTap: () {
+                          context.read<UserBloc>().add(
+                                SignUpUser(
+                                  SignUpParams(authProvider: "facebook"),
+                                ),
+                              );
+                        },
                       ),
                       SocialAuthButton(
                         authProviderName: "Google",
                         authProviderlogoImagePath: kGoogleIcon,
-                        onTap: () {},
+                        onTap: () {
+                          context.read<UserBloc>().add(
+                                SignUpUser(
+                                  SignUpParams(authProvider: "google"),
+                                ),
+                              );
+                        },
                       ),
                     ],
                   ),
@@ -200,8 +212,9 @@ class _SignUpViewState extends State<SignUpView> {
       context.read<UserBloc>().add(SignUpUser(SignUpParams(
           name: _nameController.value.text,
           email: _emailOrPhoneController.text,
+          phone: _emailOrPhoneController.text,
           password: _passwordController.text,
-          authProvider: "email")));
+          authProvider: "google")));
     }
   }
 }

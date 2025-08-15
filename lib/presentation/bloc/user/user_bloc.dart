@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:foody_licious/core/usecase/usecase.dart';
+import 'package:foody_licious/domain/usecase/user/get_local_user_usecase.dart';
 import 'package:foody_licious/domain/usecase/user/sign_in_usecase.dart';
 import 'package:foody_licious/domain/usecase/user/sign_up_usecase.dart';
 
@@ -14,11 +15,13 @@ part 'user_event.dart';
 part 'user_state.dart';
 
 class UserBloc extends Bloc<UserEvent, UserState> {
+  final GetLocalUserUseCase _getCachedUserUseCase;
   final SignInUseCase _signInUseCase;
   final SignUpUseCase _signUpUseCase;
   UserBloc(
     this._signInUseCase,
     this._signUpUseCase,
+    this._getCachedUserUseCase,
   ) : super(UserInitial()) {
     on<SignInUser>(_onSignIn);
     on<SignUpUser>(_onSignUp);

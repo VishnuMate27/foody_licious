@@ -1,10 +1,12 @@
 import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:foody_licious/core/error/failures.dart';
 import 'package:foody_licious/data/models/user/authentication_response_model.dart';
 import 'package:foody_licious/domain/usecase/user/sign_in_usecase.dart';
 import 'package:foody_licious/domain/usecase/user/sign_up_usecase.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 
 import '../../../../core/error/exceptions.dart';
@@ -19,6 +21,7 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
   // final http.Client client;
   // UserRemoteDataSourceImpl({required this.client});
   final FirebaseAuth firebaseAuth;
+  GoogleSignIn googleSignIn = GoogleSignIn.instance;
   UserRemoteDataSourceImpl({required this.firebaseAuth});
 
   @override
@@ -46,9 +49,71 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
   Future<AuthenticationResponseModel> signUp(SignUpParams params) async {
     if (params.authProvider == "email") {
       final userCredential = await firebaseAuth.createUserWithEmailAndPassword(
-        email: params.email!, password: params.password);
+          email: params.email!, password: params.password!);
+      final user = userCredential.user;
+      await user?.sendEmailVerification();
+    } else if (params.authProvider == "phone") {
+      final confirmationResult = await firebaseAuth.verifyPhoneNumber(
+        phoneNumber: '+91${params.phone}',
+        verificationCompleted: (PhoneAuthCredential credential) async {
+          // Sign the user in (or link) with the auto-generated credential
+          await firebaseAuth.signInWithCredential(credential);
+        },
+        verificationFailed: (FirebaseAuthException e) {
+          if (e.code == 'invalid-phone-number') {
+            print('The provided phone number is not valid.');
+          }
+        },
+        codeSent: (String verificationId, int? resendToken) async {
+          // Update the UI - wait for the user to enter the SMS code
+          String smsCode = '123456';
+
+          // Create a PhoneAuthCredential with the code
+          PhoneAuthCredential credential = PhoneAuthProvider.credential(
+              verificationId: verificationId, smsCode: smsCode);
+
+          // Sign the user in (or link) with the credential
+          await firebaseAuth.signInWithCredential(credential);
+        },
+        codeAutoRetrievalTimeout: (String verificationId) {},
+      );
+      //final user = confirmationResult.confirm("");
+    } else if (params.authProvider == "google") {
+      // Trigger the authentication flow
+      try {
+        googleSignIn.initialize(
+          serverClientId:
+              "235207156108-fa47j8320h395gkh8iete4efe61ko8j3.apps.googleusercontent.com",
+        );
+        final GoogleSignInAccount? googleUser =
+            await googleSignIn.authenticate();
+        if (googleUser == null) print("Authuser is null");
+        // Obtain the auth details from the request
+        final GoogleSignInAuthentication? googleAuth =
+            googleUser?.authentication;
+        // Create a new credential
+        final credential = GoogleAuthProvider.credential(
+          idToken: googleAuth?.idToken,
+        );
+        // Once signed in, return the UserCredential
+        final userCredential =
+            await firebaseAuth.signInWithCredential(credential);
         final user = userCredential.user;
-        await user?.sendEmailVerification();
+      } catch (e) {
+        print("Exception ${e}");
+      }
+    } else if (params.authProvider == "facebook") {
+      // Trigger the sign-in flow
+      final LoginResult loginResult = await FacebookAuth.instance.login();
+
+      // Create a credential from the access token
+      final OAuthCredential facebookAuthCredential =
+          FacebookAuthProvider.credential(loginResult.accessToken!.tokenString);
+
+      // Once signed in, return the UserCredential
+      final userCredential = await firebaseAuth.signInWithCredential(facebookAuthCredential);
+
+      final user = userCredential.user;
     }
     // final response =
     //     await client.post(Uri.parse('$baseUrl/authentication/local/sign-up'),

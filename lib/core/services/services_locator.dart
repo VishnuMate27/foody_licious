@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:foody_licious/domain/usecase/user/get_local_user_usecase.dart';
 import 'package:foody_licious/domain/usecase/user/sign_in_usecase.dart';
 import 'package:foody_licious/domain/usecase/user/sign_up_usecase.dart';
 import 'package:foody_licious/presentation/bloc/user/user_bloc.dart';
@@ -6,7 +8,6 @@ import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 
 import '../../data/data_sources/local/user_local_data_source.dart';
 import '../../data/data_sources/remote/user_remote_data_source.dart';
@@ -20,12 +21,12 @@ Future<void> init() async {
   //Features - User
   // Bloc
   sl.registerFactory(
-    () => UserBloc(sl(), sl()),
+    () => UserBloc(sl(), sl(), sl()),
   );
   // Use cases
   sl.registerLazySingleton(() => SignInUseCase(sl()));
   sl.registerLazySingleton(() => SignUpUseCase(sl()));
-
+  sl.registerLazySingleton(() => GetLocalUserUseCase(sl()));
   // Repository
   sl.registerLazySingleton<UserRepository>(
     () => UserRepositoryImpl(
@@ -52,6 +53,6 @@ Future<void> init() async {
   const secureStorage = FlutterSecureStorage();
   sl.registerLazySingleton(() => sharedPreferences);
   sl.registerLazySingleton(() => secureStorage);
-  sl.registerLazySingleton(() => http.Client());
+  sl.registerLazySingleton(() => FirebaseAuth.instance);
   sl.registerLazySingleton(() => InternetConnectionChecker());
 }

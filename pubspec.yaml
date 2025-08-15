@@ -19,10 +19,12 @@ dependencies:
 
   #firebase
   firebase_auth: ^6.0.1
+  google_sign_in: ^7.1.1
+  flutter_facebook_auth: ^7.1.2
 
   #local storage
   shared_preferences: ^2.2.0
-  flutter_secure_storage: ^8.0.0
+  flutter_secure_storage: ^9.2.4
 
   #state management
   bloc: ^8.1.2
