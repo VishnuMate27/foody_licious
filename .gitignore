@@ -30,7 +30,7 @@ migrate_working_dir/
 .pub-cache/
 .pub/
 /build/
-/pubspec.lock
+pubspec.lock
 
 # Symbolication related
 app.*.symbols
@@ -48,3 +48,6 @@ lib/firebase_options.dart
 android/app/google-services.json
 ios/Runner/GoogleService-Info.plist
 /firebase.json
+
+# Secrets & Environment
+*.env

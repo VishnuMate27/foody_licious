@@ -82,8 +82,7 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
       // Trigger the authentication flow
       try {
         googleSignIn.initialize(
-          serverClientId:
-              "235207156108-fa47j8320h395gkh8iete4efe61ko8j3.apps.googleusercontent.com",
+          serverClientId: kServerClientId,
         );
         final GoogleSignInAccount? googleUser =
             await googleSignIn.authenticate();
