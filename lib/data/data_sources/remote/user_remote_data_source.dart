@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:foody_licious/core/error/failures.dart';
 import 'package:foody_licious/data/models/user/authentication_response_model.dart';
+import 'package:foody_licious/data/models/user/user_model.dart';
 import 'package:foody_licious/domain/usecase/user/sign_in_usecase.dart';
 import 'package:foody_licious/domain/usecase/user/sign_up_usecase.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -18,11 +19,11 @@ abstract class UserRemoteDataSource {
 }
 
 class UserRemoteDataSourceImpl implements UserRemoteDataSource {
-  // final http.Client client;
-  // UserRemoteDataSourceImpl({required this.client});
+  final http.Client client;
   final FirebaseAuth firebaseAuth;
+  User? user;
   GoogleSignIn googleSignIn = GoogleSignIn.instance;
-  UserRemoteDataSourceImpl({required this.firebaseAuth});
+  UserRemoteDataSourceImpl({required this.firebaseAuth, required this.client});
 
   @override
   Future<AuthenticationResponseModel> signIn(SignInParams params) async {
@@ -50,7 +51,7 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
     if (params.authProvider == "email") {
       final userCredential = await firebaseAuth.createUserWithEmailAndPassword(
           email: params.email!, password: params.password!);
-      final user = userCredential.user;
+      user = userCredential.user;
       await user?.sendEmailVerification();
     } else if (params.authProvider == "phone") {
       final confirmationResult = await firebaseAuth.verifyPhoneNumber(
@@ -110,28 +111,37 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
           FacebookAuthProvider.credential(loginResult.accessToken!.tokenString);
 
       // Once signed in, return the UserCredential
-      final userCredential = await firebaseAuth.signInWithCredential(facebookAuthCredential);
+      final userCredential =
+          await firebaseAuth.signInWithCredential(facebookAuthCredential);
 
       final user = userCredential.user;
     }
-    // final response =
-    //     await client.post(Uri.parse('$baseUrl/authentication/local/sign-up'),
-    //         headers: {
-    //           'Content-Type': 'application/json',
-    //         },
-    //         body: json.encode({
-    //           'firstName': params.firstName,
-    //           'lastName': params.lastName,
-    //           'email': params.email,
-    //           'password': params.password,
-    //         }));
-    // if (response.statusCode == 201) {
-    return authenticationResponseModelFromJson("");
-    // return authenticationResponseModelFromJson(response.body);
-    // } else if (response.statusCode == 400 || response.statusCode == 401) {
-    //   throw CredentialFailure();
-    // } else {
-    //   throw ServerException();
-    // }
+    print({
+        "id": user!.uid,
+        "name": user!.displayName ?? params.name,
+        "email": params.email ?? "",
+        params.phone ?? "phone": params.phone,
+        "authProvider": params.authProvider
+      });
+    final response = await client.post(
+      Uri.parse('$kBaseUrl/api/auth/register'),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: json.encode({
+        "id": user!.uid,
+        "name": user!.displayName ?? params.name,
+        "email": params.email ?? "",
+        "phone": "0123456788",
+        "authProvider": params.authProvider
+      }),
+    );
+    if (response.statusCode == 201) {
+      return authenticationResponseModelFromJson(response.body);
+    } else if (response.statusCode == 400 || response.statusCode == 401) {
+      throw CredentialFailure();
+    } else {
+      throw ServerException();
+    }
   }
 }

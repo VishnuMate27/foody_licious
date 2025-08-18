@@ -31,3 +31,18 @@ class UserLoggedOut extends UserState {
   @override
   List<Object> get props => [];
 }
+
+class InputValidationState extends UserState {
+  final bool isEmail;
+  final bool isValid;
+  final String inputType;
+  
+  InputValidationState({
+    required this.isEmail,
+    required this.isValid,
+    required this.inputType,
+  });
+  
+  @override
+  List<Object> get props => [isEmail, isValid, inputType];
+}

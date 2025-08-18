@@ -50,7 +50,7 @@ Future<void> init() async {
     () => UserLocalDataSourceImpl(sharedPreferences: sl(), secureStorage: sl()),
   );
   sl.registerLazySingleton<UserRemoteDataSource>(
-    () => UserRemoteDataSourceImpl(firebaseAuth: sl()),
+    () => UserRemoteDataSourceImpl(firebaseAuth: sl(), client: sl()),
   );
 
   ///***********************************************
@@ -64,5 +64,6 @@ Future<void> init() async {
   sl.registerLazySingleton(() => sharedPreferences);
   sl.registerLazySingleton(() => secureStorage);
   sl.registerLazySingleton(() => FirebaseAuth.instance);
+  sl.registerLazySingleton(() => http.Client());
   sl.registerLazySingleton(() => InternetConnectionChecker());
 }

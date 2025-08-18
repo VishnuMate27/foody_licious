@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -5,6 +7,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:foody_licious/core/constant/colors.dart';
 import 'package:foody_licious/core/constant/images.dart';
+import 'package:foody_licious/core/constant/strings.dart';
 import 'package:foody_licious/core/error/failures.dart';
 import 'package:foody_licious/core/router/app_router.dart';
 import 'package:foody_licious/domain/usecase/user/sign_up_usecase.dart';
@@ -13,6 +16,7 @@ import 'package:foody_licious/presentation/widgets/gradient_button.dart';
 import 'package:foody_licious/presentation/widgets/input_text_form_field.dart';
 import 'package:foody_licious/presentation/widgets/social_auth_button.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart' as http;
 
 class SignUpView extends StatefulWidget {
   const SignUpView({super.key});
@@ -26,6 +30,27 @@ class _SignUpViewState extends State<SignUpView> {
   final TextEditingController _emailOrPhoneController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    super.initState();
+    // Listen to changes in email/phone field and dispatch to BLoC
+    _emailOrPhoneController.addListener(_onInputChanged);
+  }
+
+  @override
+  void dispose() {
+    _emailOrPhoneController.removeListener(_onInputChanged);
+    _nameController.dispose();
+    _emailOrPhoneController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  void _onInputChanged() {
+    final text = _emailOrPhoneController.text.trim();
+    context.read<UserBloc>().add(ValidateEmailOrPhone(text));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +72,10 @@ class _SignUpViewState extends State<SignUpView> {
             errorMessage = "Network error. Check your connection.";
           }
           EasyLoading.showError(errorMessage);
+        } else if (state is InputValidationState) {
+          if (!state.isEmail && _passwordController.text.isNotEmpty) {
+            _passwordController.clear();
+          }
         }
       },
       child: Scaffold(
@@ -107,25 +136,63 @@ class _SignUpViewState extends State<SignUpView> {
                   SizedBox(
                     height: 12.h,
                   ),
-                  InputTextFormField(
-                      textController: _emailOrPhoneController,
-                      labelText: "Email or Phone Number",
-                      hintText: "Enter email or phone Number",
-                      prefixIconData: Icons.mail_outlined,
-                      keyboardType: TextInputType.emailAddress,
-                      validatorText:
-                          "Please enter your valid email or phone Number"),
+                  BlocBuilder<UserBloc, UserState>(
+                    builder: (context, state) {
+                      bool isEmail = false;
+                      IconData prefixIcon = Icons.mail_outlined;
+                      TextInputType keyboardType = TextInputType.emailAddress;
+                      if (state is InputValidationState) {
+                        isEmail = state.isEmail;
+                        prefixIcon = isEmail
+                            ? Icons.mail_outlined
+                            : Icons.phone_outlined;
+                        keyboardType = isEmail
+                            ? TextInputType.emailAddress
+                            : TextInputType.phone;
+                      }
+                      return InputTextFormField(
+                        textController: _emailOrPhoneController,
+                        labelText: "Email or Phone Number",
+                        hintText: "Enter email or phone number",
+                        prefixIconData: prefixIcon,
+                        keyboardType: keyboardType,
+                        validatorText:
+                            "Please enter your email or phone number",
+                      );
+                    },
+                  ),
                   SizedBox(
                     height: 12.h,
                   ),
-                  InputTextFormField(
-                      textController: _passwordController,
-                      labelText: "Password",
-                      hintText: "Enter password",
-                      prefixIconData: Icons.lock_outline,
-                      keyboardType: TextInputType.text,
-                      validatorText: "Please set your Password",
-                      obscureText: true),
+                  BlocBuilder<UserBloc, UserState>(
+                    builder: (context, state) {
+                      bool showPassword = false;
+
+                      if (state is InputValidationState) {
+                        showPassword = state.isEmail && state.isValid;
+                      }
+
+                      return AnimatedContainer(
+                        duration: const Duration(milliseconds: 300),
+                        height: showPassword ? null : 0,
+                        child: showPassword
+                            ? Column(
+                                children: [
+                                  InputTextFormField(
+                                      textController: _passwordController,
+                                      labelText: "Password",
+                                      hintText: "Enter password",
+                                      prefixIconData: Icons.lock_outline,
+                                      keyboardType: TextInputType.text,
+                                      validatorText: "Please set your Password",
+                                      obscureText: true),
+                                  SizedBox(height: 12.h),
+                                ],
+                              )
+                            : const SizedBox.shrink(),
+                      );
+                    },
+                  ),
                   SizedBox(
                     height: 18.h,
                   ),
@@ -176,17 +243,18 @@ class _SignUpViewState extends State<SignUpView> {
                   SizedBox(
                     height: 20.h,
                   ),
-                  GradientButton(
-                      buttonText: "Create Account",
-                      onTap: () {
-                        if (_formKey.currentState!.validate()) {
-                          if (_passwordController.text !=
-                              _emailOrPhoneController.text) {
-                            print("Email & password cannot be same");
-                            _onSignUp(context, _formKey);
+                  BlocBuilder<UserBloc, UserState>(
+                    builder: (context, state) {
+                      return GradientButton(
+                        buttonText: "Create Account",
+                        onTap: () {
+                          if (_formKey.currentState!.validate()) {
+                            _onSignUp(context, _formKey, state);
                           }
-                        }
-                      }),
+                        },
+                      );
+                    },
+                  ),
                   TextButton(
                     onPressed: () {},
                     child: Text(
@@ -207,14 +275,35 @@ class _SignUpViewState extends State<SignUpView> {
     );
   }
 
-  void _onSignUp(BuildContext context, GlobalKey<FormState> key) {
+  _onSignUp(
+      BuildContext context, GlobalKey<FormState> key, UserState state) async {
     if (key.currentState!.validate()) {
-      context.read<UserBloc>().add(SignUpUser(SignUpParams(
-          name: _nameController.value.text,
-          email: _emailOrPhoneController.text,
-          phone: _emailOrPhoneController.text,
-          password: _passwordController.text,
-          authProvider: "google")));
+      final emailOrPhone = _emailOrPhoneController.text.trim();
+      bool isEmail = false;
+
+      if (state is InputValidationState) {
+        isEmail = state.isEmail;
+      }
+      final response = await http.post(
+        Uri.parse('$kBaseUrl/api/auth/register'),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: json.encode({
+          "id": "myid1",
+          "name": "myName",
+          "email": "vishnu2002mate@gmail.com",
+          "phone": "0123456788",
+          "authProvider": "email"
+        }),
+      );
+      print(response);
+    //   context.read<UserBloc>().add(SignUpUser(SignUpParams(
+    //       name: _nameController.text.trim(),
+    //       email: isEmail ? emailOrPhone : null,
+    //       phone: !isEmail ? emailOrPhone : null,
+    //       password: isEmail ? _passwordController.text : null,
+    //       authProvider: isEmail ? "email" : "phone")));
     }
   }
 }

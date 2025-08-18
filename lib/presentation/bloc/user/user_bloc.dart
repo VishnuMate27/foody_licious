@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:foody_licious/core/constant/validators.dart';
 import 'package:foody_licious/core/usecase/usecase.dart';
 import 'package:foody_licious/domain/usecase/user/get_local_user_usecase.dart';
 import 'package:foody_licious/domain/usecase/user/sign_in_usecase.dart';
@@ -27,6 +28,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     on<SignUpUser>(_onSignUp);
     on<CheckUser>(_onCheckUser);
     on<SignOutUser>(_onSignOut);
+    on<ValidateEmailOrPhone>(_onValidateEmailOrPhone);
   }
 
   void _onSignIn(SignInUser event, Emitter<UserState> emit) async {
@@ -76,5 +78,28 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     } catch (e) {
       emit(UserLoggedFail(ExceptionFailure()));
     }
+  }
+
+  void _onValidateEmailOrPhone(
+      ValidateEmailOrPhone event, Emitter<UserState> emit) {
+    final input = event.input.trim();
+
+    if (input.isEmpty) {
+      emit(InputValidationState(
+        isEmail: false,
+        isValid: false,
+        inputType: 'none',
+      ));
+      return;
+    }
+
+    final bool isEmail = Validators.isValidEmail(input);
+    final bool isPhone = Validators.isValidPhone(input);
+
+    emit(InputValidationState(
+      isEmail: isEmail,
+      isValid: isEmail || isPhone,
+      inputType: isEmail ? 'email' : (isPhone ? 'phone' : 'invalid'),
+    ));
   }
 }

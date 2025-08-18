@@ -16,3 +16,12 @@ class SignUpUser extends UserEvent {
 class SignOutUser extends UserEvent {}
 
 class CheckUser extends UserEvent {}
+
+class ValidateEmailOrPhone extends UserEvent {
+  final String input;
+  
+  ValidateEmailOrPhone(this.input);
+  
+  @override
+  List<Object> get props => [input];
+}
