@@ -284,26 +284,13 @@ class _SignUpViewState extends State<SignUpView> {
       if (state is InputValidationState) {
         isEmail = state.isEmail;
       }
-      final response = await http.post(
-        Uri.parse('$kBaseUrl/api/auth/register'),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: json.encode({
-          "id": "myid1",
-          "name": "myName",
-          "email": "vishnu2002mate@gmail.com",
-          "phone": "0123456788",
-          "authProvider": "email"
-        }),
-      );
-      print(response);
-    //   context.read<UserBloc>().add(SignUpUser(SignUpParams(
-    //       name: _nameController.text.trim(),
-    //       email: isEmail ? emailOrPhone : null,
-    //       phone: !isEmail ? emailOrPhone : null,
-    //       password: isEmail ? _passwordController.text : null,
-    //       authProvider: isEmail ? "email" : "phone")));
+      
+        context.read<UserBloc>().add(SignUpUser(SignUpParams(
+            name: _nameController.text.trim(),
+            email: isEmail ? emailOrPhone : null,
+            phone: !isEmail ? emailOrPhone : null,
+            password: isEmail ? _passwordController.text : null,
+            authProvider: isEmail ? "email" : "phone")));
     }
   }
 }

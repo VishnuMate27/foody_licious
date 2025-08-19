@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:foody_licious/core/error/failures.dart';
 import 'package:foody_licious/data/models/user/authentication_response_model.dart';
@@ -48,94 +49,133 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
 
   @override
   Future<AuthenticationResponseModel> signUp(SignUpParams params) async {
+    User? user;
+
     if (params.authProvider == "email") {
+      // Create user
       final userCredential = await firebaseAuth.createUserWithEmailAndPassword(
-          email: params.email!, password: params.password!);
+        email: params.email!,
+        password: params.password!,
+      );
       user = userCredential.user;
-      await user?.sendEmailVerification();
+
+      // Send verification mail
+      await user?.sendEmailVerification().then((value){
+  
+
+      });
+
+      // Refresh user (to get latest status)
+      // await user?.reload();
+      // user = firebaseAuth.currentUser;
+
+      // // Check verification
+      // if (user == null || !user.emailVerified) {
+      //   throw Exception("Please verify your email first.");
+      // }
+
+      // Now call backend
+      return await _sendRegisterRequest(user!, params);
     } else if (params.authProvider == "phone") {
-      final confirmationResult = await firebaseAuth.verifyPhoneNumber(
+      // Phone verification
+      await firebaseAuth.verifyPhoneNumber(
         phoneNumber: '+91${params.phone}',
         verificationCompleted: (PhoneAuthCredential credential) async {
-          // Sign the user in (or link) with the auto-generated credential
-          await firebaseAuth.signInWithCredential(credential);
+          final phoneCredentials =
+              await firebaseAuth.signInWithCredential(credential);
+          user = phoneCredentials.user;
         },
         verificationFailed: (FirebaseAuthException e) {
-          if (e.code == 'invalid-phone-number') {
-            print('The provided phone number is not valid.');
-          }
+          throw Exception("Phone verification failed: ${e.message}");
         },
         codeSent: (String verificationId, int? resendToken) async {
-          // Update the UI - wait for the user to enter the SMS code
-          String smsCode = '123456';
+          // Normally ask user to input OTP
+          String smsCode = '123456'; // ⚠️ Replace with user input!
 
-          // Create a PhoneAuthCredential with the code
           PhoneAuthCredential credential = PhoneAuthProvider.credential(
-              verificationId: verificationId, smsCode: smsCode);
+            verificationId: verificationId,
+            smsCode: smsCode,
+          );
 
-          // Sign the user in (or link) with the credential
-          await firebaseAuth.signInWithCredential(credential);
+          final phoneCredentials =
+              await firebaseAuth.signInWithCredential(credential);
+          user = phoneCredentials.user;
+
+          // if (user != null) {
+          //   return await _sendRegisterRequest(user, params);
+          // }
         },
         codeAutoRetrievalTimeout: (String verificationId) {},
       );
-      //final user = confirmationResult.confirm("");
+
+      // Fallback: if callback didn't return
+      if (user == null) {
+        throw Exception("Phone verification did not complete.");
+      }
+      return await _sendRegisterRequest(user!, params);
     } else if (params.authProvider == "google") {
-      // Trigger the authentication flow
       try {
-        googleSignIn.initialize(
-          serverClientId: kServerClientId,
-        );
+        googleSignIn.initialize(serverClientId: kServerClientId);
         final GoogleSignInAccount? googleUser =
             await googleSignIn.authenticate();
-        if (googleUser == null) print("Authuser is null");
-        // Obtain the auth details from the request
-        final GoogleSignInAuthentication? googleAuth =
-            googleUser?.authentication;
-        // Create a new credential
+        if (googleUser == null) {
+          throw Exception("Google authentication cancelled.");
+        }
+
+        final GoogleSignInAuthentication googleAuth =
+            await googleUser.authentication;
+
         final credential = GoogleAuthProvider.credential(
-          idToken: googleAuth?.idToken,
+          idToken: googleAuth.idToken,
         );
-        // Once signed in, return the UserCredential
+
         final userCredential =
             await firebaseAuth.signInWithCredential(credential);
-        final user = userCredential.user;
+        user = userCredential.user;
+
+        if (user == null) throw Exception("Google sign-in failed.");
+        return await _sendRegisterRequest(user, params);
       } catch (e) {
-        print("Exception ${e}");
+        throw Exception("Google SignIn failed: $e");
       }
     } else if (params.authProvider == "facebook") {
-      // Trigger the sign-in flow
       final LoginResult loginResult = await FacebookAuth.instance.login();
+      if (loginResult.status != LoginStatus.success) {
+        throw Exception("Facebook login failed.");
+      }
 
-      // Create a credential from the access token
       final OAuthCredential facebookAuthCredential =
           FacebookAuthProvider.credential(loginResult.accessToken!.tokenString);
 
-      // Once signed in, return the UserCredential
       final userCredential =
           await firebaseAuth.signInWithCredential(facebookAuthCredential);
+      user = userCredential.user;
 
-      final user = userCredential.user;
+      if (user == null) throw Exception("Facebook sign-in failed.");
+      return await _sendRegisterRequest(user, params);
     }
-    print({
-        "id": user!.uid,
-        "name": user!.displayName ?? params.name,
-        "email": params.email ?? "",
-        params.phone ?? "phone": params.phone,
-        "authProvider": params.authProvider
-      });
+
+    throw Exception("Unsupported auth provider: ${params.authProvider}");
+  }
+
+  Future<AuthenticationResponseModel> _sendRegisterRequest(
+      User user, SignUpParams params) async {
+    final requestBody = json.encode({
+      "email": user.email ?? params.email,
+      "id": user.uid,
+      "name": params.name,
+      "phone": user.phoneNumber ?? params.phone ?? "",
+      "authProvider": params.authProvider
+    });
+
     final response = await client.post(
       Uri.parse('$kBaseUrl/api/auth/register'),
       headers: {
         'Content-Type': 'application/json',
       },
-      body: json.encode({
-        "id": user!.uid,
-        "name": user!.displayName ?? params.name,
-        "email": params.email ?? "",
-        "phone": "0123456788",
-        "authProvider": params.authProvider
-      }),
+      body: requestBody,
     );
+
     if (response.statusCode == 201) {
       return authenticationResponseModelFromJson(response.body);
     } else if (response.statusCode == 400 || response.statusCode == 401) {
