@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
@@ -16,7 +17,7 @@ import '../../../core/constant/strings.dart';
 
 abstract class UserRemoteDataSource {
   Future<AuthenticationResponseModel> signIn(SignInParams params);
-  Future<AuthenticationResponseModel> signUp(SignUpParams params);
+  Future<AuthenticationResponseModel> signUpWithEmail(SignUpParams params);
 }
 
 class UserRemoteDataSourceImpl implements UserRemoteDataSource {
@@ -24,6 +25,7 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
   final FirebaseAuth firebaseAuth;
   User? user;
   GoogleSignIn googleSignIn = GoogleSignIn.instance;
+  String _verificationId = "";
   UserRemoteDataSourceImpl({required this.firebaseAuth, required this.client});
 
   @override
@@ -48,114 +50,15 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
   }
 
   @override
-  Future<AuthenticationResponseModel> signUp(SignUpParams params) async {
+  Future<AuthenticationResponseModel> signUpWithEmail(SignUpParams params) async {
     User? user;
-
-    if (params.authProvider == "email") {
-      // Create user
-      final userCredential = await firebaseAuth.createUserWithEmailAndPassword(
-        email: params.email!,
-        password: params.password!,
-      );
-      user = userCredential.user;
-
-      // Send verification mail
-      await user?.sendEmailVerification().then((value){
-  
-
-      });
-
-      // Refresh user (to get latest status)
-      // await user?.reload();
-      // user = firebaseAuth.currentUser;
-
-      // // Check verification
-      // if (user == null || !user.emailVerified) {
-      //   throw Exception("Please verify your email first.");
-      // }
-
-      // Now call backend
-      return await _sendRegisterRequest(user!, params);
-    } else if (params.authProvider == "phone") {
-      // Phone verification
-      await firebaseAuth.verifyPhoneNumber(
-        phoneNumber: '+91${params.phone}',
-        verificationCompleted: (PhoneAuthCredential credential) async {
-          final phoneCredentials =
-              await firebaseAuth.signInWithCredential(credential);
-          user = phoneCredentials.user;
-        },
-        verificationFailed: (FirebaseAuthException e) {
-          throw Exception("Phone verification failed: ${e.message}");
-        },
-        codeSent: (String verificationId, int? resendToken) async {
-          // Normally ask user to input OTP
-          String smsCode = '123456'; // ⚠️ Replace with user input!
-
-          PhoneAuthCredential credential = PhoneAuthProvider.credential(
-            verificationId: verificationId,
-            smsCode: smsCode,
-          );
-
-          final phoneCredentials =
-              await firebaseAuth.signInWithCredential(credential);
-          user = phoneCredentials.user;
-
-          // if (user != null) {
-          //   return await _sendRegisterRequest(user, params);
-          // }
-        },
-        codeAutoRetrievalTimeout: (String verificationId) {},
-      );
-
-      // Fallback: if callback didn't return
-      if (user == null) {
-        throw Exception("Phone verification did not complete.");
-      }
-      return await _sendRegisterRequest(user!, params);
-    } else if (params.authProvider == "google") {
-      try {
-        googleSignIn.initialize(serverClientId: kServerClientId);
-        final GoogleSignInAccount? googleUser =
-            await googleSignIn.authenticate();
-        if (googleUser == null) {
-          throw Exception("Google authentication cancelled.");
-        }
-
-        final GoogleSignInAuthentication googleAuth =
-            await googleUser.authentication;
-
-        final credential = GoogleAuthProvider.credential(
-          idToken: googleAuth.idToken,
-        );
-
-        final userCredential =
-            await firebaseAuth.signInWithCredential(credential);
-        user = userCredential.user;
-
-        if (user == null) throw Exception("Google sign-in failed.");
-        return await _sendRegisterRequest(user, params);
-      } catch (e) {
-        throw Exception("Google SignIn failed: $e");
-      }
-    } else if (params.authProvider == "facebook") {
-      final LoginResult loginResult = await FacebookAuth.instance.login();
-      if (loginResult.status != LoginStatus.success) {
-        throw Exception("Facebook login failed.");
-      }
-
-      final OAuthCredential facebookAuthCredential =
-          FacebookAuthProvider.credential(loginResult.accessToken!.tokenString);
-
-      final userCredential =
-          await firebaseAuth.signInWithCredential(facebookAuthCredential);
-      user = userCredential.user;
-
-      if (user == null) throw Exception("Facebook sign-in failed.");
-      return await _sendRegisterRequest(user, params);
-    }
-
-    throw Exception("Unsupported auth provider: ${params.authProvider}");
+    // Create user
+    final userCredential = await firebaseAuth.createUserWithEmailAndPassword(
+      email: params.email!,
+      password: params.password!,
+    );
+    user = userCredential.user;
+    return await _sendRegisterRequest(user!, params);
   }
 
   Future<AuthenticationResponseModel> _sendRegisterRequest(
@@ -183,5 +86,57 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
     } else {
       throw ServerException();
     }
+  }
+
+  @override
+  Future<Unit> verifyEmail() async {
+    final user = firebaseAuth.currentUser;
+    if (user != null) {
+      try {
+        await user.reload();
+        await user.sendEmailVerification();
+      } on FirebaseAuthException catch (e) {
+        if (e.code == 'too-many-requests') {
+          throw TooManyRequestsException();
+        } else {
+          throw ServerException();
+        }
+      } catch (e) {
+        throw ServerException();
+      }
+    } else {
+      throw NoUserException();
+    }
+    return Future.value(unit);
+  }
+
+  @override
+  Future<void> verifyPhoneNumber(String phoneNumber) async {
+    final PhoneVerificationCompleted phoneVerificationCompleted =
+        (AuthCredential authCredential) {
+      print("phone is verified : token ${authCredential.token}");
+    };
+    final PhoneVerificationFailed phoneVerificationFailed =
+        (FirebaseAuthException authCredential) {
+      print("phone failed ${authCredential.message},${authCredential.code}");
+    };
+    final PhoneCodeAutoRetrievalTimeout phoneCodeAutoRetrievalTimeout =
+        (String verificationId) {
+      this._verificationId = verificationId;
+      print("time out $verificationId");
+    };
+    final PhoneCodeSent phoneCodeSent =
+        (String verificationID, [int? forceResendingToken]) {
+      this._verificationId = verificationID;
+      print("sendPhoneCode $verificationID");
+    };
+
+    firebaseAuth.verifyPhoneNumber(
+        phoneNumber: phoneNumber,
+        timeout: const Duration(seconds: 5),
+        verificationCompleted: phoneVerificationCompleted,
+        verificationFailed: phoneVerificationFailed,
+        codeSent: phoneCodeSent,
+        codeAutoRetrievalTimeout: phoneCodeAutoRetrievalTimeout);
   }
 }

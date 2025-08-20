@@ -41,7 +41,7 @@ class UserRepositoryImpl implements UserRepository {
       return Left(NetworkFailure());
     }
     try {
-      final remoteResponse = await remoteDataSource.signUp(params);
+      final remoteResponse = await remoteDataSource.signUpWithEmail(params);
       await localDataSource.saveToken(remoteResponse.token);
       await localDataSource.saveUser(remoteResponse.user);
       return Right(remoteResponse.user);
