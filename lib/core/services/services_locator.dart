@@ -2,8 +2,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:foody_licious/domain/usecase/user/get_local_user_usecase.dart';
+import 'package:foody_licious/domain/usecase/user/send_verification_email_usecase.dart';
 import 'package:foody_licious/domain/usecase/user/sign_in_usecase.dart';
-import 'package:foody_licious/domain/usecase/user/sign_up_usecase.dart';
+import 'package:foody_licious/domain/usecase/user/sign_up_with_email_usecase.dart';
+import 'package:foody_licious/domain/usecase/user/sign_up_with_phone_usecase.dart';
 import 'package:foody_licious/firebase_options.dart';
 import 'package:foody_licious/presentation/bloc/user/user_bloc.dart';
 import 'package:get_it/get_it.dart';
@@ -20,7 +22,6 @@ import '../network/network_info.dart';
 final sl = GetIt.instance;
 
 Future<void> init() async {
-  
   // Must be first
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -31,11 +32,13 @@ Future<void> init() async {
   //Features - User
   // Bloc
   sl.registerFactory(
-    () => UserBloc(sl(), sl(), sl()),
+    () => UserBloc(sl(), sl(), sl(),sl(),sl()),
   );
   // Use cases
   sl.registerLazySingleton(() => SignInUseCase(sl()));
-  sl.registerLazySingleton(() => SignUpUseCase(sl()));
+  sl.registerLazySingleton(() => SignUpWithEmailUseCase(sl()));
+  sl.registerLazySingleton(() => SignUpWithPhoneUseCase(sl()));
+  sl.registerLazySingleton(() => SendVerificationEmailUseCase(sl()));
   sl.registerLazySingleton(() => GetLocalUserUseCase(sl()));
   // Repository
   sl.registerLazySingleton<UserRepository>(
