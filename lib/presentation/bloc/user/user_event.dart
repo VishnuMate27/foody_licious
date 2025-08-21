@@ -8,9 +8,14 @@ class SignInUser extends UserEvent {
   SignInUser(this.params);
 }
 
-class SignUpUser extends UserEvent {
-  final SignUpParams params;
-  SignUpUser(this.params);
+class SignUpWithEmailUser extends UserEvent {
+  final SignUpWithEmailParams params;
+  SignUpWithEmailUser(this.params);
+}
+
+class SignUpWithPhoneUser extends UserEvent {
+  final SignUpWithPhoneParams params;
+  SignUpWithPhoneUser(this.params);
 }
 
 class SignOutUser extends UserEvent {}
@@ -19,9 +24,11 @@ class CheckUser extends UserEvent {}
 
 class ValidateEmailOrPhone extends UserEvent {
   final String input;
-  
+
   ValidateEmailOrPhone(this.input);
-  
+
   @override
   List<Object> get props => [input];
 }
+
+class SendVerificationEmailUser extends UserEvent {}

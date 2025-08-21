@@ -27,8 +27,6 @@ class UserRepositoryImpl implements UserRepository {
     }
     try {
       final remoteResponse = await remoteDataSource.signIn(params);
-      await localDataSource.saveToken(remoteResponse.token);
-      await localDataSource.saveUser(remoteResponse.user);
       return Right(remoteResponse.user);
     } on Failure catch (failure) {
       return Left(failure);
@@ -36,15 +34,26 @@ class UserRepositoryImpl implements UserRepository {
   }
 
   @override
-  Future<Either<Failure, User>> signUp(params) async {
+  Future<Either<Failure, User>> signUpWithEmail(params) async {
     if (!await networkInfo.isConnected) {
       return Left(NetworkFailure());
     }
     try {
       final remoteResponse = await remoteDataSource.signUpWithEmail(params);
-      await localDataSource.saveToken(remoteResponse.token);
-      await localDataSource.saveUser(remoteResponse.user);
       return Right(remoteResponse.user);
+    } on Failure catch (failure) {
+      return Left(failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, Unit>> signUpWithPhone(params) async {
+    if (!await networkInfo.isConnected) {
+      return Left(NetworkFailure());
+    }
+    try {
+      final remoteResponse = await remoteDataSource.signUpWithPhone(params);
+      return Right(remoteResponse);
     } on Failure catch (failure) {
       return Left(failure);
     }
@@ -59,7 +68,19 @@ class UserRepositoryImpl implements UserRepository {
       return Left(CacheFailure());
     }
   }
-
+  
+  @override
+  Future<Either<Failure, Unit>> sendVerificationEmail() async {
+    if (!await networkInfo.isConnected) {
+      return Left(NetworkFailure());
+    }
+    try {
+      final remoteResponse = await remoteDataSource.sendVerificationEmail();
+      return Right(remoteResponse);
+    } on Failure catch (failure) {
+      return Left(failure);
+    }
+  }
   @override
   Future<Either<Failure, User>> getLocalUser() async {
     try {

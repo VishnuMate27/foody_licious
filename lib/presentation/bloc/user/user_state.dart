@@ -36,13 +36,58 @@ class InputValidationState extends UserState {
   final bool isEmail;
   final bool isValid;
   final String inputType;
-  
+
   InputValidationState({
     required this.isEmail,
     required this.isValid,
     required this.inputType,
   });
-  
+
   @override
   List<Object> get props => [isEmail, isValid, inputType];
+}
+
+class UserVerificationSuccess extends UserState {
+  @override
+  List<Object> get props => [];
+}
+
+class UserVerificationEmailRequested extends UserState {
+  final User user;
+  UserVerificationEmailRequested(this.user);
+  @override
+  List<Object> get props => [user];
+}
+
+class UserVerificationEmailSent extends UserState {
+  @override
+  List<Object> get props => [];
+}
+
+class UserVerificationEmailSentFailed extends UserState {
+  final Failure failure;
+  UserVerificationEmailSentFailed(this.failure);
+  @override
+  List<Object> get props => [failure];
+}
+
+class UserVerificationSMSRequested extends UserState {
+  final Unit unit;
+  UserVerificationSMSRequested(this.unit);
+  @override
+  List<Object> get props => [unit];
+}
+
+class UserVerificationSMSSent extends UserState {
+  final Unit unit;
+  UserVerificationSMSSent(this.unit);
+  @override
+  List<Object> get props => [unit];
+}
+
+class UserVerificationSMSSentFailed extends UserState {
+  final Failure failure;
+  UserVerificationSMSSentFailed(this.failure);
+  @override
+  List<Object> get props => [failure];
 }

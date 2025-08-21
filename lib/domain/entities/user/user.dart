@@ -23,12 +23,12 @@ class User extends Equatable {
 }
 
 class Address extends Equatable {
-  final String addressText;
-  final Coordinates coordinates;
+  final String? addressText;
+  final Coordinates? coordinates;
 
   const Address({
-    required this.addressText,
-    required this.coordinates,
+    this.addressText,
+    this.coordinates,
   });
 
   @override
@@ -36,12 +36,12 @@ class Address extends Equatable {
 }
 
 class Coordinates extends Equatable {
-  final String type;
-  final List<double> coordinates;
+  final String? type;
+  final List<double>? coordinates;
 
   const Coordinates({
-    required this.type,
-    required this.coordinates,
+    this.type,
+    this.coordinates,
   });
 
   @override

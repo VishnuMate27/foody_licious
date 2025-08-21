@@ -22,7 +22,7 @@ class UserModel extends User {
       email: json['email'] as String?,
       phone: json['phone'] as String?,
       address: AddressModel.fromJson(json['address'] ?? {}),
-      orderHistory: List<String>.from(json['orderHistory'] ?? []),
+      orderHistory: List<String>.from(json['orderHistory'] ?? {}),
     );
   }
 
@@ -40,14 +40,14 @@ class UserModel extends User {
 
 class AddressModel extends Address {
   const AddressModel({
-    required super.addressText,
-    required super.coordinates,
+    super.addressText,
+    super.coordinates,
   });
 
   factory AddressModel.fromJson(Map<String, dynamic> json) {
     return AddressModel(
-      addressText: json['addressText'] as String,
-      coordinates: CoordinatesModel.fromJson(json['coordinates']),
+      addressText: json['addressText'] as String?,
+      coordinates: CoordinatesModel.fromJson(json['coordinates'] ?? {}),
     );
   }
 
@@ -61,16 +61,18 @@ class AddressModel extends Address {
 
 class CoordinatesModel extends Coordinates {
   const CoordinatesModel({
-    required super.type,
-    required super.coordinates,
+    super.type,
+    super.coordinates,
   });
 
   factory CoordinatesModel.fromJson(Map<String, dynamic> json) {
     return CoordinatesModel(
-      type: json['type'] as String,
-      coordinates: List<double>.from(
-        (json['coordinates'] as List).map((e) => e.toDouble()),
-      ),
+      type: json['type'] as String?,
+      coordinates: json['coordinates'] != null
+          ? List<double>.from(
+              (json['coordinates'] as List).map((e) => (e as num).toDouble()),
+            )
+          : <double>[],
     );
   }
 

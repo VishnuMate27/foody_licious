@@ -8,7 +8,8 @@ import 'package:foody_licious/core/error/failures.dart';
 import 'package:foody_licious/data/models/user/authentication_response_model.dart';
 import 'package:foody_licious/data/models/user/user_model.dart';
 import 'package:foody_licious/domain/usecase/user/sign_in_usecase.dart';
-import 'package:foody_licious/domain/usecase/user/sign_up_usecase.dart';
+import 'package:foody_licious/domain/usecase/user/sign_up_with_email_usecase.dart';
+import 'package:foody_licious/domain/usecase/user/sign_up_with_phone_usecase.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 
@@ -17,7 +18,14 @@ import '../../../core/constant/strings.dart';
 
 abstract class UserRemoteDataSource {
   Future<AuthenticationResponseModel> signIn(SignInParams params);
-  Future<AuthenticationResponseModel> signUpWithEmail(SignUpParams params);
+  Future<AuthenticationResponseModel> signUpWithEmail(
+      SignUpWithEmailParams params);
+  Future<Unit> sendVerificationEmail();    
+  Future<Unit> signUpWithPhone(SignUpWithPhoneParams params);
+  Future<AuthenticationResponseModel> signUpWithGoogle(
+      SignUpWithEmailParams params);
+  Future<AuthenticationResponseModel> signUpWithFacebook(
+      SignUpWithEmailParams params);
 }
 
 class UserRemoteDataSourceImpl implements UserRemoteDataSource {
@@ -50,7 +58,8 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
   }
 
   @override
-  Future<AuthenticationResponseModel> signUpWithEmail(SignUpParams params) async {
+  Future<AuthenticationResponseModel> signUpWithEmail(
+      SignUpWithEmailParams params) async {
     User? user;
     // Create user
     final userCredential = await firebaseAuth.createUserWithEmailAndPassword(
@@ -61,13 +70,30 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
     return await _sendRegisterRequest(user!, params);
   }
 
+  @override
+  Future<Unit> signUpWithPhone(SignUpWithPhoneParams params) async {
+    return Future.value(unit);
+  }
+
+  @override
+  Future<AuthenticationResponseModel> signUpWithGoogle(
+      SignUpWithEmailParams params) async {
+    return await _sendRegisterRequest(user!, params);
+  }
+
+  @override
+  Future<AuthenticationResponseModel> signUpWithFacebook(
+      SignUpWithEmailParams params) async {
+    return await _sendRegisterRequest(user!, params);
+  }
+
   Future<AuthenticationResponseModel> _sendRegisterRequest(
-      User user, SignUpParams params) async {
+      User user, SignUpWithEmailParams params) async {
     final requestBody = json.encode({
       "email": user.email ?? params.email,
       "id": user.uid,
       "name": params.name,
-      "phone": user.phoneNumber ?? params.phone ?? "",
+      "phone": user.phoneNumber ?? "",
       "authProvider": params.authProvider
     });
 
@@ -89,7 +115,7 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
   }
 
   @override
-  Future<Unit> verifyEmail() async {
+  Future<Unit> sendVerificationEmail() async {
     final user = firebaseAuth.currentUser;
     if (user != null) {
       try {

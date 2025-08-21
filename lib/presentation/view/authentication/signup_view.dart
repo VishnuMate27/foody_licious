@@ -10,7 +10,7 @@ import 'package:foody_licious/core/constant/images.dart';
 import 'package:foody_licious/core/constant/strings.dart';
 import 'package:foody_licious/core/error/failures.dart';
 import 'package:foody_licious/core/router/app_router.dart';
-import 'package:foody_licious/domain/usecase/user/sign_up_usecase.dart';
+import 'package:foody_licious/domain/usecase/user/sign_up_with_email_usecase.dart';
 import 'package:foody_licious/presentation/bloc/user/user_bloc.dart';
 import 'package:foody_licious/presentation/widgets/gradient_button.dart';
 import 'package:foody_licious/presentation/widgets/input_text_form_field.dart';
@@ -60,10 +60,10 @@ class _SignUpViewState extends State<SignUpView> {
         if (state is UserLoading) {
           // EasyLoading.show(status: 'Loading...');
         } else if (state is UserLogged) {
-          Navigator.of(context).pushNamedAndRemoveUntil(
-            AppRouter.home,
-            (Route<dynamic> route) => false,
-          );
+          // Navigator.of(context).pushNamedAndRemoveUntil(
+          //   AppRouter.home,
+          //   (Route<dynamic> route) => false,
+          // );
         } else if (state is UserLoggedFail) {
           String errorMessage = "An error occurred. Please try again.";
           if (state.failure is CredentialFailure) {
@@ -71,11 +71,22 @@ class _SignUpViewState extends State<SignUpView> {
           } else if (state.failure is NetworkFailure) {
             errorMessage = "Network error. Check your connection.";
           }
-          EasyLoading.showError(errorMessage);
+          // EasyLoading.showError(errorMessage);
+          print(errorMessage);
         } else if (state is InputValidationState) {
           if (!state.isEmail && _passwordController.text.isNotEmpty) {
             _passwordController.clear();
           }
+        } else if (state is UserVerificationEmailRequested) {
+          //TODO: Add method for sending verification email
+          context.read<UserBloc>().add(SendVerificationEmailUser());
+        } else if (state is UserVerificationSMSRequested) {
+          //TODO: Add method for sending verification sms
+        } else if (state is UserVerificationEmailSent) {
+          Navigator.of(context).pushNamedAndRemoveUntil(
+            AppRouter.verification,
+            (Route<dynamic> route) => false,
+          );
         }
       },
       child: Scaffold(
@@ -221,8 +232,9 @@ class _SignUpViewState extends State<SignUpView> {
                         authProviderlogoImagePath: kFacebookIcon,
                         onTap: () {
                           context.read<UserBloc>().add(
-                                SignUpUser(
-                                  SignUpParams(authProvider: "facebook"),
+                                SignUpWithEmailUser(
+                                  SignUpWithEmailParams(
+                                      authProvider: "facebook"),
                                 ),
                               );
                         },
@@ -232,8 +244,8 @@ class _SignUpViewState extends State<SignUpView> {
                         authProviderlogoImagePath: kGoogleIcon,
                         onTap: () {
                           context.read<UserBloc>().add(
-                                SignUpUser(
-                                  SignUpParams(authProvider: "google"),
+                                SignUpWithEmailUser(
+                                  SignUpWithEmailParams(authProvider: "google"),
                                 ),
                               );
                         },
@@ -284,13 +296,12 @@ class _SignUpViewState extends State<SignUpView> {
       if (state is InputValidationState) {
         isEmail = state.isEmail;
       }
-      
-        context.read<UserBloc>().add(SignUpUser(SignUpParams(
-            name: _nameController.text.trim(),
-            email: isEmail ? emailOrPhone : null,
-            phone: !isEmail ? emailOrPhone : null,
-            password: isEmail ? _passwordController.text : null,
-            authProvider: isEmail ? "email" : "phone")));
+
+      context.read<UserBloc>().add(SignUpWithEmailUser(SignUpWithEmailParams(
+          name: _nameController.text.trim(),
+          email: isEmail ? emailOrPhone : null,
+          password: isEmail ? _passwordController.text : null,
+          authProvider: isEmail ? "email" : "phone")));
     }
   }
 }
