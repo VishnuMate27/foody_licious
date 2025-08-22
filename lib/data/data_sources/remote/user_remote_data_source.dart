@@ -20,7 +20,8 @@ abstract class UserRemoteDataSource {
   Future<AuthenticationResponseModel> signIn(SignInParams params);
   Future<AuthenticationResponseModel> signUpWithEmail(
       SignUpWithEmailParams params);
-  Future<Unit> sendVerificationEmail();    
+  Future<Unit> sendVerificationEmail();
+  Future<Unit> waitForEmailVerification();
   Future<Unit> signUpWithPhone(SignUpWithPhoneParams params);
   Future<AuthenticationResponseModel> signUpWithGoogle(
       SignUpWithEmailParams params);
@@ -68,6 +69,34 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
     );
     user = userCredential.user;
     return await _sendRegisterRequest(user!, params);
+  }
+
+  @override
+  Future<Unit> waitForEmailVerification({
+    Duration checkInterval = const Duration(seconds: 3),
+    Duration timeout = const Duration(minutes: 2),
+  }) async {
+    final user = firebaseAuth.currentUser;
+    if (user == null) {
+      throw NoUserException();
+    }
+
+    final stopwatch = Stopwatch()..start();
+
+    while (true) {
+      await user.reload(); // Refresh user state
+      final refreshedUser = firebaseAuth.currentUser;
+
+      if (refreshedUser != null && refreshedUser.emailVerified) {
+        return Future.value(unit);
+      }
+
+      if (stopwatch.elapsed >= timeout) {
+        throw TimeoutException();
+      }
+
+      await Future.delayed(checkInterval);
+    }
   }
 
   @override

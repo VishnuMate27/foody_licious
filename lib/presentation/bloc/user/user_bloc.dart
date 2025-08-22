@@ -11,6 +11,7 @@ import 'package:foody_licious/domain/usecase/user/send_verification_email_usecas
 import 'package:foody_licious/domain/usecase/user/sign_in_usecase.dart';
 import 'package:foody_licious/domain/usecase/user/sign_up_with_email_usecase.dart';
 import 'package:foody_licious/domain/usecase/user/sign_up_with_phone_usecase.dart';
+import 'package:foody_licious/domain/usecase/user/wait_for_email_verification_usecase.dart';
 
 import '../../../core/error/failures.dart';
 import '../../../domain/entities/user/user.dart';
@@ -24,16 +25,19 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   final SignUpWithEmailUseCase _signUpWithEmailUseCase;
   final SignUpWithPhoneUseCase _signUpWithPhoneUseCase;
   final SendVerificationEmailUseCase _sendVerificationEmailUseCase;
+  final WaitForEmailVerificationUsecase _waitForEmailVerificationUseCase;
   UserBloc(
     this._signInUseCase,
     this._signUpWithEmailUseCase,
     this._signUpWithPhoneUseCase,
     this._sendVerificationEmailUseCase,
     this._getCachedUserUseCase,
+    this._waitForEmailVerificationUseCase,
   ) : super(UserInitial()) {
     on<SignInUser>(_onSignIn);
     on<SignUpWithEmailUser>(_onSignUpWithEmail);
     on<SendVerificationEmailUser>(_onSendVerificationEmail);
+    on<WaitForEmailVerificationUser>(_onWaitForEmailVerification);
     on<SignUpWithPhoneUser>(_onSignUpWithPhone);
     on<CheckUser>(_onCheckUser);
     on<SignOutUser>(_onSignOut);
@@ -80,13 +84,28 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     }
   }
 
-  FutureOr<void> _onSendVerificationEmail(SendVerificationEmailUser event, Emitter<UserState> emit) async {
+  FutureOr<void> _onSendVerificationEmail(
+      SendVerificationEmailUser event, Emitter<UserState> emit) async {
     try {
       emit(UserLoading());
       final result = await _sendVerificationEmailUseCase(NoParams());
       result.fold(
         (failure) => emit(UserLoggedFail(failure)),
         (unit) => emit(UserVerificationEmailSent()),
+      );
+    } catch (e) {
+      emit(UserLoggedFail(ExceptionFailure()));
+    }
+  }
+
+  FutureOr<void> _onWaitForEmailVerification(
+      WaitForEmailVerificationUser event, Emitter<UserState> emit) async {
+    try {
+      emit(UserLoading());
+      final result = await _sendVerificationEmailUseCase(NoParams());
+      result.fold(
+        (failure) => emit(UserLoggedFail(failure)),
+        (unit) => emit(UserEmailVerificationSuccess()),
       );
     } catch (e) {
       emit(UserLoggedFail(ExceptionFailure()));

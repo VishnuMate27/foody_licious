@@ -22,6 +22,12 @@ class HomeView extends StatefulWidget {
 class _HomeViewState extends State<HomeView> {
   final TextEditingController _searchController = TextEditingController();
   bool isDark = false;
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,7 +74,7 @@ class _HomeViewState extends State<HomeView> {
               CarouselSlider(
                 options: CarouselOptions(
                   height: 172.h,
-                  autoPlay: true,
+                  autoPlay: false,
                   autoPlayInterval: const Duration(seconds: 5),
                   viewportFraction: 0.8,
                   enlargeCenterPage: true,

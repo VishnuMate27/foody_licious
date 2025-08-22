@@ -6,6 +6,7 @@ import 'package:foody_licious/domain/usecase/user/send_verification_email_usecas
 import 'package:foody_licious/domain/usecase/user/sign_in_usecase.dart';
 import 'package:foody_licious/domain/usecase/user/sign_up_with_email_usecase.dart';
 import 'package:foody_licious/domain/usecase/user/sign_up_with_phone_usecase.dart';
+import 'package:foody_licious/domain/usecase/user/wait_for_email_verification_usecase.dart';
 import 'package:foody_licious/firebase_options.dart';
 import 'package:foody_licious/presentation/bloc/user/user_bloc.dart';
 import 'package:get_it/get_it.dart';
@@ -32,13 +33,14 @@ Future<void> init() async {
   //Features - User
   // Bloc
   sl.registerFactory(
-    () => UserBloc(sl(), sl(), sl(),sl(),sl()),
+    () => UserBloc(sl(), sl(), sl(),sl(),sl(),sl()),
   );
   // Use cases
   sl.registerLazySingleton(() => SignInUseCase(sl()));
   sl.registerLazySingleton(() => SignUpWithEmailUseCase(sl()));
   sl.registerLazySingleton(() => SignUpWithPhoneUseCase(sl()));
   sl.registerLazySingleton(() => SendVerificationEmailUseCase(sl()));
+  sl.registerLazySingleton(() => WaitForEmailVerificationUsecase(sl()));
   sl.registerLazySingleton(() => GetLocalUserUseCase(sl()));
   // Repository
   sl.registerLazySingleton<UserRepository>(

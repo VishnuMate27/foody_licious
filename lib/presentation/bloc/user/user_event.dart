@@ -32,3 +32,5 @@ class ValidateEmailOrPhone extends UserEvent {
 }
 
 class SendVerificationEmailUser extends UserEvent {}
+
+class WaitForEmailVerificationUser extends UserEvent {}

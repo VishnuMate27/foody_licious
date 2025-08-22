@@ -68,7 +68,7 @@ class UserRepositoryImpl implements UserRepository {
       return Left(CacheFailure());
     }
   }
-  
+
   @override
   Future<Either<Failure, Unit>> sendVerificationEmail() async {
     if (!await networkInfo.isConnected) {
@@ -81,6 +81,20 @@ class UserRepositoryImpl implements UserRepository {
       return Left(failure);
     }
   }
+
+  @override
+  Future<Either<Failure, Unit>> waitForEmailVerification() async {
+    if (!await networkInfo.isConnected) {
+      return Left(NetworkFailure());
+    }
+    try {
+      final remoteResponse = await remoteDataSource.waitForEmailVerification();
+      return Right(remoteResponse);
+    } on Failure catch (failure) {
+      return Left(failure);
+    }
+  }
+
   @override
   Future<Either<Failure, User>> getLocalUser() async {
     try {

@@ -56,16 +56,242 @@ class _VerificationViewState extends State<VerificationView> {
       ),
     );
 
-    return BlocListener<UserBloc, UserState>(
-      listener: (context, state) {
-
-      },
-      child: Scaffold(
+    return BlocConsumer<UserBloc, UserState>(listener: (context, state) async {
+      // if (state is UserEmailVerificationSuccess) {
+      //   Navigator.of(context).pushNamedAndRemoveUntil(
+      //     AppRouter.home,
+      //     (Route<dynamic> route) => false,
+      //   );
+      // }
+    }, builder: (context, state) {
+      if (state is UserVerificationEmailSent) {
+        return Scaffold(
           backgroundColor: kWhite,
           body: SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Column(children: [
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 82.h,
+                  ),
+                  Center(
+                    child: Image.asset(
+                      kLogo,
+                      width: 90.w,
+                      height: 90.h,
+                    ),
+                  ),
+                  Text(
+                    "Foody Licious",
+                    style: GoogleFonts.yeonSung(color: kTextRed, fontSize: 40),
+                  ),
+                  SizedBox(
+                    height: 10.h,
+                  ),
+                  Text(
+                    "Deliever Favorite Food",
+                    style: GoogleFonts.lato(
+                        color: kTextRedDark,
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(
+                    height: 28.h,
+                  ),
+                  Text(
+                    "Email Verification",
+                    style: GoogleFonts.yeonSung(
+                        color: kTextRedDark,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1.0),
+                  ),
+                  SizedBox(
+                    height: 20.h,
+                  ),
+                  _BouncyIcon(
+                    icon: Icons.mark_email_read_rounded,
+                    size: 50,
+                    color: kTextRed,
+                  ),
+                  SizedBox(
+                    height: 20.h,
+                  ),
+                  Text(
+                    "We’ve sent you a verification email!",
+                    style: GoogleFonts.lato(
+                        color: kTextRedDark,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(
+                    height: 20.h,
+                  ),
+                  Text(
+                    "Please check your inbox and click the link to verify your email address. Once verified, you can start enjoying delicious food with Foodylicious.",
+                    style: GoogleFonts.lato(
+                      color: kTextRedDark,
+                      fontSize: 14,
+                      fontWeight: FontWeight.normal,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(
+                    height: 20.h,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16.w),
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          GradientButton(
+                              height: 30.h,
+                              width: 140.h,
+                              buttonText: "Open Mail App",
+                              fontSize: 14,
+                              onTap: () {}),
+                          GradientButton(
+                              height: 30.h,
+                              width: 140.h,
+                              buttonText: "Resend Email",
+                              fontSize: 14,
+                              onTap: () {})
+                        ]),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      } else if (state is UserEmailVerificationSuccess) {
+        return Scaffold(
+          backgroundColor: kWhite,
+          body: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Column(
+                children: [
+                  SizedBox(height: 82.h),
+                  Center(
+                    child: Image.asset(
+                      kLogo,
+                      width: 90.w,
+                      height: 90.h,
+                    ),
+                  ),
+                  Text(
+                    "Foody Licious",
+                    style: GoogleFonts.yeonSung(color: kTextRed, fontSize: 40),
+                  ),
+                  SizedBox(height: 10.h),
+                  Text(
+                    "Deliver Favorite Food",
+                    style: GoogleFonts.lato(
+                        color: kTextRedDark,
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 28.h),
+                  Text(
+                    "Verification Successful",
+                    style: GoogleFonts.yeonSung(
+                        color: kTextRedDark,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1.0),
+                  ),
+                  SizedBox(height: 20.h),
+                  _BouncyIcon(
+                    icon: Icons.verified_rounded,
+                    size: 60,
+                    color: Colors.green,
+                  ),
+                  SizedBox(height: 20.h),
+                  Text(
+                    "Your email has been verified!",
+                    style: GoogleFonts.lato(
+                        color: kTextRedDark,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 20.h),
+                  Text(
+                    "Welcome to Foodylicious 🎉 Now you can explore menus, order your favorite dishes, and enjoy fast delivery.",
+                    style: GoogleFonts.lato(
+                      color: kTextRedDark,
+                      fontSize: 14,
+                      fontWeight: FontWeight.normal,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 30.h),
+                  TweenAnimationBuilder<double>(
+                    tween: Tween(begin: 0.0, end: 1.0),
+                    duration: const Duration(seconds: 5),
+                    onEnd: () {
+                      // Auto continue after 5 seconds
+                      Navigator.of(context).pushNamedAndRemoveUntil(
+                        AppRouter.home,
+                        (Route<dynamic> route) => false,
+                      );
+                    },
+                    builder: (context, value, child) {
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).pushNamedAndRemoveUntil(
+                            AppRouter.home,
+                            (Route<dynamic> route) => false,
+                          );
+                        },
+                        child: Container(
+                          height: 45.h,
+                          width: 200.w,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            gradient: LinearGradient(
+                              colors: [kTextRed, kTextRedDark],
+                            ),
+                          ),
+                          child: Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              Positioned.fill(
+                                child: LinearProgressIndicator(
+                                  value: value,
+                                  backgroundColor: Colors.transparent,
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                    Colors.white.withOpacity(0.4),
+                                  ),
+                                ),
+                              ),
+                              Text(
+                                "Continue",
+                                style: GoogleFonts.lato(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  )
+                ],
+              ),
+            ),
+          ),
+        );
+      }
+      return Scaffold(
+        backgroundColor: kWhite,
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Column(
+              children: [
                 SizedBox(
                   height: 82.h,
                 ),
@@ -176,9 +402,63 @@ class _VerificationViewState extends State<VerificationView> {
                   height: 40.h,
                 ),
                 GradientButton(buttonText: "Verify", onTap: () {})
-              ]),
+              ],
             ),
-          )),
+          ),
+        ),
+      );
+    });
+  }
+}
+
+class _BouncyIcon extends StatefulWidget {
+  const _BouncyIcon({
+    required this.icon,
+    this.size = 80,
+    this.color = kTextRed,
+  });
+  final IconData icon;
+  final double size;
+  final Color color;
+
+  @override
+  State<_BouncyIcon> createState() => _BouncyIconState();
+}
+
+class _BouncyIconState extends State<_BouncyIcon>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _c = AnimationController(
+      vsync: this, duration: const Duration(milliseconds: 900))
+    ..repeat(reverse: true);
+  late final Animation<double> _scale = Tween(begin: 0.96, end: 1.04)
+      .animate(CurvedAnimation(parent: _c, curve: Curves.easeInOut));
+
+  @override
+  void dispose() {
+    _c.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ScaleTransition(
+      scale: _scale,
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: widget.color.withOpacity(0.15),
+          border: Border.all(color: widget.color.withOpacity(0.6)),
+          boxShadow: [
+            BoxShadow(
+              blurRadius: 30,
+              spreadRadius: 2,
+              color: widget.color.withOpacity(0.25),
+            ),
+          ],
+        ),
+        child: Icon(widget.icon, size: widget.size, color: widget.color),
+      ),
     );
   }
 }

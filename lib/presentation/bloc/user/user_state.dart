@@ -47,7 +47,7 @@ class InputValidationState extends UserState {
   List<Object> get props => [isEmail, isValid, inputType];
 }
 
-class UserVerificationSuccess extends UserState {
+class UserEmailVerificationSuccess extends UserState {
   @override
   List<Object> get props => [];
 }
