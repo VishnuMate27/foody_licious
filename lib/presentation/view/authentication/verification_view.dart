@@ -57,12 +57,12 @@ class _VerificationViewState extends State<VerificationView> {
     );
 
     return BlocConsumer<UserBloc, UserState>(listener: (context, state) async {
-      // if (state is UserEmailVerificationSuccess) {
-      //   Navigator.of(context).pushNamedAndRemoveUntil(
-      //     AppRouter.home,
-      //     (Route<dynamic> route) => false,
-      //   );
-      // }
+      if (state is UserEmailVerificationSuccess) {
+        // Navigator.of(context).pushNamedAndRemoveUntil(
+        //   AppRouter.home,
+        //   (Route<dynamic> route) => false,
+        // );
+      }
     }, builder: (context, state) {
       if (state is UserVerificationEmailSent) {
         return Scaffold(
@@ -194,7 +194,7 @@ class _VerificationViewState extends State<VerificationView> {
                   ),
                   SizedBox(height: 28.h),
                   Text(
-                    "Verification Successful",
+                    "Verification Successful!",
                     style: GoogleFonts.yeonSung(
                         color: kTextRedDark,
                         fontSize: 20,
@@ -228,7 +228,7 @@ class _VerificationViewState extends State<VerificationView> {
                   SizedBox(height: 30.h),
                   TweenAnimationBuilder<double>(
                     tween: Tween(begin: 0.0, end: 1.0),
-                    duration: const Duration(seconds: 5),
+                    duration: const Duration(seconds: 10),
                     onEnd: () {
                       // Auto continue after 5 seconds
                       Navigator.of(context).pushNamedAndRemoveUntil(
@@ -285,6 +285,7 @@ class _VerificationViewState extends State<VerificationView> {
           ),
         );
       }
+      debugPrint(state.toString());
       return Scaffold(
         backgroundColor: kWhite,
         body: SingleChildScrollView(

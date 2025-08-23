@@ -83,12 +83,14 @@ class _SignUpViewState extends State<SignUpView> {
         } else if (state is UserVerificationSMSRequested) {
           //TODO: Add method for sending verification sms
         } else if (state is UserVerificationEmailSent) {
+          context.read<UserBloc>().add(WaitForEmailVerificationUser());
           Navigator.of(context).pushNamedAndRemoveUntil(
             AppRouter.verification,
             (Route<dynamic> route) => false,
           );
         }
       },
+      
       child: Scaffold(
         backgroundColor: kWhite,
         body: SingleChildScrollView(

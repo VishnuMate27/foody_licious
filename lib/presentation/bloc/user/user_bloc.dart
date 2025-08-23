@@ -101,8 +101,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   FutureOr<void> _onWaitForEmailVerification(
       WaitForEmailVerificationUser event, Emitter<UserState> emit) async {
     try {
-      emit(UserLoading());
-      final result = await _sendVerificationEmailUseCase(NoParams());
+      final result = await _waitForEmailVerificationUseCase(NoParams());
       result.fold(
         (failure) => emit(UserLoggedFail(failure)),
         (unit) => emit(UserEmailVerificationSuccess()),
