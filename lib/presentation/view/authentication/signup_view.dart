@@ -11,6 +11,7 @@ import 'package:foody_licious/core/constant/strings.dart';
 import 'package:foody_licious/core/error/failures.dart';
 import 'package:foody_licious/core/router/app_router.dart';
 import 'package:foody_licious/domain/usecase/user/sign_up_with_email_usecase.dart';
+import 'package:foody_licious/domain/usecase/user/sign_up_with_phone_usecase.dart';
 import 'package:foody_licious/presentation/bloc/user/user_bloc.dart';
 import 'package:foody_licious/presentation/widgets/gradient_button.dart';
 import 'package:foody_licious/presentation/widgets/input_text_form_field.dart';
@@ -90,7 +91,6 @@ class _SignUpViewState extends State<SignUpView> {
           );
         }
       },
-      
       child: Scaffold(
         backgroundColor: kWhite,
         body: SingleChildScrollView(
@@ -149,20 +149,54 @@ class _SignUpViewState extends State<SignUpView> {
                   SizedBox(
                     height: 12.h,
                   ),
-                  BlocBuilder<UserBloc, UserState>(
+                  BlocConsumer<UserBloc, UserState>(
+                    listener: (context, state) {
+                      if (state is InputValidationState) {
+                        if (state.isPhone) {
+                          // Phone mode → enforce +91
+                          if (!_emailOrPhoneController.text.startsWith("+91")) {
+                            final newText = _emailOrPhoneController.text;
+                            _emailOrPhoneController.text = "+91$newText";
+                            _emailOrPhoneController.selection =
+                                TextSelection.fromPosition(
+                              TextPosition(
+                                  offset: _emailOrPhoneController.text.length),
+                            );
+                          }
+                        } else if (state.isEmail) {
+                          // Email mode → remove +91 if present
+                          if (_emailOrPhoneController.text.startsWith("+91")) {
+                            final newText = _emailOrPhoneController.text
+                                .replaceFirst("+91", "");
+                            _emailOrPhoneController.text = newText;
+                            _emailOrPhoneController.selection =
+                                TextSelection.fromPosition(
+                              TextPosition(
+                                  offset: _emailOrPhoneController.text.length),
+                            );
+                          }
+                        }
+                      }
+                    },
                     builder: (context, state) {
                       bool isEmail = false;
+                      bool isPhone = false;
                       IconData prefixIcon = Icons.mail_outlined;
-                      TextInputType keyboardType = TextInputType.emailAddress;
+                      TextInputType keyboardType = TextInputType.text;
+
                       if (state is InputValidationState) {
                         isEmail = state.isEmail;
-                        prefixIcon = isEmail
-                            ? Icons.mail_outlined
-                            : Icons.phone_outlined;
-                        keyboardType = isEmail
-                            ? TextInputType.emailAddress
-                            : TextInputType.phone;
+                        isPhone = state.isPhone;
+
+                        if (isEmail) {
+                          prefixIcon = Icons.mail_outlined;
+                          keyboardType = TextInputType.emailAddress;
+                        } else if (isPhone) {
+                          prefixIcon = Icons.phone_outlined;
+                          keyboardType = TextInputType.phone;
+                        }
                       }
+
                       return InputTextFormField(
                         textController: _emailOrPhoneController,
                         labelText: "Email or Phone Number",
@@ -299,11 +333,18 @@ class _SignUpViewState extends State<SignUpView> {
         isEmail = state.isEmail;
       }
 
-      context.read<UserBloc>().add(SignUpWithEmailUser(SignUpWithEmailParams(
-          name: _nameController.text.trim(),
-          email: isEmail ? emailOrPhone : null,
-          password: isEmail ? _passwordController.text : null,
-          authProvider: isEmail ? "email" : "phone")));
+      if (isEmail) {
+        context.read<UserBloc>().add(SignUpWithEmailUser(SignUpWithEmailParams(
+            name: _nameController.text.trim(),
+            email: emailOrPhone,
+            password: _passwordController.text,
+            authProvider: "email")));
+      } else {
+        context.read<UserBloc>().add(SignUpWithPhoneUser(SignUpWithPhoneParams(
+            name: _nameController.text.trim(),
+            phone: emailOrPhone,
+            authProvider: "phone")));
+      }
     }
   }
 }

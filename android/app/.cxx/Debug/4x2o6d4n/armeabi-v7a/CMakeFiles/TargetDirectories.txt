@@ -1,2 +1,0 @@
-D:/Projects/Learning/Flutter/foody_licious/android/app/.cxx/Debug/4x2o6d4n/armeabi-v7a/CMakeFiles/edit_cache.dir
-D:/Projects/Learning/Flutter/foody_licious/android/app/.cxx/Debug/4x2o6d4n/armeabi-v7a/CMakeFiles/rebuild_cache.dir

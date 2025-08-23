@@ -34,11 +34,13 @@ class UserLoggedOut extends UserState {
 
 class InputValidationState extends UserState {
   final bool isEmail;
+  final bool isPhone;
   final bool isValid;
   final String inputType;
 
   InputValidationState({
     required this.isEmail,
+    required this.isPhone,
     required this.isValid,
     required this.inputType,
   });

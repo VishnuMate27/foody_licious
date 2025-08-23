@@ -101,6 +101,31 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
 
   @override
   Future<Unit> signUpWithPhone(SignUpWithPhoneParams params) async {
+    final PhoneVerificationCompleted phoneVerificationCompleted =
+        (AuthCredential authCredential) {
+      print("phone is verified : token ${authCredential.token}");
+    };
+    final PhoneVerificationFailed phoneVerificationFailed =
+        (FirebaseAuthException authCredential) {
+      print("phone failed ${authCredential.message},${authCredential.code}");
+    };
+    final PhoneCodeAutoRetrievalTimeout phoneCodeAutoRetrievalTimeout =
+        (String verificationId) {
+      this._verificationId = verificationId;
+      print("time out $verificationId");
+    };
+    final PhoneCodeSent phoneCodeSent =
+        (String verificationID, [int? forceResendingToken]) {
+      this._verificationId = verificationID;
+      print("sendPhoneCode $verificationID");
+    };
+    // await firebaseAuth.verifyPhoneNumber(
+    //     phoneNumber: params.phone,
+    //     timeout: const Duration(seconds: 5),
+    //     verificationCompleted: phoneVerificationCompleted,
+    //     verificationFailed: phoneVerificationFailed,
+    //     codeSent: phoneCodeSent,
+    //     codeAutoRetrievalTimeout: phoneCodeAutoRetrievalTimeout);
     return Future.value(unit);
   }
 

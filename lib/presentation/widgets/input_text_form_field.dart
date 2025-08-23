@@ -17,6 +17,7 @@ class InputTextFormField extends StatefulWidget {
   final TextInputType? keyboardType;
   final String? validatorText;
   final bool obscureText; // initial value
+  final Function(String)? onChanged;
 
   const InputTextFormField({
     super.key,
@@ -32,6 +33,7 @@ class InputTextFormField extends StatefulWidget {
     this.keyboardType = TextInputType.text,
     this.validatorText = "This field cannot be empty.",
     this.obscureText = false,
+    this.onChanged,
   });
 
   @override
@@ -55,6 +57,7 @@ class _InputTextFormFieldState extends State<InputTextFormField> {
       controller: widget.textController,
       keyboardType: widget.keyboardType,
       obscureText: _obscure,
+      onChanged: widget.onChanged,
       decoration: InputDecoration(
         fillColor: const Color.fromARGB(255, 49, 42, 42),
         labelText: widget.labelText,

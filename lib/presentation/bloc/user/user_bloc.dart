@@ -142,6 +142,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     if (input.isEmpty) {
       emit(InputValidationState(
         isEmail: false,
+        isPhone: false,
         isValid: false,
         inputType: 'none',
       ));
@@ -153,6 +154,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
 
     emit(InputValidationState(
       isEmail: isEmail,
+      isPhone: isPhone,
       isValid: isEmail || isPhone,
       inputType: isEmail ? 'email' : (isPhone ? 'phone' : 'invalid'),
     ));
