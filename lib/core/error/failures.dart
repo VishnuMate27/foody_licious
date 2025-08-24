@@ -17,3 +17,9 @@ class ExceptionFailure extends Failure {}
 class CredentialFailure extends Failure {}
 
 class AuthenticationFailure extends Failure {}
+
+class NoUserFailure extends Failure {}
+
+class UserAlreadyExistsFailure extends Failure {}
+
+class TooManyRequestsFailure extends Failure {}

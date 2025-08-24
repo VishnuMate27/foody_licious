@@ -22,7 +22,9 @@ abstract class UserRemoteDataSource {
       SignUpWithEmailParams params);
   Future<Unit> sendVerificationEmail();
   Future<Unit> waitForEmailVerification();
-  Future<Unit> signUpWithPhone(SignUpWithPhoneParams params);
+  Future<Unit> verifyPhoneNumber(SignUpWithPhoneParams params);
+  Future<AuthenticationResponseModel> signUpWithPhone(
+      SignUpWithPhoneParams params);
   Future<AuthenticationResponseModel> signUpWithGoogle(
       SignUpWithEmailParams params);
   Future<AuthenticationResponseModel> signUpWithFacebook(
@@ -78,7 +80,7 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
   }) async {
     final user = firebaseAuth.currentUser;
     if (user == null) {
-      throw NoUserException();
+      throw NoUserFailure();
     }
 
     final stopwatch = Stopwatch()..start();
@@ -100,33 +102,57 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
   }
 
   @override
-  Future<Unit> signUpWithPhone(SignUpWithPhoneParams params) async {
-    final PhoneVerificationCompleted phoneVerificationCompleted =
-        (AuthCredential authCredential) {
-      print("phone is verified : token ${authCredential.token}");
-    };
-    final PhoneVerificationFailed phoneVerificationFailed =
-        (FirebaseAuthException authCredential) {
-      print("phone failed ${authCredential.message},${authCredential.code}");
-    };
-    final PhoneCodeAutoRetrievalTimeout phoneCodeAutoRetrievalTimeout =
-        (String verificationId) {
-      this._verificationId = verificationId;
-      print("time out $verificationId");
-    };
-    final PhoneCodeSent phoneCodeSent =
-        (String verificationID, [int? forceResendingToken]) {
-      this._verificationId = verificationID;
-      print("sendPhoneCode $verificationID");
-    };
-    // await firebaseAuth.verifyPhoneNumber(
-    //     phoneNumber: params.phone,
-    //     timeout: const Duration(seconds: 5),
-    //     verificationCompleted: phoneVerificationCompleted,
-    //     verificationFailed: phoneVerificationFailed,
-    //     codeSent: phoneCodeSent,
-    //     codeAutoRetrievalTimeout: phoneCodeAutoRetrievalTimeout);
-    return Future.value(unit);
+  Future<Unit> verifyPhoneNumber(SignUpWithPhoneParams params) async {
+    final requestBody = json.encode({
+      "phone": params.phone ?? "",
+    });
+
+    final response = await client.post(
+      Uri.parse('$kBaseUrl/api/auth/sendVerificationCode'),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: requestBody,
+    );
+
+    if (response.statusCode == 201) {
+      return Future.value(unit);
+    } else if (response.statusCode == 400 || response.statusCode == 401) {
+      throw CredentialFailure();
+    } else if (response.statusCode == 409) {
+      throw UserAlreadyExistsFailure();
+    } else {
+      throw ServerFailure();
+    }
+  }
+
+  @override
+  Future<AuthenticationResponseModel> signUpWithPhone(
+      SignUpWithPhoneParams params) async {
+    final requestBody = json.encode({
+      "phone": params.phone ?? "",
+      "name": params.name ?? "",
+      "authProvider": params.authProvider,
+      "code": params.code
+    });
+
+    final response = await client.post(
+      Uri.parse('$kBaseUrl/api/auth/verifyCodeAndRegisterWithPhone'),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: requestBody,
+    );
+
+    if (response.statusCode == 201) {
+      return authenticationResponseModelFromJson(response.body);
+    } else if (response.statusCode == 400 || response.statusCode == 401) {
+      throw CredentialFailure();
+    } else if (response.statusCode == 409) {
+      throw UserAlreadyExistsFailure();
+    } else {
+      throw ServerFailure();
+    }
   }
 
   @override
@@ -164,7 +190,7 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
     } else if (response.statusCode == 400 || response.statusCode == 401) {
       throw CredentialFailure();
     } else {
-      throw ServerException();
+      throw ServerFailure();
     }
   }
 
@@ -177,46 +203,16 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
         await user.sendEmailVerification();
       } on FirebaseAuthException catch (e) {
         if (e.code == 'too-many-requests') {
-          throw TooManyRequestsException();
+          throw TooManyRequestsFailure();
         } else {
-          throw ServerException();
+          throw ServerFailure();
         }
       } catch (e) {
-        throw ServerException();
+        throw ServerFailure();
       }
     } else {
-      throw NoUserException();
+      throw NoUserFailure();
     }
     return Future.value(unit);
-  }
-
-  @override
-  Future<void> verifyPhoneNumber(String phoneNumber) async {
-    final PhoneVerificationCompleted phoneVerificationCompleted =
-        (AuthCredential authCredential) {
-      print("phone is verified : token ${authCredential.token}");
-    };
-    final PhoneVerificationFailed phoneVerificationFailed =
-        (FirebaseAuthException authCredential) {
-      print("phone failed ${authCredential.message},${authCredential.code}");
-    };
-    final PhoneCodeAutoRetrievalTimeout phoneCodeAutoRetrievalTimeout =
-        (String verificationId) {
-      this._verificationId = verificationId;
-      print("time out $verificationId");
-    };
-    final PhoneCodeSent phoneCodeSent =
-        (String verificationID, [int? forceResendingToken]) {
-      this._verificationId = verificationID;
-      print("sendPhoneCode $verificationID");
-    };
-
-    firebaseAuth.verifyPhoneNumber(
-        phoneNumber: phoneNumber,
-        timeout: const Duration(seconds: 5),
-        verificationCompleted: phoneVerificationCompleted,
-        verificationFailed: phoneVerificationFailed,
-        codeSent: phoneCodeSent,
-        codeAutoRetrievalTimeout: phoneCodeAutoRetrievalTimeout);
   }
 }

@@ -12,6 +12,10 @@ class SignUpWithEmailUser extends UserEvent {
   final SignUpWithEmailParams params;
   SignUpWithEmailUser(this.params);
 }
+class VerifyPhoneNumberUser extends UserEvent {
+  final SignUpWithPhoneParams params;
+  VerifyPhoneNumberUser(this.params);
+}
 
 class SignUpWithPhoneUser extends UserEvent {
   final SignUpWithPhoneParams params;

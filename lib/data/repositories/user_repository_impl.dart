@@ -47,13 +47,26 @@ class UserRepositoryImpl implements UserRepository {
   }
 
   @override
-  Future<Either<Failure, Unit>> signUpWithPhone(params) async {
+  Future<Either<Failure, Unit>> verifyPhoneNumber(params) async {
+    if (!await networkInfo.isConnected) {
+      return Left(NetworkFailure());
+    }
+    try {
+      final remoteResponse = await remoteDataSource.verifyPhoneNumber(params);
+      return Right(remoteResponse);
+    } on Failure catch (failure) {
+      return Left(failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, User>> signUpWithPhone(params) async {
     if (!await networkInfo.isConnected) {
       return Left(NetworkFailure());
     }
     try {
       final remoteResponse = await remoteDataSource.signUpWithPhone(params);
-      return Right(remoteResponse);
+      return Right(remoteResponse.user);
     } on Failure catch (failure) {
       return Left(failure);
     }

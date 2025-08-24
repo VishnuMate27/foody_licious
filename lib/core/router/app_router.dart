@@ -56,7 +56,14 @@ class AppRouter {
       case signUp:
         return MaterialPageRoute(builder: (_) => const SignUpView());
       case verification:
-        return MaterialPageRoute(builder: (_) => VerificationView());
+        final args = routeSettings.arguments as Map<String, dynamic>;
+        return MaterialPageRoute(
+          builder: (_) => VerificationView(
+            nameController: args['nameController'],
+            emailOrPhoneController: args['emailOrPhoneController'],
+            authProvider: args['authProvider'],
+          ),
+        );
       case setLocation:
         return MaterialPageRoute(builder: (_) => SetLocationView());
       //products

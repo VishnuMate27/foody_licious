@@ -4,12 +4,12 @@ import '../../../../../core/error/failures.dart';
 import '../../entities/user/user.dart';
 import '../../repositories/user_repository.dart';
 
-class SignUpWithPhoneUseCase implements UseCase<Unit, SignUpWithPhoneParams> {
+class SignUpWithPhoneUseCase implements UseCase<User, SignUpWithPhoneParams> {
   final UserRepository repository;
   SignUpWithPhoneUseCase(this.repository);
 
   @override
-  Future<Either<Failure, Unit>> call(SignUpWithPhoneParams params) async {
+  Future<Either<Failure, User>> call(SignUpWithPhoneParams params) async {
     return await repository.signUpWithPhone(params);
   }
 }
@@ -17,9 +17,7 @@ class SignUpWithPhoneUseCase implements UseCase<Unit, SignUpWithPhoneParams> {
 class SignUpWithPhoneParams {
   final String? name;
   final String? phone;
+  final String? code;
   final String authProvider;
-  const SignUpWithPhoneParams(
-      {this.name,
-      this.phone,
-      required this.authProvider});
+  const SignUpWithPhoneParams({this.name, this.phone, this.code, required this.authProvider});
 }

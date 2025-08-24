@@ -73,11 +73,11 @@ class UserVerificationEmailSentFailed extends UserState {
   List<Object> get props => [failure];
 }
 
-class UserVerificationSMSRequested extends UserState {
-  final Unit unit;
-  UserVerificationSMSRequested(this.unit);
+class UserPhoneVerificationSuccess extends UserState {
+  final User user;
+  UserPhoneVerificationSuccess(this.user);
   @override
-  List<Object> get props => [unit];
+  List<Object> get props => [user];
 }
 
 class UserVerificationSMSSent extends UserState {

@@ -11,6 +11,7 @@ import 'package:foody_licious/domain/usecase/user/send_verification_email_usecas
 import 'package:foody_licious/domain/usecase/user/sign_in_usecase.dart';
 import 'package:foody_licious/domain/usecase/user/sign_up_with_email_usecase.dart';
 import 'package:foody_licious/domain/usecase/user/sign_up_with_phone_usecase.dart';
+import 'package:foody_licious/domain/usecase/user/verify_phone_number_usecase.dart';
 import 'package:foody_licious/domain/usecase/user/wait_for_email_verification_usecase.dart';
 
 import '../../../core/error/failures.dart';
@@ -23,12 +24,14 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   final GetLocalUserUseCase _getCachedUserUseCase;
   final SignInUseCase _signInUseCase;
   final SignUpWithEmailUseCase _signUpWithEmailUseCase;
+  final VerifyPhoneNumberUseCase _verifyPhoneNumberUseCase;
   final SignUpWithPhoneUseCase _signUpWithPhoneUseCase;
   final SendVerificationEmailUseCase _sendVerificationEmailUseCase;
   final WaitForEmailVerificationUsecase _waitForEmailVerificationUseCase;
   UserBloc(
     this._signInUseCase,
     this._signUpWithEmailUseCase,
+    this._verifyPhoneNumberUseCase,
     this._signUpWithPhoneUseCase,
     this._sendVerificationEmailUseCase,
     this._getCachedUserUseCase,
@@ -39,6 +42,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     on<SendVerificationEmailUser>(_onSendVerificationEmail);
     on<WaitForEmailVerificationUser>(_onWaitForEmailVerification);
     on<SignUpWithPhoneUser>(_onSignUpWithPhone);
+    on<VerifyPhoneNumberUser>(_onVerifyPhoneNumber);
     on<CheckUser>(_onCheckUser);
     on<SignOutUser>(_onSignOut);
     on<ValidateEmailOrPhone>(_onValidateEmailOrPhone);
@@ -118,7 +122,21 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       final result = await _signUpWithPhoneUseCase(event.params);
       result.fold(
         (failure) => emit(UserLoggedFail(failure)),
-        (unit) => emit(UserVerificationSMSRequested(unit)),
+        (user) => emit(UserPhoneVerificationSuccess(user)),
+      );
+    } catch (e) {
+      emit(UserLoggedFail(ExceptionFailure()));
+    }
+  }
+
+  FutureOr<void> _onVerifyPhoneNumber(
+      VerifyPhoneNumberUser event, Emitter<UserState> emit) async {
+    try {
+      emit(UserLoading());
+      final result = await _verifyPhoneNumberUseCase(event.params);
+      result.fold(
+        (failure) => emit(UserLoggedFail(failure)),
+        (unit) => emit(UserVerificationSMSSent(unit)),
       );
     } catch (e) {
       emit(UserLoggedFail(ExceptionFailure()));

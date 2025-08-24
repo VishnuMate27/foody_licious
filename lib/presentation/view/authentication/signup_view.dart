@@ -81,8 +81,14 @@ class _SignUpViewState extends State<SignUpView> {
         } else if (state is UserVerificationEmailRequested) {
           //TODO: Add method for sending verification email
           context.read<UserBloc>().add(SendVerificationEmailUser());
-        } else if (state is UserVerificationSMSRequested) {
-          //TODO: Add method for sending verification sms
+        } else if (state is UserVerificationSMSSent) {
+          Navigator.of(context).pushNamedAndRemoveUntil(
+              AppRouter.verification, (Route<dynamic> route) => false,
+              arguments: {
+                'nameController': _nameController,
+                'emailOrPhoneController': _emailOrPhoneController,
+                'authProvider': 'phone',
+              });
         } else if (state is UserVerificationEmailSent) {
           context.read<UserBloc>().add(WaitForEmailVerificationUser());
           Navigator.of(context).pushNamedAndRemoveUntil(
@@ -340,10 +346,11 @@ class _SignUpViewState extends State<SignUpView> {
             password: _passwordController.text,
             authProvider: "email")));
       } else {
-        context.read<UserBloc>().add(SignUpWithPhoneUser(SignUpWithPhoneParams(
-            name: _nameController.text.trim(),
-            phone: emailOrPhone,
-            authProvider: "phone")));
+        context.read<UserBloc>().add(VerifyPhoneNumberUser(
+            SignUpWithPhoneParams(
+                name: _nameController.text.trim(),
+                phone: emailOrPhone,
+                authProvider: "phone")));
       }
     }
   }
