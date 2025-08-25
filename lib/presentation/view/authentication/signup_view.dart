@@ -92,10 +92,18 @@ class _SignUpViewState extends State<SignUpView> {
         } else if (state is UserVerificationEmailSent) {
           context.read<UserBloc>().add(WaitForEmailVerificationUser());
           Navigator.of(context).pushNamedAndRemoveUntil(
-            AppRouter.verification,
+              AppRouter.verification, (Route<dynamic> route) => false,
+              arguments: {
+                'nameController': _nameController,
+                'emailOrPhoneController': _emailOrPhoneController,
+                'authProvider': 'email',
+              });
+        }else if (state is UserGoogleSignUpSuccess || state is UserFacebookSignUpSuccess) {
+          Navigator.of(context).pushNamedAndRemoveUntil(
+            AppRouter.home,
             (Route<dynamic> route) => false,
           );
-        }
+        } 
       },
       child: Scaffold(
         backgroundColor: kWhite,
@@ -274,10 +282,7 @@ class _SignUpViewState extends State<SignUpView> {
                         authProviderlogoImagePath: kFacebookIcon,
                         onTap: () {
                           context.read<UserBloc>().add(
-                                SignUpWithEmailUser(
-                                  SignUpWithEmailParams(
-                                      authProvider: "facebook"),
-                                ),
+                                SignUpWithFacebookUser()
                               );
                         },
                       ),
@@ -286,9 +291,7 @@ class _SignUpViewState extends State<SignUpView> {
                         authProviderlogoImagePath: kGoogleIcon,
                         onTap: () {
                           context.read<UserBloc>().add(
-                                SignUpWithEmailUser(
-                                  SignUpWithEmailParams(authProvider: "google"),
-                                ),
+                                SignUpWithGoogleUser(),
                               );
                         },
                       ),
@@ -334,9 +337,11 @@ class _SignUpViewState extends State<SignUpView> {
     if (key.currentState!.validate()) {
       final emailOrPhone = _emailOrPhoneController.text.trim();
       bool isEmail = false;
+      bool isPhone = false;
 
       if (state is InputValidationState) {
         isEmail = state.isEmail;
+        isPhone = state.isPhone;
       }
 
       if (isEmail) {
@@ -345,7 +350,7 @@ class _SignUpViewState extends State<SignUpView> {
             email: emailOrPhone,
             password: _passwordController.text,
             authProvider: "email")));
-      } else {
+      } else if (isPhone) {
         context.read<UserBloc>().add(VerifyPhoneNumberUser(
             SignUpWithPhoneParams(
                 name: _nameController.text.trim(),

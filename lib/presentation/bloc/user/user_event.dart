@@ -22,6 +22,10 @@ class SignUpWithPhoneUser extends UserEvent {
   SignUpWithPhoneUser(this.params);
 }
 
+class SignUpWithGoogleUser extends UserEvent {}
+
+class SignUpWithFacebookUser extends UserEvent {}
+
 class SignOutUser extends UserEvent {}
 
 class CheckUser extends UserEvent {}

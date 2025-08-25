@@ -25,10 +25,8 @@ abstract class UserRemoteDataSource {
   Future<Unit> verifyPhoneNumber(SignUpWithPhoneParams params);
   Future<AuthenticationResponseModel> signUpWithPhone(
       SignUpWithPhoneParams params);
-  Future<AuthenticationResponseModel> signUpWithGoogle(
-      SignUpWithEmailParams params);
-  Future<AuthenticationResponseModel> signUpWithFacebook(
-      SignUpWithEmailParams params);
+  Future<AuthenticationResponseModel> signUpWithGoogle();
+  Future<AuthenticationResponseModel> signUpWithFacebook();
 }
 
 class UserRemoteDataSourceImpl implements UserRemoteDataSource {
@@ -70,7 +68,7 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
       password: params.password!,
     );
     user = userCredential.user;
-    return await _sendRegisterRequest(user!, params);
+    return await _sendRegisterRequest(user!, params: params);
   }
 
   @override
@@ -129,6 +127,94 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
   @override
   Future<AuthenticationResponseModel> signUpWithPhone(
       SignUpWithPhoneParams params) async {
+    return await _sendRegisterWithPhoneRequest(params);
+  }
+
+  @override
+  Future<AuthenticationResponseModel> signUpWithGoogle() async {
+    try {
+      googleSignIn.initialize(serverClientId: kServerClientId);
+      final GoogleSignInAccount? googleUser = await googleSignIn.authenticate();
+      if (googleUser == null) {
+        throw Exception("Google authentication cancelled.");
+      }
+
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+
+      final credential = GoogleAuthProvider.credential(
+        idToken: googleAuth.idToken,
+      );
+
+      final userCredential =
+          await firebaseAuth.signInWithCredential(credential);
+      user = userCredential.user;
+
+      if (user == null) throw Exception("Google sign-in failed.");
+      return await _sendRegisterRequest(user!, authProvider: "google");
+    } catch (e) {
+      throw ExceptionFailure();
+    }
+  }
+
+  @override
+  Future<AuthenticationResponseModel> signUpWithFacebook() async {
+    final LoginResult loginResult = await FacebookAuth.instance.login();
+    if (loginResult.status != LoginStatus.success) {
+      throw Exception("Facebook login failed.");
+    }
+
+    final OAuthCredential facebookAuthCredential =
+        FacebookAuthProvider.credential(loginResult.accessToken!.tokenString);
+
+    final userCredential =
+        await firebaseAuth.signInWithCredential(facebookAuthCredential);
+    user = userCredential.user;
+
+    if (user == null) throw Exception("Facebook sign-in failed.");
+    return await _sendRegisterRequest(user!, authProvider: "facebook");
+  }
+
+  Future<AuthenticationResponseModel> _sendRegisterRequest(User user,
+      {SignUpWithEmailParams? params, String? authProvider}) async {
+    Object? requestBody;
+    if (params != null) {
+      requestBody = json.encode({
+        "email": user.email ?? params.email,
+        "id": user.uid,
+        "name": params.name,
+        "phone": user.phoneNumber ?? "",
+        "authProvider": params.authProvider
+      });
+    } else {
+      requestBody = json.encode({
+        "email": user.email,
+        "id": user.uid,
+        "name": user.displayName,
+        "phone": user.phoneNumber ?? "",
+        "authProvider": authProvider
+      });
+    }
+
+    final response = await client.post(
+      Uri.parse('$kBaseUrl/api/auth/register'),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: requestBody,
+    );
+
+    if (response.statusCode == 201) {
+      return authenticationResponseModelFromJson(response.body);
+    } else if (response.statusCode == 400 || response.statusCode == 401) {
+      throw CredentialFailure();
+    } else {
+      throw ServerFailure();
+    }
+  }
+
+  Future<AuthenticationResponseModel> _sendRegisterWithPhoneRequest(
+      SignUpWithPhoneParams params) async {
     final requestBody = json.encode({
       "phone": params.phone ?? "",
       "name": params.name ?? "",
@@ -150,45 +236,6 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
       throw CredentialFailure();
     } else if (response.statusCode == 409) {
       throw UserAlreadyExistsFailure();
-    } else {
-      throw ServerFailure();
-    }
-  }
-
-  @override
-  Future<AuthenticationResponseModel> signUpWithGoogle(
-      SignUpWithEmailParams params) async {
-    return await _sendRegisterRequest(user!, params);
-  }
-
-  @override
-  Future<AuthenticationResponseModel> signUpWithFacebook(
-      SignUpWithEmailParams params) async {
-    return await _sendRegisterRequest(user!, params);
-  }
-
-  Future<AuthenticationResponseModel> _sendRegisterRequest(
-      User user, SignUpWithEmailParams params) async {
-    final requestBody = json.encode({
-      "email": user.email ?? params.email,
-      "id": user.uid,
-      "name": params.name,
-      "phone": user.phoneNumber ?? "",
-      "authProvider": params.authProvider
-    });
-
-    final response = await client.post(
-      Uri.parse('$kBaseUrl/api/auth/register'),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: requestBody,
-    );
-
-    if (response.statusCode == 201) {
-      return authenticationResponseModelFromJson(response.body);
-    } else if (response.statusCode == 400 || response.statusCode == 401) {
-      throw CredentialFailure();
     } else {
       throw ServerFailure();
     }

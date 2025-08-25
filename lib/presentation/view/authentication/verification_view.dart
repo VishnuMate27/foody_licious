@@ -12,6 +12,8 @@ import 'package:foody_licious/presentation/widgets/gradient_button.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pinput/pinput.dart';
 import 'package:smart_auth/smart_auth.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:open_mail_app_plus/open_mail_app_plus.dart';
 
 class VerificationView extends StatefulWidget {
   final TextEditingController? nameController;
@@ -158,13 +160,39 @@ class _VerificationViewState extends State<VerificationView> {
                               width: 140.h,
                               buttonText: "Open Mail App",
                               fontSize: 14,
-                              onTap: () {}),
+                              onTap: () async {
+                                // Android: Will open mail app or show native picker.
+                                // iOS: Will open mail app if single mail app found.
+                                var result = await OpenMailAppPlus.openMailApp(
+                                  nativePickerTitle: 'Select email app to open',
+                                );
+
+                                // If no mail apps found, show error
+                                if (!result.didOpen && !result.canOpen) {
+                                  showNoMailAppsDialog(context);
+
+                                  // iOS: if multiple mail apps found, show dialog to select.
+                                  // There is no native intent/default app system in iOS so
+                                  // you have to do it yourself.
+                                } else if (!result.didOpen && result.canOpen) {
+                                  showDialog(
+                                    context: context,
+                                    builder: (_) {
+                                      return MailAppPickerDialog(
+                                        mailApps: result.options,
+                                      );
+                                    },
+                                  );
+                                }
+                              }),
                           GradientButton(
                               height: 30.h,
                               width: 140.h,
                               buttonText: "Resend Email",
                               fontSize: 14,
-                              onTap: () {})
+                              onTap: () {
+                                
+                              })
                         ]),
                   ),
                 ],
@@ -314,7 +342,8 @@ class _VerificationViewState extends State<VerificationView> {
                     ),
                     Text(
                       "Foody Licious",
-                      style: GoogleFonts.yeonSung(color: kTextRed, fontSize: 40),
+                      style:
+                          GoogleFonts.yeonSung(color: kTextRed, fontSize: 40),
                     ),
                     SizedBox(
                       height: 10.h,
@@ -556,7 +585,6 @@ class _VerificationViewState extends State<VerificationView> {
       );
     });
   }
-
   _onVerify(BuildContext context, GlobalKey<FormState> key) async {
     if (key.currentState!.validate()) {
       final verificationCode = pinController.text.trim();
@@ -572,4 +600,25 @@ class _VerificationViewState extends State<VerificationView> {
           );
     }
   }
+
+   void showNoMailAppsDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("Open Mail App"),
+          content: Text("No mail apps installed"),
+          actions: <Widget>[
+            TextButton(
+              child: Text("OK"),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            )
+          ],
+        );
+      },
+    );
+  }
+
 }

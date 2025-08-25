@@ -10,6 +10,8 @@ import 'package:foody_licious/domain/usecase/user/get_local_user_usecase.dart';
 import 'package:foody_licious/domain/usecase/user/send_verification_email_usecase.dart';
 import 'package:foody_licious/domain/usecase/user/sign_in_usecase.dart';
 import 'package:foody_licious/domain/usecase/user/sign_up_with_email_usecase.dart';
+import 'package:foody_licious/domain/usecase/user/sign_up_with_facebook_usecase.dart';
+import 'package:foody_licious/domain/usecase/user/sign_up_with_google_usecase.dart';
 import 'package:foody_licious/domain/usecase/user/sign_up_with_phone_usecase.dart';
 import 'package:foody_licious/domain/usecase/user/verify_phone_number_usecase.dart';
 import 'package:foody_licious/domain/usecase/user/wait_for_email_verification_usecase.dart';
@@ -26,6 +28,8 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   final SignUpWithEmailUseCase _signUpWithEmailUseCase;
   final VerifyPhoneNumberUseCase _verifyPhoneNumberUseCase;
   final SignUpWithPhoneUseCase _signUpWithPhoneUseCase;
+  final SignUpWithGoogleUseCase _signUpWithGoogleUseCase;
+  final SignUpWithFacebookUseCase _signUpWithFacebookUseCase;
   final SendVerificationEmailUseCase _sendVerificationEmailUseCase;
   final WaitForEmailVerificationUsecase _waitForEmailVerificationUseCase;
   UserBloc(
@@ -33,6 +37,8 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     this._signUpWithEmailUseCase,
     this._verifyPhoneNumberUseCase,
     this._signUpWithPhoneUseCase,
+    this._signUpWithGoogleUseCase,
+    this._signUpWithFacebookUseCase,
     this._sendVerificationEmailUseCase,
     this._getCachedUserUseCase,
     this._waitForEmailVerificationUseCase,
@@ -42,6 +48,8 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     on<SendVerificationEmailUser>(_onSendVerificationEmail);
     on<WaitForEmailVerificationUser>(_onWaitForEmailVerification);
     on<SignUpWithPhoneUser>(_onSignUpWithPhone);
+    on<SignUpWithGoogleUser>(_onSignUpWithGoogle);
+    on<SignUpWithFacebookUser>(_onSignUpWithFacebook);
     on<VerifyPhoneNumberUser>(_onVerifyPhoneNumber);
     on<CheckUser>(_onCheckUser);
     on<SignOutUser>(_onSignOut);
@@ -123,6 +131,34 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       result.fold(
         (failure) => emit(UserLoggedFail(failure)),
         (user) => emit(UserPhoneVerificationSuccess(user)),
+      );
+    } catch (e) {
+      emit(UserLoggedFail(ExceptionFailure()));
+    }
+  }
+
+  FutureOr<void> _onSignUpWithGoogle(
+      SignUpWithGoogleUser event, Emitter<UserState> emit) async {
+    try {
+      emit(UserLoading());
+      final result = await _signUpWithGoogleUseCase(event);
+      result.fold(
+        (failure) => emit(UserLoggedFail(failure)),
+        (user) => emit(UserGoogleSignUpSuccess(user)),
+      );
+    } catch (e) {
+      emit(UserLoggedFail(ExceptionFailure()));
+    }
+  }
+
+  FutureOr<void> _onSignUpWithFacebook(
+      SignUpWithFacebookUser event, Emitter<UserState> emit) async {
+    try {
+      emit(UserLoading());
+      final result = await _signUpWithFacebookUseCase(event);
+      result.fold(
+        (failure) => emit(UserLoggedFail(failure)),
+        (user) => emit(UserFacebookSignUpSuccess(user)),
       );
     } catch (e) {
       emit(UserLoggedFail(ExceptionFailure()));

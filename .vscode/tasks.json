@@ -1,0 +1,17 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "update-env",
+      "type": "shell",
+      "command": "powershell",
+      "args": [
+        "-ExecutionPolicy",
+        "Bypass",
+        "-Command",
+        "$ip = (Get-NetIPAddress -AddressFamily IPv4 | Where-Object { $_.IPAddress -notlike '127.*' -and $_.PrefixOrigin -eq 'Dhcp' } | Select-Object -First 1 -ExpandProperty IPAddress); $envPath = 'assets/utils/.env'; (Get-Content $envPath) -replace 'BASE_URL\\s*=\\s*\".*\"', ('BASE_URL = \"\"\"http://'+$ip+':5001\"\"\"') | Set-Content $envPath; Write-Output ('Updated BASE_URL to \"http://'+$ip+':5001\" in '+$envPath)"
+      ],
+      "problemMatcher": []
+    }
+  ]
+}

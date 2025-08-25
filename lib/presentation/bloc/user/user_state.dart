@@ -79,6 +79,19 @@ class UserPhoneVerificationSuccess extends UserState {
   @override
   List<Object> get props => [user];
 }
+class UserGoogleSignUpSuccess extends UserState {
+  final User user;
+  UserGoogleSignUpSuccess(this.user);
+  @override
+  List<Object> get props => [user];
+}
+
+class UserFacebookSignUpSuccess extends UserState {
+  final User user;
+  UserFacebookSignUpSuccess(this.user);
+  @override
+  List<Object> get props => [user];
+}
 
 class UserVerificationSMSSent extends UserState {
   final Unit unit;

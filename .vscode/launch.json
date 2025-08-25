@@ -1,32 +1,25 @@
 {
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
-    "version": "0.2.0",
-    "configurations": [
-        {
-            "type": "cmake",
-            "request": "launch",
-            "name": "CMake: Script debugging",
-            "cmakeDebugType": "script",
-            "scriptPath": "${workspaceFolder}/<...>.cmake"
-        },
-        {
-            "name": "foody_licious",
-            "request": "launch",
-            "type": "dart"
-        },
-        {
-            "name": "foody_licious (profile mode)",
-            "request": "launch",
-            "type": "dart",
-            "flutterMode": "profile"
-        },
-        {
-            "name": "foody_licious (release mode)",
-            "request": "launch",
-            "type": "dart",
-            "flutterMode": "release"
-        }
-    ]
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "foody_licious",
+      "request": "launch",
+      "type": "dart",
+      "preLaunchTask": "update-env"
+    },
+    {
+      "name": "foody_licious (profile mode)",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "profile",
+      "preLaunchTask": "update-env"
+    },
+    {
+      "name": "foody_licious (release mode)",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "release",
+      "preLaunchTask": "update-env"
+    }
+  ]
 }

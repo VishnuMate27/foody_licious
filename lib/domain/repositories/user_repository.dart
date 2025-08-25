@@ -16,8 +16,8 @@ abstract class UserRepository {
   Future<Either<Failure, User>> signUpWithPhone(SignUpWithPhoneParams params);
   Future<Either<Failure, Unit>> sendVerificationEmail();
   Future<Either<Failure, Unit>> waitForEmailVerification();
-  // Future<Either<Failure, User>> signUpWithGoogle(SignUpParams params);
-  // Future<Either<Failure, User>> signUpWithFacebook(SignUpParams params);
+  Future<Either<Failure, User>> signUpWithGoogle();
+  Future<Either<Failure, User>> signUpWithFacebook();
   Future<Either<Failure, NoParams>> signOut();
   Future<Either<Failure, User>> getLocalUser();
 }

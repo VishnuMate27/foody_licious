@@ -40,6 +40,8 @@ dependencies:
   carousel_slider: ^5.0.0
   flutter_easyloading: ^3.0.5 
   flutter_dotenv: ^5.2.1
+  url_launcher: ^6.3.2
+  open_mail_app_plus: ^0.0.2
 
   #ui
   flutter_screenutil: ^5.9.3

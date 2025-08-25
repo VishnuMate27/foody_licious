@@ -74,7 +74,7 @@ class _HomeViewState extends State<HomeView> {
               CarouselSlider(
                 options: CarouselOptions(
                   height: 172.h,
-                  autoPlay: false,
+                  autoPlay: true,
                   autoPlayInterval: const Duration(seconds: 5),
                   viewportFraction: 0.8,
                   enlargeCenterPage: true,
