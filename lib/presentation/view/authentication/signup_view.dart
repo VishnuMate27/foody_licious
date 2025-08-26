@@ -9,6 +9,7 @@ import 'package:foody_licious/core/constant/colors.dart';
 import 'package:foody_licious/core/constant/images.dart';
 import 'package:foody_licious/core/constant/strings.dart';
 import 'package:foody_licious/core/error/failures.dart';
+import 'package:foody_licious/core/extension/failure_extension.dart';
 import 'package:foody_licious/core/router/app_router.dart';
 import 'package:foody_licious/domain/usecase/user/sign_up_with_email_usecase.dart';
 import 'package:foody_licious/domain/usecase/user/sign_up_with_phone_usecase.dart';
@@ -57,9 +58,10 @@ class _SignUpViewState extends State<SignUpView> {
   Widget build(BuildContext context) {
     return BlocListener<UserBloc, UserState>(
       listener: (context, state) {
+        String? errorMessage;
         EasyLoading.dismiss();
         if (state is UserLoading) {
-          // EasyLoading.show(status: 'Loading...');
+          EasyLoading.show(status: 'Loading...');
         } else if (state is UserLogged) {
           // Navigator.of(context).pushNamedAndRemoveUntil(
           //   AppRouter.home,
@@ -79,16 +81,7 @@ class _SignUpViewState extends State<SignUpView> {
             _passwordController.clear();
           }
         } else if (state is UserVerificationEmailRequested) {
-          //TODO: Add method for sending verification email
           context.read<UserBloc>().add(SendVerificationEmailUser());
-        } else if (state is UserVerificationSMSSent) {
-          Navigator.of(context).pushNamedAndRemoveUntil(
-              AppRouter.verification, (Route<dynamic> route) => false,
-              arguments: {
-                'nameController': _nameController,
-                'emailOrPhoneController': _emailOrPhoneController,
-                'authProvider': 'phone',
-              });
         } else if (state is UserVerificationEmailSent) {
           context.read<UserBloc>().add(WaitForEmailVerificationUser());
           Navigator.of(context).pushNamedAndRemoveUntil(
@@ -98,12 +91,63 @@ class _SignUpViewState extends State<SignUpView> {
                 'emailOrPhoneController': _emailOrPhoneController,
                 'authProvider': 'email',
               });
-        }else if (state is UserGoogleSignUpSuccess || state is UserFacebookSignUpSuccess) {
+        } else if (state is UserVerificationSMSSent) {
+          Navigator.of(context).pushNamedAndRemoveUntil(
+              AppRouter.verification, (Route<dynamic> route) => false,
+              arguments: {
+                'nameController': _nameController,
+                'emailOrPhoneController': _emailOrPhoneController,
+                'authProvider': 'phone',
+              });
+        } else if (state is UserGoogleSignUpSuccess ||
+            state is UserFacebookSignUpSuccess) {
           Navigator.of(context).pushNamedAndRemoveUntil(
             AppRouter.home,
             (Route<dynamic> route) => false,
           );
-        } 
+        } else if (state is UserVerificationEmailRequestFailed) {
+          EasyLoading.showError(
+            state.failure.toMessage(
+              defaultMessage: "Verification Email Request Failed!",
+            ),
+          );
+        } else if (state is UserVerificationEmailSentFailed) {
+          EasyLoading.showError(
+            state.failure.toMessage(
+              defaultMessage: "Failed to send verification email!",
+            ),
+          );
+        } else if (state is UserEmailVerificationFailed) {
+          EasyLoading.showError(
+            state.failure.toMessage(
+              defaultMessage: "Email Verification Failed!",
+            ),
+          );
+        } else if (state is UserVerificationSMSSentFailed) {
+          EasyLoading.showError(
+            state.failure.toMessage(
+              defaultMessage: "Failed to send verification SMS!",
+            ),
+          );
+        } else if (state is UserPhoneVerificationFailed) {
+          EasyLoading.showError(
+            state.failure.toMessage(
+              defaultMessage: "Failed to verify phone number!",
+            ),
+          );
+        } else if (state is UserGoogleSignUpFailed) {
+          EasyLoading.showError(
+            state.failure.toMessage(
+              defaultMessage: "Failed to sign up with google!",
+            ),
+          );
+        } else if (state is UserFacebookSignUpFailed) {
+          EasyLoading.showError(
+            state.failure.toMessage(
+              defaultMessage: "Failed to sign up with facebook!",
+            ),
+          );
+        }
       },
       child: Scaffold(
         backgroundColor: kWhite,
@@ -281,9 +325,9 @@ class _SignUpViewState extends State<SignUpView> {
                         authProviderName: "Facebook",
                         authProviderlogoImagePath: kFacebookIcon,
                         onTap: () {
-                          context.read<UserBloc>().add(
-                                SignUpWithFacebookUser()
-                              );
+                          context
+                              .read<UserBloc>()
+                              .add(SignUpWithFacebookUser());
                         },
                       ),
                       SocialAuthButton(

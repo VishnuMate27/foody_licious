@@ -13,6 +13,7 @@ import 'package:foody_licious/domain/usecase/user/wait_for_email_verification_us
 import 'package:foody_licious/firebase_options.dart';
 import 'package:foody_licious/presentation/bloc/user/user_bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -41,12 +42,12 @@ Future<void> init() async {
   // Use cases
   sl.registerLazySingleton(() => SignInUseCase(sl()));
   sl.registerLazySingleton(() => SignUpWithEmailUseCase(sl()));
-  sl.registerLazySingleton(() => SignUpWithGoogleUseCase(sl()));
-  sl.registerLazySingleton(() => SignUpWithFacebookUseCase(sl()));
-  sl.registerLazySingleton(() => VerifyPhoneNumberUseCase(sl()));
-  sl.registerLazySingleton(() => SignUpWithPhoneUseCase(sl()));
   sl.registerLazySingleton(() => SendVerificationEmailUseCase(sl()));
   sl.registerLazySingleton(() => WaitForEmailVerificationUsecase(sl()));
+  sl.registerLazySingleton(() => VerifyPhoneNumberUseCase(sl()));
+  sl.registerLazySingleton(() => SignUpWithPhoneUseCase(sl()));
+  sl.registerLazySingleton(() => SignUpWithGoogleUseCase(sl()));
+  sl.registerLazySingleton(() => SignUpWithFacebookUseCase(sl()));
   sl.registerLazySingleton(() => GetLocalUserUseCase(sl()));
   // Repository
   sl.registerLazySingleton<UserRepository>(
@@ -61,7 +62,7 @@ Future<void> init() async {
     () => UserLocalDataSourceImpl(sharedPreferences: sl(), secureStorage: sl()),
   );
   sl.registerLazySingleton<UserRemoteDataSource>(
-    () => UserRemoteDataSourceImpl(firebaseAuth: sl(), client: sl()),
+    () => UserRemoteDataSourceImpl(firebaseAuth: sl(), client: sl(),googleSignIn:sl()),
   );
 
   ///***********************************************
@@ -76,5 +77,6 @@ Future<void> init() async {
   sl.registerLazySingleton(() => secureStorage);
   sl.registerLazySingleton(() => FirebaseAuth.instance);
   sl.registerLazySingleton(() => http.Client());
+  sl.registerLazySingleton(() => GoogleSignIn.instance);
   sl.registerLazySingleton(() => InternetConnectionChecker());
 }

@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:foody_licious/core/constant/colors.dart';
 import 'package:foody_licious/core/constant/images.dart';
+import 'package:foody_licious/core/extension/failure_extension.dart';
 import 'package:foody_licious/core/router/app_router.dart';
 import 'package:foody_licious/core/utils/sms_retriever.dart';
 import 'package:foody_licious/domain/usecase/user/sign_up_with_phone_usecase.dart';
 import 'package:foody_licious/presentation/bloc/user/user_bloc.dart';
+import 'package:foody_licious/presentation/widgets/alerts.dart';
 import 'package:foody_licious/presentation/widgets/bouncy_icon.dart';
 import 'package:foody_licious/presentation/widgets/gradient_button.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pinput/pinput.dart';
 import 'package:smart_auth/smart_auth.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:open_mail_app_plus/open_mail_app_plus.dart';
 
 class VerificationView extends StatefulWidget {
@@ -71,6 +73,18 @@ class _VerificationViewState extends State<VerificationView> {
         Navigator.of(context).pushNamedAndRemoveUntil(
           AppRouter.home,
           (Route<dynamic> route) => false,
+        );
+      } else if (state is UserEmailVerificationFailed) {
+        EasyLoading.showError(
+          state.failure.toMessage(
+            defaultMessage: "Email Verification Failed!",
+          ),
+        );
+      } else if (state is UserPhoneVerificationFailed) {
+        EasyLoading.showError(
+          state.failure.toMessage(
+            defaultMessage: "Failed to verify phone number!",
+          ),
         );
       }
     }, builder: (context, state) {
@@ -161,19 +175,11 @@ class _VerificationViewState extends State<VerificationView> {
                               buttonText: "Open Mail App",
                               fontSize: 14,
                               onTap: () async {
-                                // Android: Will open mail app or show native picker.
-                                // iOS: Will open mail app if single mail app found.
                                 var result = await OpenMailAppPlus.openMailApp(
                                   nativePickerTitle: 'Select email app to open',
                                 );
-
-                                // If no mail apps found, show error
                                 if (!result.didOpen && !result.canOpen) {
                                   showNoMailAppsDialog(context);
-
-                                  // iOS: if multiple mail apps found, show dialog to select.
-                                  // There is no native intent/default app system in iOS so
-                                  // you have to do it yourself.
                                 } else if (!result.didOpen && result.canOpen) {
                                   showDialog(
                                     context: context,
@@ -190,9 +196,7 @@ class _VerificationViewState extends State<VerificationView> {
                               width: 140.h,
                               buttonText: "Resend Email",
                               fontSize: 14,
-                              onTap: () {
-                                
-                              })
+                              onTap: () {})
                         ]),
                   ),
                 ],
@@ -455,6 +459,7 @@ class _VerificationViewState extends State<VerificationView> {
           ),
         );
       }
+      print("State is: $state");
       return Scaffold(
         backgroundColor: kWhite,
         body: SingleChildScrollView(
@@ -585,6 +590,7 @@ class _VerificationViewState extends State<VerificationView> {
       );
     });
   }
+
   _onVerify(BuildContext context, GlobalKey<FormState> key) async {
     if (key.currentState!.validate()) {
       final verificationCode = pinController.text.trim();
@@ -600,25 +606,4 @@ class _VerificationViewState extends State<VerificationView> {
           );
     }
   }
-
-   void showNoMailAppsDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text("Open Mail App"),
-          content: Text("No mail apps installed"),
-          actions: <Widget>[
-            TextButton(
-              child: Text("OK"),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            )
-          ],
-        );
-      },
-    );
-  }
-
 }

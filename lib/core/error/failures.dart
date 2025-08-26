@@ -20,6 +20,8 @@ class AuthenticationFailure extends Failure {}
 
 class NoUserFailure extends Failure {}
 
+class TimeOutFailure extends Failure {}
+
 class UserAlreadyExistsFailure extends Failure {}
 
 class TooManyRequestsFailure extends Failure {}

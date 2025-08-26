@@ -12,10 +12,10 @@ import '../entities/user/user.dart';
 abstract class UserRepository {
   Future<Either<Failure, User>> signIn(SignInParams params);
   Future<Either<Failure, User>> signUpWithEmail(SignUpWithEmailParams params);
-  Future<Either<Failure, Unit>> verifyPhoneNumber(SignUpWithPhoneParams params);
-  Future<Either<Failure, User>> signUpWithPhone(SignUpWithPhoneParams params);
   Future<Either<Failure, Unit>> sendVerificationEmail();
   Future<Either<Failure, Unit>> waitForEmailVerification();
+  Future<Either<Failure, Unit>> verifyPhoneNumber(SignUpWithPhoneParams params);
+  Future<Either<Failure, User>> signUpWithPhone(SignUpWithPhoneParams params);
   Future<Either<Failure, User>> signUpWithGoogle();
   Future<Either<Failure, User>> signUpWithFacebook();
   Future<Either<Failure, NoParams>> signOut();

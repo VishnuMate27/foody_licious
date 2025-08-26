@@ -45,28 +45,28 @@ class UserRepositoryImpl implements UserRepository {
       return Left(failure);
     }
   }
-
+  
   @override
-  Future<Either<Failure, User>> signUpWithGoogle() async {
+  Future<Either<Failure, Unit>> sendVerificationEmail() async {
     if (!await networkInfo.isConnected) {
       return Left(NetworkFailure());
     }
     try {
-      final remoteResponse = await remoteDataSource.signUpWithGoogle();
-      return Right(remoteResponse.user);
+      final remoteResponse = await remoteDataSource.sendVerificationEmail();
+      return Right(remoteResponse);
     } on Failure catch (failure) {
       return Left(failure);
     }
   }
 
   @override
-  Future<Either<Failure, User>> signUpWithFacebook() async {
+  Future<Either<Failure, Unit>> waitForEmailVerification() async {
     if (!await networkInfo.isConnected) {
       return Left(NetworkFailure());
     }
     try {
-      final remoteResponse = await remoteDataSource.signUpWithFacebook();
-      return Right(remoteResponse.user);
+      final remoteResponse = await remoteDataSource.waitForEmailVerification();
+      return Right(remoteResponse);
     } on Failure catch (failure) {
       return Left(failure);
     }
@@ -99,38 +99,38 @@ class UserRepositoryImpl implements UserRepository {
   }
 
   @override
+  Future<Either<Failure, User>> signUpWithGoogle() async {
+    if (!await networkInfo.isConnected) {
+      return Left(NetworkFailure());
+    }
+    try {
+      final remoteResponse = await remoteDataSource.signUpWithGoogle();
+      return Right(remoteResponse.user);
+    } on Failure catch (failure) {
+      return Left(failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, User>> signUpWithFacebook() async {
+    if (!await networkInfo.isConnected) {
+      return Left(NetworkFailure());
+    }
+    try {
+      final remoteResponse = await remoteDataSource.signUpWithFacebook();
+      return Right(remoteResponse.user);
+    } on Failure catch (failure) {
+      return Left(failure);
+    }
+  }
+
+  @override
   Future<Either<Failure, NoParams>> signOut() async {
     try {
       await localDataSource.clearCache();
       return Right(NoParams());
     } on CacheFailure {
       return Left(CacheFailure());
-    }
-  }
-
-  @override
-  Future<Either<Failure, Unit>> sendVerificationEmail() async {
-    if (!await networkInfo.isConnected) {
-      return Left(NetworkFailure());
-    }
-    try {
-      final remoteResponse = await remoteDataSource.sendVerificationEmail();
-      return Right(remoteResponse);
-    } on Failure catch (failure) {
-      return Left(failure);
-    }
-  }
-
-  @override
-  Future<Either<Failure, Unit>> waitForEmailVerification() async {
-    if (!await networkInfo.isConnected) {
-      return Left(NetworkFailure());
-    }
-    try {
-      final remoteResponse = await remoteDataSource.waitForEmailVerification();
-      return Right(remoteResponse);
-    } on Failure catch (failure) {
-      return Left(failure);
     }
   }
 

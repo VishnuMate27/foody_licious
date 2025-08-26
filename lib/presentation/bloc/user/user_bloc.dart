@@ -26,31 +26,31 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   final GetLocalUserUseCase _getCachedUserUseCase;
   final SignInUseCase _signInUseCase;
   final SignUpWithEmailUseCase _signUpWithEmailUseCase;
+  final SendVerificationEmailUseCase _sendVerificationEmailUseCase;
+  final WaitForEmailVerificationUsecase _waitForEmailVerificationUseCase;
   final VerifyPhoneNumberUseCase _verifyPhoneNumberUseCase;
   final SignUpWithPhoneUseCase _signUpWithPhoneUseCase;
   final SignUpWithGoogleUseCase _signUpWithGoogleUseCase;
   final SignUpWithFacebookUseCase _signUpWithFacebookUseCase;
-  final SendVerificationEmailUseCase _sendVerificationEmailUseCase;
-  final WaitForEmailVerificationUsecase _waitForEmailVerificationUseCase;
   UserBloc(
+    this._getCachedUserUseCase,
     this._signInUseCase,
     this._signUpWithEmailUseCase,
+    this._sendVerificationEmailUseCase,
+    this._waitForEmailVerificationUseCase,
     this._verifyPhoneNumberUseCase,
     this._signUpWithPhoneUseCase,
     this._signUpWithGoogleUseCase,
     this._signUpWithFacebookUseCase,
-    this._sendVerificationEmailUseCase,
-    this._getCachedUserUseCase,
-    this._waitForEmailVerificationUseCase,
   ) : super(UserInitial()) {
     on<SignInUser>(_onSignIn);
     on<SignUpWithEmailUser>(_onSignUpWithEmail);
     on<SendVerificationEmailUser>(_onSendVerificationEmail);
     on<WaitForEmailVerificationUser>(_onWaitForEmailVerification);
+    on<VerifyPhoneNumberUser>(_onVerifyPhoneNumber);
     on<SignUpWithPhoneUser>(_onSignUpWithPhone);
     on<SignUpWithGoogleUser>(_onSignUpWithGoogle);
     on<SignUpWithFacebookUser>(_onSignUpWithFacebook);
-    on<VerifyPhoneNumberUser>(_onVerifyPhoneNumber);
     on<CheckUser>(_onCheckUser);
     on<SignOutUser>(_onSignOut);
     on<ValidateEmailOrPhone>(_onValidateEmailOrPhone);
@@ -69,44 +69,30 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     }
   }
 
-  void _onCheckUser(CheckUser event, Emitter<UserState> emit) async {
-    try {
-      emit(UserLoading());
-      // final result = await _getCachedUserUseCase(NoParams());
-      // result.fold(
-      //   (failure) => emit(UserLoggedFail(failure)),
-      //   (user) => emit(UserLogged(user)),
-      // );
-    } catch (e) {
-      emit(UserLoggedFail(ExceptionFailure()));
-    }
-  }
-
   FutureOr<void> _onSignUpWithEmail(
       SignUpWithEmailUser event, Emitter<UserState> emit) async {
     try {
       emit(UserLoading());
       final result = await _signUpWithEmailUseCase(event.params);
       result.fold(
-        (failure) => emit(UserLoggedFail(failure)),
+        (failure) => emit(UserVerificationEmailRequestFailed(failure)),
         (user) => emit(UserVerificationEmailRequested(user)),
       );
     } catch (e) {
-      emit(UserLoggedFail(ExceptionFailure()));
+      emit(UserVerificationEmailRequestFailed(ExceptionFailure()));
     }
   }
 
   FutureOr<void> _onSendVerificationEmail(
       SendVerificationEmailUser event, Emitter<UserState> emit) async {
     try {
-      emit(UserLoading());
       final result = await _sendVerificationEmailUseCase(NoParams());
       result.fold(
-        (failure) => emit(UserLoggedFail(failure)),
+        (failure) => emit(UserVerificationEmailSentFailed(failure)),
         (unit) => emit(UserVerificationEmailSent()),
       );
     } catch (e) {
-      emit(UserLoggedFail(ExceptionFailure()));
+      emit(UserVerificationEmailSentFailed(ExceptionFailure()));
     }
   }
 
@@ -115,53 +101,11 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     try {
       final result = await _waitForEmailVerificationUseCase(NoParams());
       result.fold(
-        (failure) => emit(UserLoggedFail(failure)),
+        (failure) => emit(UserEmailVerificationFailed(failure)),
         (unit) => emit(UserEmailVerificationSuccess()),
       );
     } catch (e) {
-      emit(UserLoggedFail(ExceptionFailure()));
-    }
-  }
-
-  FutureOr<void> _onSignUpWithPhone(
-      SignUpWithPhoneUser event, Emitter<UserState> emit) async {
-    try {
-      emit(UserLoading());
-      final result = await _signUpWithPhoneUseCase(event.params);
-      result.fold(
-        (failure) => emit(UserLoggedFail(failure)),
-        (user) => emit(UserPhoneVerificationSuccess(user)),
-      );
-    } catch (e) {
-      emit(UserLoggedFail(ExceptionFailure()));
-    }
-  }
-
-  FutureOr<void> _onSignUpWithGoogle(
-      SignUpWithGoogleUser event, Emitter<UserState> emit) async {
-    try {
-      emit(UserLoading());
-      final result = await _signUpWithGoogleUseCase(event);
-      result.fold(
-        (failure) => emit(UserLoggedFail(failure)),
-        (user) => emit(UserGoogleSignUpSuccess(user)),
-      );
-    } catch (e) {
-      emit(UserLoggedFail(ExceptionFailure()));
-    }
-  }
-
-  FutureOr<void> _onSignUpWithFacebook(
-      SignUpWithFacebookUser event, Emitter<UserState> emit) async {
-    try {
-      emit(UserLoading());
-      final result = await _signUpWithFacebookUseCase(event);
-      result.fold(
-        (failure) => emit(UserLoggedFail(failure)),
-        (user) => emit(UserFacebookSignUpSuccess(user)),
-      );
-    } catch (e) {
-      emit(UserLoggedFail(ExceptionFailure()));
+      emit(UserEmailVerificationFailed(ExceptionFailure()));
     }
   }
 
@@ -171,9 +115,63 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       emit(UserLoading());
       final result = await _verifyPhoneNumberUseCase(event.params);
       result.fold(
-        (failure) => emit(UserLoggedFail(failure)),
+        (failure) => emit(UserVerificationSMSSentFailed(failure)),
         (unit) => emit(UserVerificationSMSSent(unit)),
       );
+    } catch (e) {
+      emit(UserVerificationSMSSentFailed(ExceptionFailure()));
+    }
+  }
+
+  FutureOr<void> _onSignUpWithPhone(
+      SignUpWithPhoneUser event, Emitter<UserState> emit) async {
+    try {
+      final result = await _signUpWithPhoneUseCase(event.params);
+      result.fold(
+        (failure) => emit(UserPhoneVerificationFailed(failure)),
+        (user) => emit(UserPhoneVerificationSuccess(user)),
+      );
+    } catch (e) {
+      emit(UserPhoneVerificationFailed(ExceptionFailure()));
+    }
+  }
+
+  FutureOr<void> _onSignUpWithGoogle(
+      SignUpWithGoogleUser event, Emitter<UserState> emit) async {
+    try {
+      emit(UserLoading());
+      final result = await _signUpWithGoogleUseCase(event);
+      result.fold(
+        (failure) => emit(UserGoogleSignUpFailed(failure)),
+        (user) => emit(UserGoogleSignUpSuccess(user)),
+      );
+    } catch (e) {
+      emit(UserGoogleSignUpFailed(ExceptionFailure()));
+    }
+  }
+
+  FutureOr<void> _onSignUpWithFacebook(
+      SignUpWithFacebookUser event, Emitter<UserState> emit) async {
+    try {
+      emit(UserLoading());
+      final result = await _signUpWithFacebookUseCase(event);
+      result.fold(
+        (failure) => emit(UserFacebookSignUpFailed(failure)),
+        (user) => emit(UserFacebookSignUpSuccess(user)),
+      );
+    } catch (e) {
+      emit(UserFacebookSignUpFailed(ExceptionFailure()));
+    }
+  }
+
+  void _onCheckUser(CheckUser event, Emitter<UserState> emit) async {
+    try {
+      emit(UserLoading());
+      // final result = await _getCachedUserUseCase(NoParams());
+      // result.fold(
+      //   (failure) => emit(UserLoggedFail(failure)),
+      //   (user) => emit(UserLogged(user)),
+      // );
     } catch (e) {
       emit(UserLoggedFail(ExceptionFailure()));
     }

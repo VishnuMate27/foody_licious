@@ -32,10 +32,9 @@ abstract class UserRemoteDataSource {
 class UserRemoteDataSourceImpl implements UserRemoteDataSource {
   final http.Client client;
   final FirebaseAuth firebaseAuth;
+  final GoogleSignIn googleSignIn;
   User? user;
-  GoogleSignIn googleSignIn = GoogleSignIn.instance;
-  String _verificationId = "";
-  UserRemoteDataSourceImpl({required this.firebaseAuth, required this.client});
+  UserRemoteDataSourceImpl({required this.firebaseAuth, required this.client, required this.googleSignIn});
 
   @override
   Future<AuthenticationResponseModel> signIn(SignInParams params) async {
@@ -72,9 +71,31 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
   }
 
   @override
+  Future<Unit> sendVerificationEmail() async {
+    final user = firebaseAuth.currentUser;
+    if (user != null) {
+      try {
+        await user.reload();
+        await user.sendEmailVerification();
+      } on FirebaseAuthException catch (e) {
+        if (e.code == 'too-many-requests') {
+          throw TooManyRequestsFailure();
+        } else {
+          throw ServerFailure();
+        }
+      } catch (e) {
+        throw ServerFailure();
+      }
+    } else {
+      throw NoUserFailure();
+    }
+    return Future.value(unit);
+  }
+
+  @override
   Future<Unit> waitForEmailVerification({
     Duration checkInterval = const Duration(seconds: 3),
-    Duration timeout = const Duration(minutes: 2),
+    Duration timeout = const Duration(minutes: 5),
   }) async {
     final user = firebaseAuth.currentUser;
     if (user == null) {
@@ -88,11 +109,12 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
       final refreshedUser = firebaseAuth.currentUser;
 
       if (refreshedUser != null && refreshedUser.emailVerified) {
+        //TODO: Update user verified to true in database
         return Future.value(unit);
       }
 
       if (stopwatch.elapsed >= timeout) {
-        throw TimeoutException();
+        throw TimeOutFailure();
       }
 
       await Future.delayed(checkInterval);
@@ -208,6 +230,8 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
       return authenticationResponseModelFromJson(response.body);
     } else if (response.statusCode == 400 || response.statusCode == 401) {
       throw CredentialFailure();
+    } else if (response.statusCode == 409) {
+      throw UserAlreadyExistsFailure();
     } else {
       throw ServerFailure();
     }
@@ -239,27 +263,5 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
     } else {
       throw ServerFailure();
     }
-  }
-
-  @override
-  Future<Unit> sendVerificationEmail() async {
-    final user = firebaseAuth.currentUser;
-    if (user != null) {
-      try {
-        await user.reload();
-        await user.sendEmailVerification();
-      } on FirebaseAuthException catch (e) {
-        if (e.code == 'too-many-requests') {
-          throw TooManyRequestsFailure();
-        } else {
-          throw ServerFailure();
-        }
-      } catch (e) {
-        throw ServerFailure();
-      }
-    } else {
-      throw NoUserFailure();
-    }
-    return Future.value(unit);
   }
 }
