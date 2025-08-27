@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:dartz/dartz.dart';
@@ -34,7 +35,10 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
   final FirebaseAuth firebaseAuth;
   final GoogleSignIn googleSignIn;
   User? user;
-  UserRemoteDataSourceImpl({required this.firebaseAuth, required this.client, required this.googleSignIn});
+  UserRemoteDataSourceImpl(
+      {required this.firebaseAuth,
+      required this.client,
+      required this.googleSignIn});
 
   @override
   Future<AuthenticationResponseModel> signIn(SignInParams params) async {

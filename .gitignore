@@ -8,6 +8,7 @@
 .buildlog/
 .history
 .svn/
+project_notes.txt
 migrate_working_dir/
 
 # IntelliJ related

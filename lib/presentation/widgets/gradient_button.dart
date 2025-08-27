@@ -10,6 +10,7 @@ class GradientButton extends StatelessWidget {
   final double height;
   final double borderRadius;
   final double fontSize;
+  final bool isActive;
 
   const GradientButton({
     super.key,
@@ -19,17 +20,18 @@ class GradientButton extends StatelessWidget {
     this.height = 57,
     this.borderRadius = 15,
     this.fontSize = 20,
+    this.isActive = true,
   });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: isActive ? onTap : () {},
       child: Container(
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(borderRadius),
             gradient: LinearGradient(
-              colors: [kGradientStart, kGradientEnd],
+              colors: isActive ? [kGradientStart, kGradientEnd]:[kInActiveGradientStart,kInActiveGradientEnd] ,
               stops: [0.0, 1.0],
             )),
         width: width.w,

@@ -26,6 +26,8 @@ const Color kBorderLight = Color(0x80F4F4F4);             // Light border grey
 /// === Gradient Colors ===
 const Color kGradientStart = Color(0xFFE85353);           // Gradient red start
 const Color kGradientEnd = Color(0xFFBE1515);             // Gradient red end
+const Color kInActiveGradientStart = Color(0xFFF2B8B8); // Muted light red/pink
+const Color kInActiveGradientEnd = Color(0xFFD6A1A1);   // Softer dull red
 
 /// === Material Utility Colors ===
 const Color kTeal = Colors.teal;
