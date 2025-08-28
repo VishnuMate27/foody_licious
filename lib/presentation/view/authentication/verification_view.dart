@@ -41,7 +41,7 @@ class _VerificationViewState extends State<VerificationView>
   UserState? _currentState;
   bool _checking = false;
   AnimationController? _controller;
-  int otpTimer = 90;
+  int otpTimer = 30;
 
   @override
   void initState() {
@@ -457,55 +457,75 @@ class _VerificationViewState extends State<VerificationView>
                     SizedBox(
                       height: 20.h,
                     ),
-                    Pinput(
-                      smsRetriever: smsRetriever,
-                      controller: pinController,
-                      focusNode: focusNode,
-                      defaultPinTheme: defaultPinTheme,
-                      separatorBuilder: (index) => const SizedBox(width: 8),
-                      validator: (value) {
-                        // return value!.length != 4 ? null : 'Pin is incomplete!';
-                      },
-                      hapticFeedbackType: HapticFeedbackType.lightImpact,
-                      onCompleted: (pin) {
-                        debugPrint('onCompleted: $pin');
-                      },
-                      onChanged: (value) {
-                        debugPrint('onChanged: $value');
-                      },
-                      cursor: Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Container(
-                            margin: const EdgeInsets.only(bottom: 9),
-                            width: 22,
-                            height: 1,
-                            color: kBorder,
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Pinput(
+                          smsRetriever: smsRetriever,
+                          controller: pinController,
+                          focusNode: focusNode,
+                          defaultPinTheme: defaultPinTheme,
+                          separatorBuilder: (index) => const SizedBox(width: 8),
+                          validator: (value) {
+                            // return value!.length != 4 ? null : 'Pin is incomplete!';
+                          },
+                          hapticFeedbackType: HapticFeedbackType.lightImpact,
+                          onCompleted: (pin) {
+                            debugPrint('onCompleted: $pin');
+                          },
+                          onChanged: (value) {
+                            debugPrint('onChanged: $value');
+                          },
+                          cursor: Column(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Container(
+                                margin: const EdgeInsets.only(bottom: 9),
+                                width: 22,
+                                height: 1,
+                                color: kBorder,
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                      focusedPinTheme: defaultPinTheme.copyWith(
-                        decoration: defaultPinTheme.decoration!.copyWith(
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(color: kBorder),
+                          focusedPinTheme: defaultPinTheme.copyWith(
+                            decoration: defaultPinTheme.decoration!.copyWith(
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(color: kBorder),
+                            ),
+                          ),
+                          submittedPinTheme: defaultPinTheme.copyWith(
+                            decoration: defaultPinTheme.decoration!.copyWith(
+                              color: kWhite,
+                              borderRadius: BorderRadius.circular(19),
+                              border: Border.all(color: kBorder),
+                            ),
+                          ),
+                          errorPinTheme: defaultPinTheme.copyBorderWith(
+                            border: Border.all(color: kError),
+                          ),
                         ),
-                      ),
-                      submittedPinTheme: defaultPinTheme.copyWith(
-                        decoration: defaultPinTheme.decoration!.copyWith(
-                          color: kWhite,
-                          borderRadius: BorderRadius.circular(19),
-                          border: Border.all(color: kBorder),
+                        SizedBox(
+                          height: 4.h,
                         ),
-                      ),
-                      errorPinTheme: defaultPinTheme.copyBorderWith(
-                        border: Border.all(color: kError),
-                      ),
-                    ),
-                    Countdown(
-                      animation: StepTween(
-                        begin: otpTimer, // THIS IS A USER ENTERED NUMBER
-                        end: 0,
-                      ).animate(_controller!),
+                        Countdown(
+                          animation: StepTween(
+                            begin: otpTimer, // THIS IS A USER ENTERED NUMBER
+                            end: 0,
+                          ).animate(_controller!),
+                          onResendOTPTapped: () {
+                            context.read<UserBloc>().add(
+                                  VerifyPhoneNumberUser(
+                                    SignUpWithPhoneParams(
+                                      name: widget.nameController!.text.trim(),
+                                      phone: widget.emailOrPhoneController!.text
+                                          .trim(),
+                                      authProvider: "phone",
+                                    ),
+                                  ),
+                                );
+                          },
+                        ),
+                      ],
                     ),
                     SizedBox(
                       height: 40.h,
@@ -646,6 +666,14 @@ class _VerificationViewState extends State<VerificationView>
                   ),
                 ],
               ),
+            ),
+          ),
+        );
+      } else if (state is UserLoading) {
+        return Scaffold(
+          body: Center(
+            child: Container(
+              child: CircularProgressIndicator(),
             ),
           ),
         );

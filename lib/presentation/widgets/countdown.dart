@@ -4,11 +4,10 @@ import 'package:google_fonts/google_fonts.dart';
 
 class Countdown extends AnimatedWidget {
   final Animation<int>? animation;
+  final Function()? onResendOTPTapped;
 
-  Countdown({
-    Key? key,
-    this.animation,
-  }) : super(key: key, listenable: animation!);
+  Countdown({Key? key, this.animation, this.onResendOTPTapped})
+      : super(key: key, listenable: animation!);
 
   @override
   build(BuildContext context) {
@@ -17,17 +16,25 @@ class Countdown extends AnimatedWidget {
     String timerText =
         '${clockTimer.inMinutes.remainder(60).toString()}:${clockTimer.inSeconds.remainder(60).toString().padLeft(2, '0')}';
 
-    return clockTimer.inSeconds == 1
+    return clockTimer.inSeconds == 0
         ? TextButton(
-            onPressed: () {},
+            onPressed: onResendOTPTapped,
             child: Text(
-              timerText,
-              style: GoogleFonts.lato(fontSize: 18, color: kTextRedDark),
+              "Resend OTP",
+              style: GoogleFonts.lato(
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+                color: kTextRedDark,
+              ),
             ),
           )
         : Text(
             timerText,
-            style: GoogleFonts.lato(fontSize: 18, color: kTextRedDark),
+            style: GoogleFonts.lato(
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+              color: kTextRedDark,
+            ),
           );
   }
 }

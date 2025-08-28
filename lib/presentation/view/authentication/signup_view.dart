@@ -357,7 +357,12 @@ class _SignUpViewState extends State<SignUpView> {
                     },
                   ),
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context).pushNamedAndRemoveUntil(
+                        AppRouter.login,
+                        (Route<dynamic> route) => false,
+                      );
+                    },
                     child: Text(
                       "Already Have An Account?",
                       style: GoogleFonts.lato(

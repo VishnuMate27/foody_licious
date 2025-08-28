@@ -18,6 +18,7 @@ import 'package:http/http.dart' as http;
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:smart_auth/smart_auth.dart';
 import '../../data/data_sources/local/user_local_data_source.dart';
 import '../../data/data_sources/remote/user_remote_data_source.dart';
 import '../../data/repositories/user_repository_impl.dart';
@@ -78,5 +79,6 @@ Future<void> init() async {
   sl.registerLazySingleton(() => FirebaseAuth.instance);
   sl.registerLazySingleton(() => http.Client());
   sl.registerLazySingleton(() => GoogleSignIn.instance);
-  sl.registerLazySingleton(() => InternetConnectionChecker());
+  sl.registerLazySingleton(() => FirebaseAuth.instance);
+  sl.registerLazySingleton(() => SmartAuth.instance);
 }
