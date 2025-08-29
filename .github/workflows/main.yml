@@ -15,17 +15,14 @@ name: "Build & Release"
 jobs:
   build:
     runs-on: macos-14
-
     steps:
-      # ✅ Checkout repo
       - uses: actions/checkout@v3
 
-      # ✅ Setup Flutter
       - uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
 
-      # 🔑 Restore required secret files
+      # 🔑 Restore required files
       - name: Restore google-services.json
         run: |
           echo "${{ secrets.GOOGLE_SERVICES_JSON }}" | base64 --decode > android/app/google-services.json
@@ -49,14 +46,17 @@ jobs:
           mkdir -p assets/utils
           echo "${{ secrets.DOTENV_FILE }}" | base64 --decode > assets/utils/.env
 
-      # ===============================
-      # 📱 iOS BUILD FIRST
-      # ===============================
+      # =========================
+      # 📱 iOS BUILD (first)
+      # =========================
       - name: Precache iOS artifacts
         run: flutter precache --ios
 
-      - name: Generate iOS project files
-        run: flutter build ios --no-codesign
+      - name: Get Flutter packages
+        run: flutter pub get
+
+      - name: Generate iOS Podhelper
+        run: flutter build ios --no-codesign --simulator
 
       - name: Install CocoaPods
         run: |
@@ -66,18 +66,18 @@ jobs:
       - name: Build iOS IPA
         run: flutter build ipa --no-codesign
 
-      # ===============================
-      # 🤖 ANDROID BUILD
-      # ===============================
-      - name: Build Android APKs
+      # =========================
+      # 🤖 ANDROID BUILD (after iOS)
+      # =========================
+      - name: Build Android APK
         run: flutter build apk --release --split-per-abi
 
-      # ===============================
-      # 🚀 RELEASE ARTIFACTS
-      # ===============================
+      # =========================
+      # 🚀 Push artifacts
+      # =========================
       - name: Push to Releases
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "build/app/outputs/apk/release/*.apk,build/ios/ipa/*.ipa"
+          artifacts: "build/app/outputs/apk/release/*,build/ios/ipa/*.ipa"
           tag: v1.0.${{ github.run_number }}
           token: ${{ secrets.TOKEN }}
