@@ -15,14 +15,17 @@ name: "Build & Release"
 jobs:
   build:
     runs-on: macos-14
+
     steps:
+      # ✅ Checkout repo
       - uses: actions/checkout@v3
 
+      # ✅ Setup Flutter
       - uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
 
-      # 🔑 Restore required files from GitHub Secrets
+      # 🔑 Restore required secret files
       - name: Restore google-services.json
         run: |
           echo "${{ secrets.GOOGLE_SERVICES_JSON }}" | base64 --decode > android/app/google-services.json
@@ -46,12 +49,14 @@ jobs:
           mkdir -p assets/utils
           echo "${{ secrets.DOTENV_FILE }}" | base64 --decode > assets/utils/.env
 
-      # ✅ Build iOS IPA FIRST
+      # ===============================
+      # 📱 iOS BUILD FIRST
+      # ===============================
       - name: Precache iOS artifacts
         run: flutter precache --ios
 
       - name: Generate iOS project files
-        run: flutter build ios --simulator --no-codesign
+        run: flutter build ios --no-codesign
 
       - name: Install CocoaPods
         run: |
@@ -61,16 +66,18 @@ jobs:
       - name: Build iOS IPA
         run: flutter build ipa --no-codesign
 
-      # ✅ Then build Android APK
-      - name: Build Android APK
+      # ===============================
+      # 🤖 ANDROID BUILD
+      # ===============================
+      - name: Build Android APKs
         run: flutter build apk --release --split-per-abi
 
-      # 📦 Upload Release Artifacts
+      # ===============================
+      # 🚀 RELEASE ARTIFACTS
+      # ===============================
       - name: Push to Releases
         uses: ncipollo/release-action@v1
         with:
-          artifacts: |
-            build/app/outputs/apk/release/*
-            build/ios/ipa/*.ipa
+          artifacts: "build/app/outputs/apk/release/*.apk,build/ios/ipa/*.ipa"
           tag: v1.0.${{ github.run_number }}
           token: ${{ secrets.TOKEN }}
