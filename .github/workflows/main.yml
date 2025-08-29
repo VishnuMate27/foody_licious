@@ -1,0 +1,68 @@
+on:
+  pull_request:
+    branches:
+      - main
+      - master
+  push:
+    branches:
+      - main
+      - master
+      - dev
+      - cicd
+
+name: "Build & Release"
+
+jobs:
+  build:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+
+      # 🔑 Restore required files
+      - name: Restore google-services.json
+        run: |
+          echo "${{ secrets.GOOGLE_SERVICES_JSON }}" | base64 --decode > android/app/google-services.json
+
+      - name: Restore strings.xml
+        run: |
+          mkdir -p android/app/src/main/res/values
+          echo "${{ secrets.STRINGS_XML }}" | base64 --decode > android/app/src/main/res/values/strings.xml
+
+      - name: Restore firebase.json
+        run: |
+          echo "${{ secrets.FIREBASE_JSON }}" | base64 --decode > firebase.json
+
+      - name: Restore firebase_options.dart
+        run: |
+          mkdir -p lib
+          echo "${{ secrets.FIREBASE_OPTIONS_DART }}" | base64 --decode > lib/firebase_options.dart
+
+      - name: Restore .env
+        run: |
+          mkdir -p assets/utils
+          echo "${{ secrets.DOTENV_FILE }}" | base64 --decode > assets/utils/.env
+
+      # ✅ Build Android
+      - run: flutter build apk --release --split-per-abi
+
+      # ✅ Build iOS
+      - run: flutter build ios --no-codesign
+      - run: |
+          cd build/ios/iphoneos
+          mkdir Payload
+          cd Payload
+          ln -s ../Runner.app
+          cd ..
+          zip -r app.ipa Payload
+
+      # Push artifacts
+      - name: Push to Releases
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "build/app/outputs/apk/release/*,build/ios/iphoneos/app.ipa"
+          tag: v1.0.${{ github.run_number }}
+          token: ${{ secrets.TOKEN }}
