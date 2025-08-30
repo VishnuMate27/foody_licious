@@ -18,6 +18,7 @@ const Color kError = Color(0xCCFF0000);                   // Error (same as text
 const Color kRed = Color(0xFF9F4040);                     // Error/alert surface
 const Color kGreen = Color(0xFF6CCB94);                   // Success/icon green
 const Color kYellow = Color(0xFFFEAD1D);                  // Warning/accent
+const Color kPrimaryRed = Color(0xFFE85353);              // Primary Red
 
 /// === Border Colors ===
 const Color kBorder = Color(0x51FF8080);                  // Semi-transparent red border

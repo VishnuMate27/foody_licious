@@ -27,6 +27,49 @@ class UserLoggedFail extends UserState {
   List<Object> get props => [failure];
 }
 
+class UserSignInWithEmailSuccess extends UserState {
+  final User user;
+  UserSignInWithEmailSuccess(this.user);
+  @override
+  List<Object> get props => [user];
+}
+
+class UserSignInWithEmailFailed extends UserState {
+  final Failure failure;
+  UserSignInWithEmailFailed(this.failure);
+  @override
+  List<Object> get props => [failure];
+}
+
+class UserGoogleSignInSuccess extends UserState {
+  final User user;
+  UserGoogleSignInSuccess(this.user);
+  @override
+  List<Object> get props => [user];
+}
+
+class UserGoogleSignInFailed extends UserState {
+  final Failure failure;
+  UserGoogleSignInFailed(this.failure);
+  @override
+  List<Object> get props => [failure];
+}
+
+class UserFacebookSignInSuccess extends UserState {
+  final User user;
+  UserFacebookSignInSuccess(this.user);
+  @override
+  List<Object> get props => [user];
+}
+
+class UserFacebookSignInFailed extends UserState {
+  final Failure failure;
+  UserFacebookSignInFailed(this.failure);
+  @override
+  List<Object> get props => [failure];
+}
+
+
 class UserVerificationEmailRequested extends UserState {
   final User user;
   UserVerificationEmailRequested(this.user);

@@ -16,12 +16,18 @@ class ExceptionFailure extends Failure {}
 
 class CredentialFailure extends Failure {}
 
-class AuthenticationFailure extends Failure {}
+// ignore: must_be_immutable
+class AuthenticationFailure extends Failure {
+  String? failureMessage;
+  AuthenticationFailure(this.failureMessage);
+}
 
-class NoUserFailure extends Failure {}
+class UserNotExistsFailure extends Failure {}
 
 class TimeOutFailure extends Failure {}
 
 class UserAlreadyExistsFailure extends Failure {}
 
 class TooManyRequestsFailure extends Failure {}
+
+class AuthProviderMissMatchFailure extends Failure {}

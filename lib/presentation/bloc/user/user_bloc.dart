@@ -8,7 +8,9 @@ import 'package:foody_licious/core/constant/validators.dart';
 import 'package:foody_licious/core/usecase/usecase.dart';
 import 'package:foody_licious/domain/usecase/user/get_local_user_usecase.dart';
 import 'package:foody_licious/domain/usecase/user/send_verification_email_usecase.dart';
-import 'package:foody_licious/domain/usecase/user/sign_in_usecase.dart';
+import 'package:foody_licious/domain/usecase/user/sign_in_with_email_usecase.dart';
+import 'package:foody_licious/domain/usecase/user/sign_in_with_facebook.dart';
+import 'package:foody_licious/domain/usecase/user/sign_in_with_google_usecase.dart';
 import 'package:foody_licious/domain/usecase/user/sign_up_with_email_usecase.dart';
 import 'package:foody_licious/domain/usecase/user/sign_up_with_facebook_usecase.dart';
 import 'package:foody_licious/domain/usecase/user/sign_up_with_google_usecase.dart';
@@ -24,7 +26,9 @@ part 'user_state.dart';
 
 class UserBloc extends Bloc<UserEvent, UserState> {
   final GetLocalUserUseCase _getCachedUserUseCase;
-  final SignInUseCase _signInUseCase;
+  final SignInWithEmailUseCase _signInWithEmailUseCase;
+  final SignInWithGoogleUseCase _signInWithGoogleUseCase;
+  final SignInWithFacebookUseCase _signInWithFacebookUseCase;
   final SignUpWithEmailUseCase _signUpWithEmailUseCase;
   final SendVerificationEmailUseCase _sendVerificationEmailUseCase;
   final WaitForEmailVerificationUsecase _waitForEmailVerificationUseCase;
@@ -34,7 +38,9 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   final SignUpWithFacebookUseCase _signUpWithFacebookUseCase;
   UserBloc(
     this._getCachedUserUseCase,
-    this._signInUseCase,
+    this._signInWithEmailUseCase,
+    this._signInWithGoogleUseCase,
+    this._signInWithFacebookUseCase,
     this._signUpWithEmailUseCase,
     this._sendVerificationEmailUseCase,
     this._waitForEmailVerificationUseCase,
@@ -43,7 +49,9 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     this._signUpWithGoogleUseCase,
     this._signUpWithFacebookUseCase,
   ) : super(UserInitial()) {
-    on<SignInUser>(_onSignIn);
+    on<SignInWithEmailUser>(_onSignInWithEmail);
+    on<SignInWithGoogleUser>(_onSignInWithGoogle);
+    on<SignInWithFacebookUser>(_onSignInWithFacebook);
     on<SignUpWithEmailUser>(_onSignUpWithEmail);
     on<SendVerificationEmailUser>(_onSendVerificationEmail);
     on<WaitForEmailVerificationUser>(_onWaitForEmailVerification);
@@ -56,16 +64,45 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     on<ValidateEmailOrPhone>(_onValidateEmailOrPhone);
   }
 
-  void _onSignIn(SignInUser event, Emitter<UserState> emit) async {
+  void _onSignInWithEmail(
+      SignInWithEmailUser event, Emitter<UserState> emit) async {
     try {
       emit(UserLoading());
-      final result = await _signInUseCase(event.params);
+      final result = await _signInWithEmailUseCase(event.params);
       result.fold(
-        (failure) => emit(UserLoggedFail(failure)),
-        (user) => emit(UserLogged(user)),
+        (failure) => emit(UserSignInWithEmailFailed(failure)),
+        (user) => emit(UserSignInWithEmailSuccess(user)),
       );
     } catch (e) {
-      emit(UserLoggedFail(ExceptionFailure()));
+      emit(UserSignInWithEmailFailed(ExceptionFailure()));
+    }
+  }
+
+  FutureOr<void> _onSignInWithGoogle(
+      SignInWithGoogleUser event, Emitter<UserState> emit) async {
+    try {
+      emit(UserLoading());
+      final result = await _signInWithGoogleUseCase(event);
+      result.fold(
+        (failure) => emit(UserGoogleSignInFailed(failure)),
+        (user) => emit(UserGoogleSignInSuccess(user)),
+      );
+    } catch (e) {
+      emit(UserGoogleSignInFailed(ExceptionFailure()));
+    }
+  }
+
+  FutureOr<void> _onSignInWithFacebook(
+      SignInWithFacebookUser event, Emitter<UserState> emit) async {
+    try {
+      emit(UserLoading());
+      final result = await _signInWithFacebookUseCase(event);
+      result.fold(
+        (failure) => emit(UserFacebookSignInFailed(failure)),
+        (user) => emit(UserFacebookSignInSuccess(user)),
+      );
+    } catch (e) {
+      emit(UserFacebookSignInFailed(ExceptionFailure()));
     }
   }
 
@@ -166,7 +203,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
 
   void _onCheckUser(CheckUser event, Emitter<UserState> emit) async {
     try {
-      emit(UserLoading());
+      // emit(UserLoading());
       // final result = await _getCachedUserUseCase(NoParams());
       // result.fold(
       //   (failure) => emit(UserLoggedFail(failure)),

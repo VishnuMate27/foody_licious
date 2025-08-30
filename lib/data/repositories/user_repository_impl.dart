@@ -21,12 +21,12 @@ class UserRepositoryImpl implements UserRepository {
   });
 
   @override
-  Future<Either<Failure, User>> signIn(params) async {
+  Future<Either<Failure, User>> signInWithEmail(params) async {
     if (!await networkInfo.isConnected) {
       return Left(NetworkFailure());
     }
     try {
-      final remoteResponse = await remoteDataSource.signIn(params);
+      final remoteResponse = await remoteDataSource.signInWithEmail(params);
       return Right(remoteResponse.user);
     } on Failure catch (failure) {
       return Left(failure);
@@ -45,7 +45,33 @@ class UserRepositoryImpl implements UserRepository {
       return Left(failure);
     }
   }
-  
+
+  @override
+  Future<Either<Failure, User>> signInWithGoogle() async {
+    if (!await networkInfo.isConnected) {
+      return Left(NetworkFailure());
+    }
+    try {
+      final remoteResponse = await remoteDataSource.signInWithGoogle();
+      return Right(remoteResponse.user);
+    } on Failure catch (failure) {
+      return Left(failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, User>> signInWithFacebook() async {
+    if (!await networkInfo.isConnected) {
+      return Left(NetworkFailure());
+    }
+    try {
+      final remoteResponse = await remoteDataSource.signInWithFacebook();
+      return Right(remoteResponse.user);
+    } on Failure catch (failure) {
+      return Left(failure);
+    }
+  }
+
   @override
   Future<Either<Failure, Unit>> sendVerificationEmail() async {
     if (!await networkInfo.isConnected) {

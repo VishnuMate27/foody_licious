@@ -3,11 +3,14 @@ part of 'user_bloc.dart';
 @immutable
 abstract class UserEvent {}
 
-class SignInUser extends UserEvent {
-  final SignInParams params;
-  SignInUser(this.params);
+class SignInWithEmailUser extends UserEvent {
+  final SignInWithEmailParams params;
+  SignInWithEmailUser(this.params);
 }
 
+class SignInWithGoogleUser extends UserEvent {}
+
+class SignInWithFacebookUser extends UserEvent {}
 class SignUpWithEmailUser extends UserEvent {
   final SignUpWithEmailParams params;
   SignUpWithEmailUser(this.params);
