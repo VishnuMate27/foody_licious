@@ -15,6 +15,7 @@ name: "Build & Release"
 jobs:
   build:
     runs-on: macos-14
+
     steps:
       - uses: actions/checkout@v3
 
@@ -46,7 +47,17 @@ jobs:
           mkdir -p assets/utils
           echo "${{ secrets.DOTENV_FILE }}" | base64 --decode > assets/utils/.env
 
-      # ✅ Then build Android APK
+      # ✅ Verify all required assets exist before building
+      - name: Verify assets
+        run: |
+          test -f android/app/google-services.json || (echo "google-services.json missing!" && exit 1)
+          test -f android/app/src/main/res/values/strings.xml || (echo "strings.xml missing!" && exit 1)
+          test -f firebase.json || (echo "firebase.json missing!" && exit 1)
+          test -f lib/firebase_options.dart || (echo "firebase_options.dart missing!" && exit 1)
+          test -f assets/utils/.env || (echo ".env file missing!" && exit 1)
+          echo "✅ All assets verified."
+
+      # ✅ Build Android APK
       - name: Build Android APK
         run: flutter build apk --release --split-per-abi
 
@@ -54,7 +65,6 @@ jobs:
       - name: Push to Releases
         uses: ncipollo/release-action@v1
         with:
-          artifacts: |
-            build/app/outputs/apk/release/*
+          artifacts: build/app/outputs/apk/release/*
           tag: v1.0.${{ github.run_number }}
           token: ${{ secrets.TOKEN }}
