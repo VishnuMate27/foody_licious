@@ -7,6 +7,7 @@ import 'package:foody_licious/core/constant/images.dart';
 import 'package:foody_licious/core/extension/failure_extension.dart';
 import 'package:foody_licious/core/router/app_router.dart';
 import 'package:foody_licious/core/utils/sms_retriever.dart';
+import 'package:foody_licious/domain/usecase/user/sign_in_with_phone_usecase.dart';
 import 'package:foody_licious/domain/usecase/user/sign_up_with_phone_usecase.dart';
 import 'package:foody_licious/presentation/bloc/user/user_bloc.dart';
 import 'package:foody_licious/presentation/widgets/alerts.dart';
@@ -113,10 +114,23 @@ class _VerificationViewState extends State<VerificationView>
     );
     return BlocConsumer<UserBloc, UserState>(listener: (context, state) async {
       _currentState = state;
-      if (state is UserPhoneVerificationSuccess) {
+      if (state is UserLoading) {
+        EasyLoading.show(status: 'Loading...');
+      } else if (state is UserPhoneVerificationForRegistrationSuccess) {
         Navigator.of(context).pushNamedAndRemoveUntil(
           AppRouter.home,
           (Route<dynamic> route) => false,
+        );
+      } else if (state is UserPhoneVerificationForLoginSuccess) {
+        Navigator.of(context).pushNamedAndRemoveUntil(
+          AppRouter.home,
+          (Route<dynamic> route) => false,
+        );
+      } else if (state is UserPhoneVerificationForLoginFailed) {
+        EasyLoading.showError(
+          state.failure.toMessage(
+            defaultMessage: "Failed to verify phone number!",
+          ),
         );
       } else if (state is UserEmailVerificationFailed) {
         EasyLoading.showError(
@@ -125,13 +139,13 @@ class _VerificationViewState extends State<VerificationView>
           ),
           duration: const Duration(seconds: 3),
         );
-      } else if (state is UserPhoneVerificationFailed) {
+      } else if (state is UserPhoneVerificationForRegistrationFailed) {
         EasyLoading.showError(
           state.failure.toMessage(
             defaultMessage: "Failed to verify phone number!",
           ),
         );
-      } else if (state is UserVerificationSMSSent) {
+      } else if (state is UserVerificationSMSForRegistrationSent) {
         // _controller = AnimationController(
         //     vsync: this, duration: Duration(seconds: otpTimer));
         // _controller!.forward();
@@ -384,7 +398,8 @@ class _VerificationViewState extends State<VerificationView>
             ),
           ),
         );
-      } else if (state is UserVerificationSMSSent) {
+      } else if (state is UserVerificationSMSForRegistrationSent ||
+          state is UserVerificationSMSForLoginSent) {
         return Scaffold(
           backgroundColor: kWhite,
           body: SingleChildScrollView(
@@ -513,16 +528,32 @@ class _VerificationViewState extends State<VerificationView>
                             end: 0,
                           ).animate(_controller!),
                           onResendOTPTapped: () {
-                            context.read<UserBloc>().add(
-                                  VerifyPhoneNumberUser(
-                                    SignUpWithPhoneParams(
-                                      name: widget.nameController!.text.trim(),
-                                      phone: widget.emailOrPhoneController!.text
-                                          .trim(),
-                                      authProvider: "phone",
+                            if (state
+                                is UserVerificationSMSForRegistrationSent) {
+                              context.read<UserBloc>().add(
+                                    VerifyPhoneNumberForRegistrationUser(
+                                      SignUpWithPhoneParams(
+                                        name:
+                                            widget.nameController!.text.trim(),
+                                        phone: widget
+                                            .emailOrPhoneController!.text
+                                            .trim(),
+                                        authProvider: "phone",
+                                      ),
                                     ),
-                                  ),
-                                );
+                                  );
+                            } else {
+                              context.read<UserBloc>().add(
+                                    VerifyPhoneNumberForLoginUser(
+                                      SignInWithPhoneParams(
+                                        phone: widget
+                                            .emailOrPhoneController!.text
+                                            .trim(),
+                                        authProvider: "phone",
+                                      ),
+                                    ),
+                                  );
+                            }
                           },
                         ),
                       ],
@@ -534,7 +565,7 @@ class _VerificationViewState extends State<VerificationView>
                       buttonText: "Verify",
                       onTap: () {
                         if (formKey.currentState!.validate()) {
-                          _onVerify(context, formKey);
+                          _onVerify(context, formKey, state);
                         }
                       },
                     ),
@@ -693,19 +724,32 @@ class _VerificationViewState extends State<VerificationView>
     });
   }
 
-  _onVerify(BuildContext context, GlobalKey<FormState> key) async {
+  _onVerify(
+      BuildContext context, GlobalKey<FormState> key, UserState state) async {
     if (key.currentState!.validate()) {
       final verificationCode = pinController.text.trim();
-      context.read<UserBloc>().add(
-            SignUpWithPhoneUser(
-              SignUpWithPhoneParams(
-                name: widget.nameController!.text,
-                phone: widget.emailOrPhoneController!.text,
-                code: verificationCode,
-                authProvider: widget.authProvider!,
+      if (state is UserVerificationSMSForRegistrationSent) {
+        context.read<UserBloc>().add(
+              SignUpWithPhoneUser(
+                SignUpWithPhoneParams(
+                  name: widget.nameController!.text,
+                  phone: widget.emailOrPhoneController!.text,
+                  code: verificationCode,
+                  authProvider: widget.authProvider!,
+                ),
               ),
-            ),
-          );
+            );
+      } else if (state is UserVerificationSMSForLoginSent) {
+        context.read<UserBloc>().add(
+              SignInWithPhoneUser(
+                SignInWithPhoneParams(
+                  phone: widget.emailOrPhoneController!.text,
+                  code: verificationCode,
+                  authProvider: widget.authProvider!,
+                ),
+              ),
+            );
+      }
     }
   }
 }

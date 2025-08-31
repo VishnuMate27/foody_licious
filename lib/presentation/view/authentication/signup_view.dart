@@ -91,7 +91,7 @@ class _SignUpViewState extends State<SignUpView> {
                 'emailOrPhoneController': _emailOrPhoneController,
                 'authProvider': 'email',
               });
-        } else if (state is UserVerificationSMSSent) {
+        } else if (state is UserVerificationSMSForRegistrationSent) {
           Navigator.of(context).pushNamedAndRemoveUntil(
               AppRouter.verification, (Route<dynamic> route) => false,
               arguments: {
@@ -123,13 +123,13 @@ class _SignUpViewState extends State<SignUpView> {
               defaultMessage: "Email Verification Failed!",
             ),
           );
-        } else if (state is UserVerificationSMSSentFailed) {
+        } else if (state is UserVerificationSMSForRegistrationSentFailed) {
           EasyLoading.showError(
             state.failure.toMessage(
               defaultMessage: "Failed to send verification SMS!",
             ),
           );
-        } else if (state is UserPhoneVerificationFailed) {
+        } else if (state is UserPhoneVerificationForRegistrationFailed) {
           EasyLoading.showError(
             state.failure.toMessage(
               defaultMessage: "Failed to verify phone number!",
@@ -400,7 +400,7 @@ class _SignUpViewState extends State<SignUpView> {
             password: _passwordController.text,
             authProvider: "email")));
       } else if (isPhone) {
-        context.read<UserBloc>().add(VerifyPhoneNumberUser(
+        context.read<UserBloc>().add(VerifyPhoneNumberForRegistrationUser(
             SignUpWithPhoneParams(
                 name: _nameController.text.trim(),
                 phone: emailOrPhone,

@@ -1,10 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:foody_licious/core/constant/colors.dart';
 import 'package:foody_licious/core/constant/images.dart';
+import 'package:foody_licious/core/extension/failure_extension.dart';
 import 'package:foody_licious/core/router/app_router.dart';
+import 'package:foody_licious/domain/usecase/user/sign_in_with_email_usecase.dart';
+import 'package:foody_licious/domain/usecase/user/sign_in_with_phone_usecase.dart';
 import 'package:foody_licious/presentation/bloc/user/user_bloc.dart';
 import 'package:foody_licious/presentation/widgets/gradient_button.dart';
 import 'package:foody_licious/presentation/widgets/input_text_form_field.dart';
@@ -21,10 +25,79 @@ class _LoginViewState extends State<LoginView> {
   final TextEditingController _emailOrPhoneController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    super.initState();
+    // Listen to changes in email/phone field and dispatch to BLoC
+    _emailOrPhoneController.addListener(_onInputChanged);
+  }
+
+  @override
+  void dispose() {
+    _emailOrPhoneController.removeListener(_onInputChanged);
+    _emailOrPhoneController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  void _onInputChanged() {
+    final text = _emailOrPhoneController.text.trim();
+    context.read<UserBloc>().add(ValidateEmailOrPhone(text));
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocListener<UserBloc, UserState>(
-      listener: (context, state) {},
+      listener: (context, state) {
+        String? errorMessage;
+        EasyLoading.dismiss();
+        if (state is UserLoading) {
+          EasyLoading.show(status: 'Loading...');
+        } else if (state is UserSignInWithEmailSuccess) {
+          Navigator.of(context).pushNamedAndRemoveUntil(
+            AppRouter.home,
+            (Route<dynamic> route) => false,
+          );
+        } else if (state is UserSignInWithEmailFailed) {
+          EasyLoading.showError(
+            state.failure.toMessage(
+              defaultMessage: "Email login Failed!",
+            ),
+          );
+        } else if (state is UserVerificationSMSForLoginSent) {
+          Navigator.of(context).pushNamedAndRemoveUntil(
+              AppRouter.verification, (Route<dynamic> route) => false,
+              arguments: {
+                'emailOrPhoneController': _emailOrPhoneController,
+                'authProvider': 'phone',
+              });
+        } else if (state is UserVerificationSMSForLoginSentFailed) {
+          EasyLoading.showError(
+            state.failure.toMessage(
+              defaultMessage: "Failed to send verification SMS!",
+            ),
+          );
+        } else if (state is UserGoogleSignInSuccess ||
+            state is UserFacebookSignInSuccess) {
+          Navigator.of(context).pushNamedAndRemoveUntil(
+            AppRouter.home,
+            (Route<dynamic> route) => false,
+          );
+        } else if (state is UserGoogleSignInFailed) {
+          EasyLoading.showError(
+            state.failure.toMessage(
+              defaultMessage: "Failed to login with google!",
+            ),
+          );
+        } else if (state is UserFacebookSignInFailed) {
+          EasyLoading.showError(
+            state.failure.toMessage(
+              defaultMessage: "Failed to login with facebook!",
+            ),
+          );
+        }
+      },
       child: Scaffold(
         backgroundColor: kWhite,
         body: SingleChildScrollView(
@@ -73,25 +146,97 @@ class _LoginViewState extends State<LoginView> {
                   SizedBox(
                     height: 28.h,
                   ),
-                  InputTextFormField(
-                      textController: _emailOrPhoneController,
-                      labelText: "Email or Phone Number",
-                      hintText: "Enter email or phone Number",
-                      prefixIconData: Icons.mail_outlined,
-                      keyboardType: TextInputType.emailAddress,
-                      validatorText:
-                          "Please enter your valid email or phone Number"),
+                  BlocConsumer<UserBloc, UserState>(
+                    listener: (context, state) {
+                      if (state is InputValidationState) {
+                        if (state.isPhone) {
+                          // Phone mode → enforce +91
+                          if (!_emailOrPhoneController.text.startsWith("+91")) {
+                            final newText = _emailOrPhoneController.text;
+                            _emailOrPhoneController.text = "+91$newText";
+                            _emailOrPhoneController.selection =
+                                TextSelection.fromPosition(
+                              TextPosition(
+                                  offset: _emailOrPhoneController.text.length),
+                            );
+                          }
+                        } else if (state.isEmail) {
+                          // Email mode → remove +91 if present
+                          if (_emailOrPhoneController.text.startsWith("+91")) {
+                            final newText = _emailOrPhoneController.text
+                                .replaceFirst("+91", "");
+                            _emailOrPhoneController.text = newText;
+                            _emailOrPhoneController.selection =
+                                TextSelection.fromPosition(
+                              TextPosition(
+                                  offset: _emailOrPhoneController.text.length),
+                            );
+                          }
+                        }
+                      }
+                    },
+                    builder: (context, state) {
+                      bool isEmail = false;
+                      bool isPhone = false;
+                      IconData prefixIcon = Icons.mail_outlined;
+                      TextInputType keyboardType = TextInputType.text;
+
+                      if (state is InputValidationState) {
+                        isEmail = state.isEmail;
+                        isPhone = state.isPhone;
+
+                        if (isEmail) {
+                          prefixIcon = Icons.mail_outlined;
+                          keyboardType = TextInputType.emailAddress;
+                        } else if (isPhone) {
+                          prefixIcon = Icons.phone_outlined;
+                          keyboardType = TextInputType.phone;
+                        }
+                      }
+
+                      return InputTextFormField(
+                        textController: _emailOrPhoneController,
+                        labelText: "Email or Phone Number",
+                        hintText: "Enter email or phone number",
+                        prefixIconData: prefixIcon,
+                        keyboardType: keyboardType,
+                        validatorText:
+                            "Please enter your email or phone number",
+                      );
+                    },
+                  ),
                   SizedBox(
                     height: 12.h,
                   ),
-                  InputTextFormField(
-                      textController: _passwordController,
-                      labelText: "Password",
-                      hintText: "Enter password",
-                      prefixIconData: Icons.lock_outline,
-                      keyboardType: TextInputType.text,
-                      validatorText: "Please set your Password",
-                      obscureText: true),
+                  BlocBuilder<UserBloc, UserState>(
+                    builder: (context, state) {
+                      bool showPassword = false;
+
+                      if (state is InputValidationState) {
+                        showPassword = state.isEmail && state.isValid;
+                      }
+
+                      return AnimatedContainer(
+                        duration: const Duration(milliseconds: 300),
+                        height: showPassword ? null : 0,
+                        child: showPassword
+                            ? Column(
+                                children: [
+                                  InputTextFormField(
+                                      textController: _passwordController,
+                                      labelText: "Password",
+                                      hintText: "Enter password",
+                                      prefixIconData: Icons.lock_outline,
+                                      keyboardType: TextInputType.text,
+                                      validatorText: "Please set your Password",
+                                      obscureText: true),
+                                  SizedBox(height: 12.h),
+                                ],
+                              )
+                            : const SizedBox.shrink(),
+                      );
+                    },
+                  ),
                   SizedBox(
                     height: 28.h,
                   ),
@@ -118,12 +263,18 @@ class _LoginViewState extends State<LoginView> {
                       SocialAuthButton(
                         authProviderName: "Facebook",
                         authProviderlogoImagePath: kFacebookIcon,
-                        onTap: () {},
+                        onTap: () {
+                          context
+                              .read<UserBloc>()
+                              .add(SignInWithFacebookUser());
+                        },
                       ),
                       SocialAuthButton(
                         authProviderName: "Google",
                         authProviderlogoImagePath: kGoogleIcon,
-                        onTap: () {},
+                        onTap: () {
+                          context.read<UserBloc>().add(SignInWithGoogleUser());
+                        },
                       ),
                     ],
                   ),
@@ -181,17 +332,13 @@ class _LoginViewState extends State<LoginView> {
       }
 
       if (isEmail) {
-        // context.read<UserBloc>().add(SignUpWithEmailUser(SignUpWithEmailParams(
-        //     name: _nameController.text.trim(),
-        //     email: emailOrPhone,
-        //     password: _passwordController.text,
-        //     authProvider: "email")));
+        context.read<UserBloc>().add(SignInWithEmailUser(SignInWithEmailParams(
+            email: emailOrPhone,
+            password: _passwordController.text,
+            authProvider: "email")));
       } else if (isPhone) {
-        // context.read<UserBloc>().add(VerifyPhoneNumberUser(
-        //     SignUpWithPhoneParams(
-        //         name: _nameController.text.trim(),
-        //         phone: emailOrPhone,
-        //         authProvider: "phone")));
+        context.read<UserBloc>().add(VerifyPhoneNumberForLoginUser(
+            SignInWithPhoneParams(phone: emailOrPhone, authProvider: "phone")));
       }
     }
   }

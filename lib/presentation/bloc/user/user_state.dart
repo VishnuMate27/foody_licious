@@ -27,6 +27,76 @@ class UserLoggedFail extends UserState {
   List<Object> get props => [failure];
 }
 
+class UserSignInWithEmailSuccess extends UserState {
+  final User user;
+  UserSignInWithEmailSuccess(this.user);
+  @override
+  List<Object> get props => [user];
+}
+
+class UserSignInWithEmailFailed extends UserState {
+  final Failure failure;
+  UserSignInWithEmailFailed(this.failure);
+  @override
+  List<Object> get props => [failure];
+}
+
+class UserVerificationSMSForLoginSent extends UserState {
+  final Unit unit;
+  UserVerificationSMSForLoginSent(this.unit);
+  @override
+  List<Object> get props => [unit];
+}
+
+class UserVerificationSMSForLoginSentFailed extends UserState {
+  final Failure failure;
+  UserVerificationSMSForLoginSentFailed(this.failure);
+  @override
+  List<Object> get props => [failure];
+}
+
+class UserPhoneVerificationForLoginSuccess extends UserState {
+  final User user;
+  UserPhoneVerificationForLoginSuccess(this.user);
+  @override
+  List<Object> get props => [user];
+}
+
+class UserPhoneVerificationForLoginFailed extends UserState {
+  final Failure failure;
+  UserPhoneVerificationForLoginFailed(this.failure);
+  @override
+  List<Object> get props => [failure];
+}
+
+class UserGoogleSignInSuccess extends UserState {
+  final User user;
+  UserGoogleSignInSuccess(this.user);
+  @override
+  List<Object> get props => [user];
+}
+
+class UserGoogleSignInFailed extends UserState {
+  final Failure failure;
+  UserGoogleSignInFailed(this.failure);
+  @override
+  List<Object> get props => [failure];
+}
+
+class UserFacebookSignInSuccess extends UserState {
+  final User user;
+  UserFacebookSignInSuccess(this.user);
+  @override
+  List<Object> get props => [user];
+}
+
+class UserFacebookSignInFailed extends UserState {
+  final Failure failure;
+  UserFacebookSignInFailed(this.failure);
+  @override
+  List<Object> get props => [failure];
+}
+
 class UserVerificationEmailRequested extends UserState {
   final User user;
   UserVerificationEmailRequested(this.user);
@@ -65,30 +135,30 @@ class UserEmailVerificationFailed extends UserState {
   List<Object> get props => [failure];
 }
 
-class UserVerificationSMSSent extends UserState {
+class UserVerificationSMSForRegistrationSent extends UserState {
   final Unit unit;
-  UserVerificationSMSSent(this.unit);
+  UserVerificationSMSForRegistrationSent(this.unit);
   @override
   List<Object> get props => [unit];
 }
 
-class UserVerificationSMSSentFailed extends UserState {
+class UserVerificationSMSForRegistrationSentFailed extends UserState {
   final Failure failure;
-  UserVerificationSMSSentFailed(this.failure);
+  UserVerificationSMSForRegistrationSentFailed(this.failure);
   @override
   List<Object> get props => [failure];
 }
 
-class UserPhoneVerificationSuccess extends UserState {
+class UserPhoneVerificationForRegistrationSuccess extends UserState {
   final User user;
-  UserPhoneVerificationSuccess(this.user);
+  UserPhoneVerificationForRegistrationSuccess(this.user);
   @override
   List<Object> get props => [user];
 }
 
-class UserPhoneVerificationFailed extends UserState {
+class UserPhoneVerificationForRegistrationFailed extends UserState {
   final Failure failure;
-  UserPhoneVerificationFailed(this.failure);
+  UserPhoneVerificationForRegistrationFailed(this.failure);
   @override
   List<Object> get props => [failure];
 }
@@ -119,7 +189,6 @@ class UserFacebookSignUpFailed extends UserState {
   UserFacebookSignUpFailed(this.failure);
   @override
   List<Object> get props => [failure];
-  
 }
 
 class UserLoggedOut extends UserState {

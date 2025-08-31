@@ -3,10 +3,24 @@ part of 'user_bloc.dart';
 @immutable
 abstract class UserEvent {}
 
-class SignInUser extends UserEvent {
-  final SignInParams params;
-  SignInUser(this.params);
+class SignInWithEmailUser extends UserEvent {
+  final SignInWithEmailParams params;
+  SignInWithEmailUser(this.params);
 }
+
+class VerifyPhoneNumberForLoginUser extends UserEvent {
+  final SignInWithPhoneParams params;
+  VerifyPhoneNumberForLoginUser(this.params);
+}
+
+class SignInWithPhoneUser extends UserEvent {
+  final SignInWithPhoneParams params;
+  SignInWithPhoneUser(this.params);
+}
+
+class SignInWithGoogleUser extends UserEvent {}
+
+class SignInWithFacebookUser extends UserEvent {}
 
 class SignUpWithEmailUser extends UserEvent {
   final SignUpWithEmailParams params;
@@ -17,9 +31,9 @@ class SendVerificationEmailUser extends UserEvent {}
 
 class WaitForEmailVerificationUser extends UserEvent {}
 
-class VerifyPhoneNumberUser extends UserEvent {
+class VerifyPhoneNumberForRegistrationUser extends UserEvent {
   final SignUpWithPhoneParams params;
-  VerifyPhoneNumberUser(this.params);
+  VerifyPhoneNumberForRegistrationUser(this.params);
 }
 
 class SignUpWithPhoneUser extends UserEvent {

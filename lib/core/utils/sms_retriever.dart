@@ -14,11 +14,12 @@ class SmsRetrieverImpl implements SmsRetriever {
 
   @override
   Future<String?> getSmsCode() async {
-    final signature = await smartAuth.getAppSignature();
-    debugPrint('App Signature: $signature');
     final res = await smartAuth.getSmsWithUserConsentApi();
     if (res.hasData && res.data != null) {
-      return res.data!.code;
+      final message = res.data!.sms ?? '';
+      final otpMatch = RegExp(r'\d{4}').firstMatch(message);
+      final otp = otpMatch?.group(0);
+      return otp;
     }
     return null;
   }

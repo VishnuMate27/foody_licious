@@ -3,12 +3,16 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:foody_licious/domain/usecase/user/get_local_user_usecase.dart';
 import 'package:foody_licious/domain/usecase/user/send_verification_email_usecase.dart';
-import 'package:foody_licious/domain/usecase/user/sign_in_usecase.dart';
+import 'package:foody_licious/domain/usecase/user/sign_in_with_email_usecase.dart';
+import 'package:foody_licious/domain/usecase/user/sign_in_with_facebook.dart';
+import 'package:foody_licious/domain/usecase/user/sign_in_with_google_usecase.dart';
+import 'package:foody_licious/domain/usecase/user/sign_in_with_phone_usecase.dart';
 import 'package:foody_licious/domain/usecase/user/sign_up_with_email_usecase.dart';
 import 'package:foody_licious/domain/usecase/user/sign_up_with_facebook_usecase.dart';
 import 'package:foody_licious/domain/usecase/user/sign_up_with_google_usecase.dart';
 import 'package:foody_licious/domain/usecase/user/sign_up_with_phone_usecase.dart';
-import 'package:foody_licious/domain/usecase/user/verify_phone_number_usecase.dart';
+import 'package:foody_licious/domain/usecase/user/verify_phone_number_for_login_usecase.dart';
+import 'package:foody_licious/domain/usecase/user/verify_phone_number_for_registration_usecase.dart';
 import 'package:foody_licious/domain/usecase/user/wait_for_email_verification_usecase.dart';
 import 'package:foody_licious/firebase_options.dart';
 import 'package:foody_licious/presentation/bloc/user/user_bloc.dart';
@@ -37,15 +41,18 @@ Future<void> init() async {
 
   //Features - User
   // Bloc
-  sl.registerFactory(
-    () => UserBloc(sl(), sl(), sl(),sl(),sl(),sl(),sl(),sl(),sl())
-  );
+  sl.registerFactory(() => UserBloc(sl(), sl(), sl(), sl(), sl(), sl(), sl(),
+      sl(), sl(), sl(), sl(), sl(), sl()));
   // Use cases
-  sl.registerLazySingleton(() => SignInUseCase(sl()));
+  sl.registerLazySingleton(() => SignInWithEmailUseCase(sl()));
+  sl.registerLazySingleton(() => VerifyPhoneNumberForLoginUseCase(sl()));
+  sl.registerLazySingleton(() => SignInWithPhoneUseCase(sl()));
   sl.registerLazySingleton(() => SignUpWithEmailUseCase(sl()));
+  sl.registerLazySingleton(() => SignInWithGoogleUseCase(sl()));
+  sl.registerLazySingleton(() => SignInWithFacebookUseCase(sl()));
   sl.registerLazySingleton(() => SendVerificationEmailUseCase(sl()));
   sl.registerLazySingleton(() => WaitForEmailVerificationUsecase(sl()));
-  sl.registerLazySingleton(() => VerifyPhoneNumberUseCase(sl()));
+  sl.registerLazySingleton(() => VerifyPhoneNumberForRegistrationUseCase(sl()));
   sl.registerLazySingleton(() => SignUpWithPhoneUseCase(sl()));
   sl.registerLazySingleton(() => SignUpWithGoogleUseCase(sl()));
   sl.registerLazySingleton(() => SignUpWithFacebookUseCase(sl()));
@@ -63,7 +70,8 @@ Future<void> init() async {
     () => UserLocalDataSourceImpl(sharedPreferences: sl(), secureStorage: sl()),
   );
   sl.registerLazySingleton<UserRemoteDataSource>(
-    () => UserRemoteDataSourceImpl(firebaseAuth: sl(), client: sl(),googleSignIn:sl()),
+    () => UserRemoteDataSourceImpl(
+        firebaseAuth: sl(), client: sl(), googleSignIn: sl()),
   );
 
   ///***********************************************
@@ -76,9 +84,9 @@ Future<void> init() async {
   const secureStorage = FlutterSecureStorage();
   sl.registerLazySingleton(() => sharedPreferences);
   sl.registerLazySingleton(() => secureStorage);
-  sl.registerLazySingleton(() => FirebaseAuth.instance);
   sl.registerLazySingleton(() => http.Client());
   sl.registerLazySingleton(() => GoogleSignIn.instance);
   sl.registerLazySingleton(() => FirebaseAuth.instance);
   sl.registerLazySingleton(() => SmartAuth.instance);
+  sl.registerLazySingleton(() => InternetConnectionChecker());
 }
