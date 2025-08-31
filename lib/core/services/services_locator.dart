@@ -6,11 +6,13 @@ import 'package:foody_licious/domain/usecase/user/send_verification_email_usecas
 import 'package:foody_licious/domain/usecase/user/sign_in_with_email_usecase.dart';
 import 'package:foody_licious/domain/usecase/user/sign_in_with_facebook.dart';
 import 'package:foody_licious/domain/usecase/user/sign_in_with_google_usecase.dart';
+import 'package:foody_licious/domain/usecase/user/sign_in_with_phone_usecase.dart';
 import 'package:foody_licious/domain/usecase/user/sign_up_with_email_usecase.dart';
 import 'package:foody_licious/domain/usecase/user/sign_up_with_facebook_usecase.dart';
 import 'package:foody_licious/domain/usecase/user/sign_up_with_google_usecase.dart';
 import 'package:foody_licious/domain/usecase/user/sign_up_with_phone_usecase.dart';
-import 'package:foody_licious/domain/usecase/user/verify_phone_number_usecase.dart';
+import 'package:foody_licious/domain/usecase/user/verify_phone_number_for_login_usecase.dart';
+import 'package:foody_licious/domain/usecase/user/verify_phone_number_for_registration_usecase.dart';
 import 'package:foody_licious/domain/usecase/user/wait_for_email_verification_usecase.dart';
 import 'package:foody_licious/firebase_options.dart';
 import 'package:foody_licious/presentation/bloc/user/user_bloc.dart';
@@ -39,16 +41,18 @@ Future<void> init() async {
 
   //Features - User
   // Bloc
-  sl.registerFactory(() => UserBloc(
-      sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()));
+  sl.registerFactory(() => UserBloc(sl(), sl(), sl(), sl(), sl(), sl(), sl(),
+      sl(), sl(), sl(), sl(), sl(), sl()));
   // Use cases
   sl.registerLazySingleton(() => SignInWithEmailUseCase(sl()));
+  sl.registerLazySingleton(() => VerifyPhoneNumberForLoginUseCase(sl()));
+  sl.registerLazySingleton(() => SignInWithPhoneUseCase(sl()));
   sl.registerLazySingleton(() => SignUpWithEmailUseCase(sl()));
   sl.registerLazySingleton(() => SignInWithGoogleUseCase(sl()));
   sl.registerLazySingleton(() => SignInWithFacebookUseCase(sl()));
   sl.registerLazySingleton(() => SendVerificationEmailUseCase(sl()));
   sl.registerLazySingleton(() => WaitForEmailVerificationUsecase(sl()));
-  sl.registerLazySingleton(() => VerifyPhoneNumberUseCase(sl()));
+  sl.registerLazySingleton(() => VerifyPhoneNumberForRegistrationUseCase(sl()));
   sl.registerLazySingleton(() => SignUpWithPhoneUseCase(sl()));
   sl.registerLazySingleton(() => SignUpWithGoogleUseCase(sl()));
   sl.registerLazySingleton(() => SignUpWithFacebookUseCase(sl()));

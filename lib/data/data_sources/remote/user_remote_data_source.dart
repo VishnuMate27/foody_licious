@@ -9,6 +9,7 @@ import 'package:foody_licious/core/error/failures.dart';
 import 'package:foody_licious/data/models/user/authentication_response_model.dart';
 import 'package:foody_licious/data/models/user/user_model.dart';
 import 'package:foody_licious/domain/usecase/user/sign_in_with_email_usecase.dart';
+import 'package:foody_licious/domain/usecase/user/sign_in_with_phone_usecase.dart';
 import 'package:foody_licious/domain/usecase/user/sign_up_with_email_usecase.dart';
 import 'package:foody_licious/domain/usecase/user/sign_up_with_phone_usecase.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -20,13 +21,16 @@ import '../../../core/constant/strings.dart';
 abstract class UserRemoteDataSource {
   Future<AuthenticationResponseModel> signInWithEmail(
       SignInWithEmailParams params);
+  Future<Unit> verifyPhoneNumberForLogin(SignInWithPhoneParams params);
+  Future<AuthenticationResponseModel> signInWithPhone(
+      SignInWithPhoneParams params);
   Future<AuthenticationResponseModel> signInWithGoogle();
   Future<AuthenticationResponseModel> signInWithFacebook();
   Future<AuthenticationResponseModel> signUpWithEmail(
       SignUpWithEmailParams params);
   Future<Unit> sendVerificationEmail();
   Future<Unit> waitForEmailVerification();
-  Future<Unit> verifyPhoneNumber(SignUpWithPhoneParams params);
+  Future<Unit> verifyPhoneNumberForRegistration(SignUpWithPhoneParams params);
   Future<AuthenticationResponseModel> signUpWithPhone(
       SignUpWithPhoneParams params);
   Future<AuthenticationResponseModel> signUpWithGoogle();
@@ -61,6 +65,37 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
         throw AuthenticationFailure(e.message ?? 'Unknown error');
       }
     }
+  }
+
+  @override
+  Future<Unit> verifyPhoneNumberForLogin(SignInWithPhoneParams params) async {
+    final requestBody = json.encode({
+      "phone": params.phone ?? "",
+    });
+
+    final response = await client.post(
+      Uri.parse('$kBaseUrl/api/auth/sendVerificationCodeForLogin'),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: requestBody,
+    );
+
+    if (response.statusCode == 200) {
+      return Future.value(unit);
+    } else if (response.statusCode == 400 || response.statusCode == 401) {
+      throw CredentialFailure();
+    } else if (response.statusCode == 404) {
+      throw UserNotExistsFailure();
+    } else {
+      throw ServerFailure();
+    }
+  }
+
+  @override
+  Future<AuthenticationResponseModel> signInWithPhone(
+      SignInWithPhoneParams params) async {
+    return await _sendLoginWithPhoneRequest(params);
   }
 
   @override
@@ -177,13 +212,14 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
   }
 
   @override
-  Future<Unit> verifyPhoneNumber(SignUpWithPhoneParams params) async {
+  Future<Unit> verifyPhoneNumberForRegistration(
+      SignUpWithPhoneParams params) async {
     final requestBody = json.encode({
       "phone": params.phone ?? "",
     });
 
     final response = await client.post(
-      Uri.parse('$kBaseUrl/api/auth/sendVerificationCode'),
+      Uri.parse('$kBaseUrl/api/auth/sendVerificationCodeForRegistration'),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -289,6 +325,33 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
       throw CredentialFailure();
     } else if (response.statusCode == 401) {
       throw AuthProviderMissMatchFailure();
+    } else if (response.statusCode == 404) {
+      throw UserNotExistsFailure();
+    } else {
+      throw ServerFailure();
+    }
+  }
+
+  Future<AuthenticationResponseModel> _sendLoginWithPhoneRequest(
+      SignInWithPhoneParams params) async {
+    final requestBody = json.encode({
+      "phone": params.phone ?? "",
+      "authProvider": params.authProvider,
+      "code": params.code
+    });
+
+    final response = await client.post(
+      Uri.parse('$kBaseUrl/api/auth/verifyCodeAndLoginWithPhone'),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: requestBody,
+    );
+
+    if (response.statusCode == 200) {
+      return authenticationResponseModelFromJson(response.body);
+    } else if (response.statusCode == 400 || response.statusCode == 401) {
+      throw CredentialFailure();
     } else if (response.statusCode == 404) {
       throw UserNotExistsFailure();
     } else {

@@ -34,6 +34,33 @@ class UserRepositoryImpl implements UserRepository {
   }
 
   @override
+  Future<Either<Failure, Unit>> verifyPhoneNumberForLogin(params) async {
+    if (!await networkInfo.isConnected) {
+      return Left(NetworkFailure());
+    }
+    try {
+      final remoteResponse =
+          await remoteDataSource.verifyPhoneNumberForLogin(params);
+      return Right(remoteResponse);
+    } on Failure catch (failure) {
+      return Left(failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, User>> signInWithPhone(params) async {
+    if (!await networkInfo.isConnected) {
+      return Left(NetworkFailure());
+    }
+    try {
+      final remoteResponse = await remoteDataSource.signInWithPhone(params);
+      return Right(remoteResponse.user);
+    } on Failure catch (failure) {
+      return Left(failure);
+    }
+  }
+
+  @override
   Future<Either<Failure, User>> signUpWithEmail(params) async {
     if (!await networkInfo.isConnected) {
       return Left(NetworkFailure());
@@ -99,12 +126,13 @@ class UserRepositoryImpl implements UserRepository {
   }
 
   @override
-  Future<Either<Failure, Unit>> verifyPhoneNumber(params) async {
+  Future<Either<Failure, Unit>> verifyPhoneNumberForRegistration(params) async {
     if (!await networkInfo.isConnected) {
       return Left(NetworkFailure());
     }
     try {
-      final remoteResponse = await remoteDataSource.verifyPhoneNumber(params);
+      final remoteResponse =
+          await remoteDataSource.verifyPhoneNumberForRegistration(params);
       return Right(remoteResponse);
     } on Failure catch (failure) {
       return Left(failure);

@@ -8,6 +8,7 @@ import 'package:foody_licious/core/constant/images.dart';
 import 'package:foody_licious/core/extension/failure_extension.dart';
 import 'package:foody_licious/core/router/app_router.dart';
 import 'package:foody_licious/domain/usecase/user/sign_in_with_email_usecase.dart';
+import 'package:foody_licious/domain/usecase/user/sign_in_with_phone_usecase.dart';
 import 'package:foody_licious/presentation/bloc/user/user_bloc.dart';
 import 'package:foody_licious/presentation/widgets/gradient_button.dart';
 import 'package:foody_licious/presentation/widgets/input_text_form_field.dart';
@@ -49,6 +50,8 @@ class _LoginViewState extends State<LoginView> {
   Widget build(BuildContext context) {
     return BlocListener<UserBloc, UserState>(
       listener: (context, state) {
+        String? errorMessage;
+        EasyLoading.dismiss();
         if (state is UserLoading) {
           EasyLoading.show(status: 'Loading...');
         } else if (state is UserSignInWithEmailSuccess) {
@@ -60,6 +63,19 @@ class _LoginViewState extends State<LoginView> {
           EasyLoading.showError(
             state.failure.toMessage(
               defaultMessage: "Email login Failed!",
+            ),
+          );
+        } else if (state is UserVerificationSMSForLoginSent) {
+          Navigator.of(context).pushNamedAndRemoveUntil(
+              AppRouter.verification, (Route<dynamic> route) => false,
+              arguments: {
+                'emailOrPhoneController': _emailOrPhoneController,
+                'authProvider': 'phone',
+              });
+        } else if (state is UserVerificationSMSForLoginSentFailed) {
+          EasyLoading.showError(
+            state.failure.toMessage(
+              defaultMessage: "Failed to send verification SMS!",
             ),
           );
         } else if (state is UserGoogleSignInSuccess ||
@@ -321,11 +337,8 @@ class _LoginViewState extends State<LoginView> {
             password: _passwordController.text,
             authProvider: "email")));
       } else if (isPhone) {
-        // context.read<UserBloc>().add(VerifyPhoneNumberUser(
-        //     SignUpWithPhoneParams(
-        //         name: _nameController.text.trim(),
-        //         phone: emailOrPhone,
-        //         authProvider: "phone")));
+        context.read<UserBloc>().add(VerifyPhoneNumberForLoginUser(
+            SignInWithPhoneParams(phone: emailOrPhone, authProvider: "phone")));
       }
     }
   }
