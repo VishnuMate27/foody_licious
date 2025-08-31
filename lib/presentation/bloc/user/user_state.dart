@@ -97,6 +97,18 @@ class UserFacebookSignInFailed extends UserState {
   List<Object> get props => [failure];
 }
 
+class UserPasswordResetEmailSent extends UserState {
+  @override
+  List<Object> get props => [];
+}
+
+class UserPasswordResetEmailSentFailed extends UserState {
+  final Failure failure;
+  UserPasswordResetEmailSentFailed(this.failure);
+  @override
+  List<Object> get props => [failure];
+}
+
 class UserVerificationEmailRequested extends UserState {
   final User user;
   UserVerificationEmailRequested(this.user);

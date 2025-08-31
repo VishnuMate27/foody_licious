@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:foody_licious/domain/usecase/user/get_local_user_usecase.dart';
+import 'package:foody_licious/domain/usecase/user/send_password_reset_email_usecase.dart';
 import 'package:foody_licious/domain/usecase/user/send_verification_email_usecase.dart';
 import 'package:foody_licious/domain/usecase/user/sign_in_with_email_usecase.dart';
 import 'package:foody_licious/domain/usecase/user/sign_in_with_facebook.dart';
@@ -42,13 +43,14 @@ Future<void> init() async {
   //Features - User
   // Bloc
   sl.registerFactory(() => UserBloc(sl(), sl(), sl(), sl(), sl(), sl(), sl(),
-      sl(), sl(), sl(), sl(), sl(), sl()));
+      sl(), sl(), sl(), sl(), sl(), sl(), sl()));
   // Use cases
   sl.registerLazySingleton(() => SignInWithEmailUseCase(sl()));
   sl.registerLazySingleton(() => VerifyPhoneNumberForLoginUseCase(sl()));
   sl.registerLazySingleton(() => SignInWithPhoneUseCase(sl()));
   sl.registerLazySingleton(() => SignUpWithEmailUseCase(sl()));
   sl.registerLazySingleton(() => SignInWithGoogleUseCase(sl()));
+  sl.registerLazySingleton(() => SendPasswordResetEmailUseCase(sl()));
   sl.registerLazySingleton(() => SignInWithFacebookUseCase(sl()));
   sl.registerLazySingleton(() => SendVerificationEmailUseCase(sl()));
   sl.registerLazySingleton(() => WaitForEmailVerificationUsecase(sl()));

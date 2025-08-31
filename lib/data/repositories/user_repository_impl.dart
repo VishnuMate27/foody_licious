@@ -100,6 +100,20 @@ class UserRepositoryImpl implements UserRepository {
   }
 
   @override
+  Future<Either<Failure, Unit>> sendPasswordResetEmail(params) async {
+    if (!await networkInfo.isConnected) {
+      return Left(NetworkFailure());
+    }
+    try {
+      final remoteResponse =
+          await remoteDataSource.sendPasswordResetEmail(params);
+      return Right(remoteResponse);
+    } on Failure catch (failure) {
+      return Left(failure);
+    }
+  }
+
+  @override
   Future<Either<Failure, Unit>> sendVerificationEmail() async {
     if (!await networkInfo.isConnected) {
       return Left(NetworkFailure());

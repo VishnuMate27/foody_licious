@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:foody_licious/core/constant/validators.dart';
 import 'package:foody_licious/core/usecase/usecase.dart';
 import 'package:foody_licious/domain/usecase/user/get_local_user_usecase.dart';
+import 'package:foody_licious/domain/usecase/user/send_password_reset_email_usecase.dart';
 import 'package:foody_licious/domain/usecase/user/send_verification_email_usecase.dart';
 import 'package:foody_licious/domain/usecase/user/sign_in_with_email_usecase.dart';
 import 'package:foody_licious/domain/usecase/user/sign_in_with_facebook.dart';
@@ -33,6 +34,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   final SignInWithPhoneUseCase _signInWithPhoneUseCase;
   final SignInWithGoogleUseCase _signInWithGoogleUseCase;
   final SignInWithFacebookUseCase _signInWithFacebookUseCase;
+  final SendPasswordResetEmailUseCase _sendPasswordResetEmailUseCase;
   final SignUpWithEmailUseCase _signUpWithEmailUseCase;
   final SendVerificationEmailUseCase _sendVerificationEmailUseCase;
   final WaitForEmailVerificationUsecase _waitForEmailVerificationUseCase;
@@ -48,6 +50,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     this._signInWithPhoneUseCase,
     this._signInWithGoogleUseCase,
     this._signInWithFacebookUseCase,
+    this._sendPasswordResetEmailUseCase,
     this._signUpWithEmailUseCase,
     this._sendVerificationEmailUseCase,
     this._waitForEmailVerificationUseCase,
@@ -61,6 +64,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     on<SignInWithPhoneUser>(_onSignInWithPhone);
     on<SignInWithGoogleUser>(_onSignInWithGoogle);
     on<SignInWithFacebookUser>(_onSignInWithFacebook);
+    on<SendPasswordResetEmailUser>(_onSendPasswordResetEmail);
     on<SignUpWithEmailUser>(_onSignUpWithEmail);
     on<SendVerificationEmailUser>(_onSendVerificationEmail);
     on<WaitForEmailVerificationUser>(_onWaitForEmailVerification);
@@ -140,6 +144,19 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       );
     } catch (e) {
       emit(UserFacebookSignInFailed(ExceptionFailure()));
+    }
+  }
+
+  FutureOr<void> _onSendPasswordResetEmail(
+      SendPasswordResetEmailUser event, Emitter<UserState> emit) async {
+    try {
+      final result = await _sendPasswordResetEmailUseCase(event.params);
+      result.fold(
+        (failure) => emit(UserPasswordResetEmailSentFailed(failure)),
+        (unit) => emit(UserPasswordResetEmailSent()),
+      );
+    } catch (e) {
+      emit(UserPasswordResetEmailSentFailed(ExceptionFailure()));
     }
   }
 

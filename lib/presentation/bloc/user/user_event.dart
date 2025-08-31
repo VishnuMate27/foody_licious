@@ -22,6 +22,11 @@ class SignInWithGoogleUser extends UserEvent {}
 
 class SignInWithFacebookUser extends UserEvent {}
 
+class SendPasswordResetEmailUser extends UserEvent {
+  final SendPasswordResetEmailParams params;
+  SendPasswordResetEmailUser(this.params);
+}
+
 class SignUpWithEmailUser extends UserEvent {
   final SignUpWithEmailParams params;
   SignUpWithEmailUser(this.params);

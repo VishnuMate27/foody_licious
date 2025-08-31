@@ -1,21 +1,17 @@
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:foody_licious/core/error/failures.dart';
 import 'package:foody_licious/data/models/user/authentication_response_model.dart';
-import 'package:foody_licious/data/models/user/user_model.dart';
+import 'package:foody_licious/domain/usecase/user/send_password_reset_email_usecase.dart';
 import 'package:foody_licious/domain/usecase/user/sign_in_with_email_usecase.dart';
 import 'package:foody_licious/domain/usecase/user/sign_in_with_phone_usecase.dart';
 import 'package:foody_licious/domain/usecase/user/sign_up_with_email_usecase.dart';
 import 'package:foody_licious/domain/usecase/user/sign_up_with_phone_usecase.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
-
-import '../../../../core/error/exceptions.dart';
 import '../../../core/constant/strings.dart';
 
 abstract class UserRemoteDataSource {
@@ -26,6 +22,7 @@ abstract class UserRemoteDataSource {
       SignInWithPhoneParams params);
   Future<AuthenticationResponseModel> signInWithGoogle();
   Future<AuthenticationResponseModel> signInWithFacebook();
+  Future<Unit> sendPasswordResetEmail(SendPasswordResetEmailParams params);
   Future<AuthenticationResponseModel> signUpWithEmail(
       SignUpWithEmailParams params);
   Future<Unit> sendVerificationEmail();
@@ -145,6 +142,23 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
       throw ExceptionFailure();
     }
     return await _sendRegisterRequest(user!, authProvider: "facebook");
+  }
+
+  @override
+  Future<Unit> sendPasswordResetEmail(
+      SendPasswordResetEmailParams params) async {
+    try {
+      await firebaseAuth.sendPasswordResetEmail(email: params.email);
+      return Future.value(unit);
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        throw UserNotExistsFailure();
+      } else {
+        throw AuthenticationFailure(e.message ?? 'Unknown error');
+      }
+    } catch (e) {
+      throw AuthenticationFailure(e.toString() ?? 'Unknown error');
+    }
   }
 
   @override

@@ -7,6 +7,7 @@ import 'package:foody_licious/core/constant/colors.dart';
 import 'package:foody_licious/core/constant/images.dart';
 import 'package:foody_licious/core/extension/failure_extension.dart';
 import 'package:foody_licious/core/router/app_router.dart';
+import 'package:foody_licious/domain/usecase/user/send_password_reset_email_usecase.dart';
 import 'package:foody_licious/domain/usecase/user/sign_in_with_email_usecase.dart';
 import 'package:foody_licious/domain/usecase/user/sign_in_with_phone_usecase.dart';
 import 'package:foody_licious/presentation/bloc/user/user_bloc.dart';
@@ -84,6 +85,10 @@ class _LoginViewState extends State<LoginView> {
             AppRouter.home,
             (Route<dynamic> route) => false,
           );
+        } else if (state is UserPasswordResetEmailSent) {
+          EasyLoading.showToast("Password Reset Email Sent!");
+        } else if (state is UserPasswordResetEmailSentFailed) {
+          EasyLoading.show(status: "Failed to send password reset email!");
         } else if (state is UserGoogleSignInFailed) {
           EasyLoading.showError(
             state.failure.toMessage(
@@ -221,6 +226,7 @@ class _LoginViewState extends State<LoginView> {
                         height: showPassword ? null : 0,
                         child: showPassword
                             ? Column(
+                                mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
                                   InputTextFormField(
                                       textController: _passwordController,
@@ -230,6 +236,34 @@ class _LoginViewState extends State<LoginView> {
                                       keyboardType: TextInputType.text,
                                       validatorText: "Please set your Password",
                                       obscureText: true),
+                                  Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        TextButton(
+                                          onPressed: () {
+                                            context.read<UserBloc>().add(
+                                                  SendPasswordResetEmailUser(
+                                                    SendPasswordResetEmailParams(
+                                                      email:
+                                                          _emailOrPhoneController
+                                                              .text
+                                                              .toLowerCase()
+                                                              .trim(),
+                                                    ),
+                                                  ),
+                                                );
+                                          },
+                                          child: Text(
+                                            "Forgot Password ?",
+                                            style: GoogleFonts.lato(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.bold,
+                                              color: kTextRedDark,
+                                            ),
+                                            textAlign: TextAlign.end,
+                                          ),
+                                        )
+                                      ]),
                                   SizedBox(height: 12.h),
                                 ],
                               )
