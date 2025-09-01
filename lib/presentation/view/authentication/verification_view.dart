@@ -74,7 +74,7 @@ class _VerificationViewState extends State<VerificationView>
   //     if (mounted) {
   //       // directly navigate if you don't want to use bloc
   //       Navigator.of(context).pushNamedAndRemoveUntil(
-  //         AppRouter.home,
+  //         AppRouter.setLocation,
   //         (Route<dynamic> route) => false,
   //       );
   //     }
@@ -118,12 +118,12 @@ class _VerificationViewState extends State<VerificationView>
         EasyLoading.show(status: 'Loading...');
       } else if (state is UserPhoneVerificationForRegistrationSuccess) {
         Navigator.of(context).pushNamedAndRemoveUntil(
-          AppRouter.home,
+          AppRouter.setLocation,
           (Route<dynamic> route) => false,
         );
       } else if (state is UserPhoneVerificationForLoginSuccess) {
         Navigator.of(context).pushNamedAndRemoveUntil(
-          AppRouter.home,
+          AppRouter.setLocation,
           (Route<dynamic> route) => false,
         );
       } else if (state is UserPhoneVerificationForLoginFailed) {
@@ -346,7 +346,7 @@ class _VerificationViewState extends State<VerificationView>
                     onEnd: () {
                       // Auto continue after 5 seconds
                       Navigator.of(context).pushNamedAndRemoveUntil(
-                        AppRouter.home,
+                        AppRouter.setLocation,
                         (Route<dynamic> route) => false,
                       );
                     },
@@ -354,7 +354,7 @@ class _VerificationViewState extends State<VerificationView>
                       return GestureDetector(
                         onTap: () {
                           Navigator.of(context).pushNamedAndRemoveUntil(
-                            AppRouter.home,
+                            AppRouter.setLocation,
                             (Route<dynamic> route) => false,
                           );
                         },

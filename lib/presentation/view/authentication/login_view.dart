@@ -57,7 +57,7 @@ class _LoginViewState extends State<LoginView> {
           EasyLoading.show(status: 'Loading...');
         } else if (state is UserSignInWithEmailSuccess) {
           Navigator.of(context).pushNamedAndRemoveUntil(
-            AppRouter.home,
+            AppRouter.setLocation,
             (Route<dynamic> route) => false,
           );
         } else if (state is UserSignInWithEmailFailed) {
@@ -82,7 +82,7 @@ class _LoginViewState extends State<LoginView> {
         } else if (state is UserGoogleSignInSuccess ||
             state is UserFacebookSignInSuccess) {
           Navigator.of(context).pushNamedAndRemoveUntil(
-            AppRouter.home,
+            AppRouter.setLocation,
             (Route<dynamic> route) => false,
           );
         } else if (state is UserPasswordResetEmailSent) {

@@ -64,7 +64,7 @@ class _SignUpViewState extends State<SignUpView> {
           EasyLoading.show(status: 'Loading...');
         } else if (state is UserLogged) {
           // Navigator.of(context).pushNamedAndRemoveUntil(
-          //   AppRouter.home,
+          //   AppRouter.setLocation,
           //   (Route<dynamic> route) => false,
           // );
         } else if (state is UserLoggedFail) {
@@ -102,7 +102,7 @@ class _SignUpViewState extends State<SignUpView> {
         } else if (state is UserGoogleSignUpSuccess ||
             state is UserFacebookSignUpSuccess) {
           Navigator.of(context).pushNamedAndRemoveUntil(
-            AppRouter.home,
+            AppRouter.setLocation,
             (Route<dynamic> route) => false,
           );
         } else if (state is UserVerificationEmailRequestFailed) {
