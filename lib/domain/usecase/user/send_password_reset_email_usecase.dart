@@ -5,7 +5,7 @@ import 'package:foody_licious/domain/repositories/user_repository.dart';
 
 class SendPasswordResetEmailUseCase
     implements UseCase<Unit, SendPasswordResetEmailParams> {
-  final UserRepository repository;
+  final AuthRepository repository;
   SendPasswordResetEmailUseCase(this.repository);
 
   @override

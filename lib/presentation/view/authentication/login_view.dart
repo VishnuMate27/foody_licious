@@ -10,7 +10,7 @@ import 'package:foody_licious/core/router/app_router.dart';
 import 'package:foody_licious/domain/usecase/user/send_password_reset_email_usecase.dart';
 import 'package:foody_licious/domain/usecase/user/sign_in_with_email_usecase.dart';
 import 'package:foody_licious/domain/usecase/user/sign_in_with_phone_usecase.dart';
-import 'package:foody_licious/presentation/bloc/user/user_bloc.dart';
+import 'package:foody_licious/presentation/bloc/auth/auth_bloc.dart';
 import 'package:foody_licious/presentation/widgets/gradient_button.dart';
 import 'package:foody_licious/presentation/widgets/input_text_form_field.dart';
 import 'package:foody_licious/presentation/widgets/social_auth_button.dart';
@@ -44,58 +44,58 @@ class _LoginViewState extends State<LoginView> {
 
   void _onInputChanged() {
     final text = _emailOrPhoneController.text.trim();
-    context.read<UserBloc>().add(ValidateEmailOrPhone(text));
+    context.read<AuthBloc>().add(ValidateEmailOrPhone(text));
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<UserBloc, UserState>(
+    return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
         String? errorMessage;
         EasyLoading.dismiss();
-        if (state is UserLoading) {
+        if (state is AuthLoading) {
           EasyLoading.show(status: 'Loading...');
-        } else if (state is UserSignInWithEmailSuccess) {
+        } else if (state is AuthSignInWithEmailSuccess) {
           Navigator.of(context).pushNamedAndRemoveUntil(
             AppRouter.setLocation,
             (Route<dynamic> route) => false,
           );
-        } else if (state is UserSignInWithEmailFailed) {
+        } else if (state is AuthSignInWithEmailFailed) {
           EasyLoading.showError(
             state.failure.toMessage(
               defaultMessage: "Email login Failed!",
             ),
           );
-        } else if (state is UserVerificationSMSForLoginSent) {
+        } else if (state is AuthVerificationSMSForLoginSent) {
           Navigator.of(context).pushNamedAndRemoveUntil(
               AppRouter.verification, (Route<dynamic> route) => false,
               arguments: {
                 'emailOrPhoneController': _emailOrPhoneController,
                 'authProvider': 'phone',
               });
-        } else if (state is UserVerificationSMSForLoginSentFailed) {
+        } else if (state is AuthVerificationSMSForLoginSentFailed) {
           EasyLoading.showError(
             state.failure.toMessage(
               defaultMessage: "Failed to send verification SMS!",
             ),
           );
-        } else if (state is UserGoogleSignInSuccess ||
-            state is UserFacebookSignInSuccess) {
+        } else if (state is AuthGoogleSignInSuccess ||
+            state is AuthFacebookSignInSuccess) {
           Navigator.of(context).pushNamedAndRemoveUntil(
             AppRouter.setLocation,
             (Route<dynamic> route) => false,
           );
-        } else if (state is UserPasswordResetEmailSent) {
+        } else if (state is AuthPasswordResetEmailSent) {
           EasyLoading.showToast("Password Reset Email Sent!");
-        } else if (state is UserPasswordResetEmailSentFailed) {
+        } else if (state is AuthPasswordResetEmailSentFailed) {
           EasyLoading.show(status: "Failed to send password reset email!");
-        } else if (state is UserGoogleSignInFailed) {
+        } else if (state is AuthGoogleSignInFailed) {
           EasyLoading.showError(
             state.failure.toMessage(
               defaultMessage: "Failed to login with google!",
             ),
           );
-        } else if (state is UserFacebookSignInFailed) {
+        } else if (state is AuthFacebookSignInFailed) {
           EasyLoading.showError(
             state.failure.toMessage(
               defaultMessage: "Failed to login with facebook!",
@@ -151,7 +151,7 @@ class _LoginViewState extends State<LoginView> {
                   SizedBox(
                     height: 28.h,
                   ),
-                  BlocConsumer<UserBloc, UserState>(
+                  BlocConsumer<AuthBloc, AuthState>(
                     listener: (context, state) {
                       if (state is InputValidationState) {
                         if (state.isPhone) {
@@ -213,7 +213,7 @@ class _LoginViewState extends State<LoginView> {
                   SizedBox(
                     height: 12.h,
                   ),
-                  BlocBuilder<UserBloc, UserState>(
+                  BlocBuilder<AuthBloc, AuthState>(
                     builder: (context, state) {
                       bool showPassword = false;
 
@@ -241,8 +241,8 @@ class _LoginViewState extends State<LoginView> {
                                       children: [
                                         TextButton(
                                           onPressed: () {
-                                            context.read<UserBloc>().add(
-                                                  SendPasswordResetEmailUser(
+                                            context.read<AuthBloc>().add(
+                                                  AuthSendPasswordResetEmail(
                                                     SendPasswordResetEmailParams(
                                                       email:
                                                           _emailOrPhoneController
@@ -299,15 +299,15 @@ class _LoginViewState extends State<LoginView> {
                         authProviderlogoImagePath: kFacebookIcon,
                         onTap: () {
                           context
-                              .read<UserBloc>()
-                              .add(SignInWithFacebookUser());
+                              .read<AuthBloc>()
+                              .add(AuthSignInWithFacebook());
                         },
                       ),
                       SocialAuthButton(
                         authProviderName: "Google",
                         authProviderlogoImagePath: kGoogleIcon,
                         onTap: () {
-                          context.read<UserBloc>().add(SignInWithGoogleUser());
+                          context.read<AuthBloc>().add(AuthSignInWithGoogle());
                         },
                       ),
                     ],
@@ -315,7 +315,7 @@ class _LoginViewState extends State<LoginView> {
                   SizedBox(
                     height: 20.h,
                   ),
-                  BlocBuilder<UserBloc, UserState>(
+                  BlocBuilder<AuthBloc, AuthState>(
                     builder: (context, state) {
                       return GradientButton(
                         buttonText: "Login",
@@ -354,7 +354,7 @@ class _LoginViewState extends State<LoginView> {
   }
 
   _onLogin(
-      BuildContext context, GlobalKey<FormState> key, UserState state) async {
+      BuildContext context, GlobalKey<FormState> key, AuthState state) async {
     if (key.currentState!.validate()) {
       final emailOrPhone = _emailOrPhoneController.text.trim();
       bool isEmail = false;
@@ -366,12 +366,12 @@ class _LoginViewState extends State<LoginView> {
       }
 
       if (isEmail) {
-        context.read<UserBloc>().add(SignInWithEmailUser(SignInWithEmailParams(
+        context.read<AuthBloc>().add(AuthSignInWithEmail(SignInWithEmailParams(
             email: emailOrPhone,
             password: _passwordController.text,
             authProvider: "email")));
       } else if (isPhone) {
-        context.read<UserBloc>().add(VerifyPhoneNumberForLoginUser(
+        context.read<AuthBloc>().add(AuthVerifyPhoneNumberForLogin(
             SignInWithPhoneParams(phone: emailOrPhone, authProvider: "phone")));
       }
     }

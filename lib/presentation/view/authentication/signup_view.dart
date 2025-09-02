@@ -13,7 +13,7 @@ import 'package:foody_licious/core/extension/failure_extension.dart';
 import 'package:foody_licious/core/router/app_router.dart';
 import 'package:foody_licious/domain/usecase/user/sign_up_with_email_usecase.dart';
 import 'package:foody_licious/domain/usecase/user/sign_up_with_phone_usecase.dart';
-import 'package:foody_licious/presentation/bloc/user/user_bloc.dart';
+import 'package:foody_licious/presentation/bloc/auth/auth_bloc.dart';
 import 'package:foody_licious/presentation/widgets/gradient_button.dart';
 import 'package:foody_licious/presentation/widgets/input_text_form_field.dart';
 import 'package:foody_licious/presentation/widgets/social_auth_button.dart';
@@ -51,23 +51,18 @@ class _SignUpViewState extends State<SignUpView> {
 
   void _onInputChanged() {
     final text = _emailOrPhoneController.text.trim();
-    context.read<UserBloc>().add(ValidateEmailOrPhone(text));
+    context.read<AuthBloc>().add(ValidateEmailOrPhone(text));
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<UserBloc, UserState>(
+    return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
         String? errorMessage;
         EasyLoading.dismiss();
-        if (state is UserLoading) {
+        if (state is AuthLoading) {
           EasyLoading.show(status: 'Loading...');
-        } else if (state is UserLogged) {
-          // Navigator.of(context).pushNamedAndRemoveUntil(
-          //   AppRouter.setLocation,
-          //   (Route<dynamic> route) => false,
-          // );
-        } else if (state is UserLoggedFail) {
+        } else if (state is AuthLoggedFail) {
           String errorMessage = "An error occurred. Please try again.";
           if (state.failure is CredentialFailure) {
             errorMessage = "Incorrect username or password.";
@@ -80,10 +75,10 @@ class _SignUpViewState extends State<SignUpView> {
           if (!state.isEmail && _passwordController.text.isNotEmpty) {
             _passwordController.clear();
           }
-        } else if (state is UserVerificationEmailRequested) {
-          context.read<UserBloc>().add(SendVerificationEmailUser());
-        } else if (state is UserVerificationEmailSent) {
-          context.read<UserBloc>().add(WaitForEmailVerificationUser());
+        } else if (state is AuthVerificationEmailRequested) {
+          context.read<AuthBloc>().add(AuthSendVerificationEmail());
+        } else if (state is AuthVerificationEmailSent) {
+          context.read<AuthBloc>().add(AuthWaitForEmailVerification());
           Navigator.of(context).pushNamedAndRemoveUntil(
               AppRouter.verification, (Route<dynamic> route) => false,
               arguments: {
@@ -91,7 +86,7 @@ class _SignUpViewState extends State<SignUpView> {
                 'emailOrPhoneController': _emailOrPhoneController,
                 'authProvider': 'email',
               });
-        } else if (state is UserVerificationSMSForRegistrationSent) {
+        } else if (state is AuthVerificationSMSForRegistrationSent) {
           Navigator.of(context).pushNamedAndRemoveUntil(
               AppRouter.verification, (Route<dynamic> route) => false,
               arguments: {
@@ -99,49 +94,49 @@ class _SignUpViewState extends State<SignUpView> {
                 'emailOrPhoneController': _emailOrPhoneController,
                 'authProvider': 'phone',
               });
-        } else if (state is UserGoogleSignUpSuccess ||
-            state is UserFacebookSignUpSuccess) {
+        } else if (state is AuthGoogleSignUpSuccess ||
+            state is AuthFacebookSignUpSuccess) {
           Navigator.of(context).pushNamedAndRemoveUntil(
             AppRouter.setLocation,
             (Route<dynamic> route) => false,
           );
-        } else if (state is UserVerificationEmailRequestFailed) {
+        } else if (state is AuthVerificationEmailRequestFailed) {
           EasyLoading.showError(
             state.failure.toMessage(
               defaultMessage: "Verification Email Request Failed!",
             ),
           );
-        } else if (state is UserVerificationEmailSentFailed) {
+        } else if (state is AuthVerificationEmailSentFailed) {
           EasyLoading.showError(
             state.failure.toMessage(
               defaultMessage: "Failed to send verification email!",
             ),
           );
-        } else if (state is UserEmailVerificationFailed) {
+        } else if (state is AuthEmailVerificationFailed) {
           EasyLoading.showError(
             state.failure.toMessage(
               defaultMessage: "Email Verification Failed!",
             ),
           );
-        } else if (state is UserVerificationSMSForRegistrationSentFailed) {
+        } else if (state is AuthVerificationSMSForRegistrationSentFailed) {
           EasyLoading.showError(
             state.failure.toMessage(
               defaultMessage: "Failed to send verification SMS!",
             ),
           );
-        } else if (state is UserPhoneVerificationForRegistrationFailed) {
+        } else if (state is AuthPhoneVerificationForRegistrationFailed) {
           EasyLoading.showError(
             state.failure.toMessage(
               defaultMessage: "Failed to verify phone number!",
             ),
           );
-        } else if (state is UserGoogleSignUpFailed) {
+        } else if (state is AuthGoogleSignUpFailed) {
           EasyLoading.showError(
             state.failure.toMessage(
               defaultMessage: "Failed to sign up with google!",
             ),
           );
-        } else if (state is UserFacebookSignUpFailed) {
+        } else if (state is AuthFacebookSignUpFailed) {
           EasyLoading.showError(
             state.failure.toMessage(
               defaultMessage: "Failed to sign up with facebook!",
@@ -207,7 +202,7 @@ class _SignUpViewState extends State<SignUpView> {
                   SizedBox(
                     height: 12.h,
                   ),
-                  BlocConsumer<UserBloc, UserState>(
+                  BlocConsumer<AuthBloc, AuthState>(
                     listener: (context, state) {
                       if (state is InputValidationState) {
                         if (state.isPhone) {
@@ -269,7 +264,7 @@ class _SignUpViewState extends State<SignUpView> {
                   SizedBox(
                     height: 12.h,
                   ),
-                  BlocBuilder<UserBloc, UserState>(
+                  BlocBuilder<AuthBloc, AuthState>(
                     builder: (context, state) {
                       bool showPassword = false;
 
@@ -326,16 +321,16 @@ class _SignUpViewState extends State<SignUpView> {
                         authProviderlogoImagePath: kFacebookIcon,
                         onTap: () {
                           context
-                              .read<UserBloc>()
-                              .add(SignUpWithFacebookUser());
+                              .read<AuthBloc>()
+                              .add(AuthSignUpWithFacebook());
                         },
                       ),
                       SocialAuthButton(
                         authProviderName: "Google",
                         authProviderlogoImagePath: kGoogleIcon,
                         onTap: () {
-                          context.read<UserBloc>().add(
-                                SignUpWithGoogleUser(),
+                          context.read<AuthBloc>().add(
+                                AuthSignUpWithGoogle(),
                               );
                         },
                       ),
@@ -344,7 +339,7 @@ class _SignUpViewState extends State<SignUpView> {
                   SizedBox(
                     height: 20.h,
                   ),
-                  BlocBuilder<UserBloc, UserState>(
+                  BlocBuilder<AuthBloc, AuthState>(
                     builder: (context, state) {
                       return GradientButton(
                         buttonText: "Create Account",
@@ -382,7 +377,7 @@ class _SignUpViewState extends State<SignUpView> {
   }
 
   _onSignUp(
-      BuildContext context, GlobalKey<FormState> key, UserState state) async {
+      BuildContext context, GlobalKey<FormState> key, AuthState state) async {
     if (key.currentState!.validate()) {
       final emailOrPhone = _emailOrPhoneController.text.trim();
       bool isEmail = false;
@@ -394,13 +389,13 @@ class _SignUpViewState extends State<SignUpView> {
       }
 
       if (isEmail) {
-        context.read<UserBloc>().add(SignUpWithEmailUser(SignUpWithEmailParams(
+        context.read<AuthBloc>().add(AuthSignUpWithEmail(SignUpWithEmailParams(
             name: _nameController.text.trim(),
             email: emailOrPhone,
             password: _passwordController.text,
             authProvider: "email")));
       } else if (isPhone) {
-        context.read<UserBloc>().add(VerifyPhoneNumberForRegistrationUser(
+        context.read<AuthBloc>().add(AuthVerifyPhoneNumberForRegistration(
             SignUpWithPhoneParams(
                 name: _nameController.text.trim(),
                 phone: emailOrPhone,

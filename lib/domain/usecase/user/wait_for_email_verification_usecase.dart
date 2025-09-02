@@ -4,7 +4,7 @@ import 'package:foody_licious/core/usecase/usecase.dart';
 import 'package:foody_licious/domain/repositories/user_repository.dart';
 
 class WaitForEmailVerificationUsecase implements UseCase<Unit, void> {
-  final UserRepository repository;
+  final AuthRepository repository;
   WaitForEmailVerificationUsecase(this.repository);
 
   @override

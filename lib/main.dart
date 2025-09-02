@@ -7,7 +7,7 @@ import 'package:foody_licious/core/constant/strings.dart';
 import 'package:foody_licious/core/router/app_router.dart';
 import 'package:foody_licious/core/services/services_locator.dart';
 import 'package:foody_licious/firebase_options.dart';
-import 'package:foody_licious/presentation/bloc/user/user_bloc.dart';
+import 'package:foody_licious/presentation/bloc/auth/auth_bloc.dart';
 import 'package:foody_licious/presentation/view/main/main_view.dart';
 import 'package:foody_licious/core/services/services_locator.dart' as di;
 import 'cubit/navigation_cubit.dart';
@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
           create: (_) => NavigationCubit(),
         ),
         BlocProvider(
-          create: (context) => di.sl<UserBloc>()..add(CheckUser()),
+          create: (context) => di.sl<AuthBloc>()..add(AuthCheck()),
         ),
       ],
       child: ScreenUtilInit(

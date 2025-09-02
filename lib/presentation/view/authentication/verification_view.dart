@@ -9,7 +9,7 @@ import 'package:foody_licious/core/router/app_router.dart';
 import 'package:foody_licious/core/utils/sms_retriever.dart';
 import 'package:foody_licious/domain/usecase/user/sign_in_with_phone_usecase.dart';
 import 'package:foody_licious/domain/usecase/user/sign_up_with_phone_usecase.dart';
-import 'package:foody_licious/presentation/bloc/user/user_bloc.dart';
+import 'package:foody_licious/presentation/bloc/auth/auth_bloc.dart';
 import 'package:foody_licious/presentation/widgets/alerts.dart';
 import 'package:foody_licious/presentation/widgets/bouncy_icon.dart';
 import 'package:foody_licious/presentation/widgets/countdown.dart';
@@ -39,7 +39,7 @@ class _VerificationViewState extends State<VerificationView>
   late final TextEditingController pinController;
   late final FocusNode focusNode;
   late final GlobalKey<FormState> formKey;
-  UserState? _currentState;
+  AuthState? _currentState;
   bool _checking = false;
   AnimationController? _controller;
   int otpTimer = 30;
@@ -70,7 +70,7 @@ class _VerificationViewState extends State<VerificationView>
   //   if (_checking) return;
   //   _checking = true;
   //   try {
-  //     context.read<UserBloc>().add(WaitForEmailVerificationUser());
+  //     context.read<AuthBloc>().add(WaitForEmailVerificationAuth());
   //     if (mounted) {
   //       // directly navigate if you don't want to use bloc
   //       Navigator.of(context).pushNamedAndRemoveUntil(
@@ -92,9 +92,9 @@ class _VerificationViewState extends State<VerificationView>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed &&
-        (_currentState is UserVerificationEmailSent ||
-            _currentState is UserEmailVerificationFailed)) {
-      context.read<UserBloc>().add(WaitForEmailVerificationUser());
+        (_currentState is AuthVerificationEmailSent ||
+            _currentState is AuthEmailVerificationFailed)) {
+      context.read<AuthBloc>().add(AuthWaitForEmailVerification());
     }
   }
 
@@ -112,40 +112,40 @@ class _VerificationViewState extends State<VerificationView>
         border: Border.all(color: kBorder),
       ),
     );
-    return BlocConsumer<UserBloc, UserState>(listener: (context, state) async {
+    return BlocConsumer<AuthBloc, AuthState>(listener: (context, state) async {
       _currentState = state;
-      if (state is UserLoading) {
+      if (state is AuthLoading) {
         EasyLoading.show(status: 'Loading...');
-      } else if (state is UserPhoneVerificationForRegistrationSuccess) {
+      } else if (state is AuthPhoneVerificationForRegistrationSuccess) {
         Navigator.of(context).pushNamedAndRemoveUntil(
           AppRouter.setLocation,
           (Route<dynamic> route) => false,
         );
-      } else if (state is UserPhoneVerificationForLoginSuccess) {
+      } else if (state is AuthPhoneVerificationForLoginSuccess) {
         Navigator.of(context).pushNamedAndRemoveUntil(
           AppRouter.setLocation,
           (Route<dynamic> route) => false,
         );
-      } else if (state is UserPhoneVerificationForLoginFailed) {
+      } else if (state is AuthPhoneVerificationForLoginFailed) {
         EasyLoading.showError(
           state.failure.toMessage(
             defaultMessage: "Failed to verify phone number!",
           ),
         );
-      } else if (state is UserEmailVerificationFailed) {
+      } else if (state is AuthEmailVerificationFailed) {
         EasyLoading.showError(
           state.failure.toMessage(
             defaultMessage: "Email Verification Failed!",
           ),
           duration: const Duration(seconds: 3),
         );
-      } else if (state is UserPhoneVerificationForRegistrationFailed) {
+      } else if (state is AuthPhoneVerificationForRegistrationFailed) {
         EasyLoading.showError(
           state.failure.toMessage(
             defaultMessage: "Failed to verify phone number!",
           ),
         );
-      } else if (state is UserVerificationSMSForRegistrationSent) {
+      } else if (state is AuthVerificationSMSForRegistrationSent) {
         // _controller = AnimationController(
         //     vsync: this, duration: Duration(seconds: otpTimer));
         // _controller!.forward();
@@ -153,8 +153,8 @@ class _VerificationViewState extends State<VerificationView>
     }, builder: (context, state) {
       _currentState = state;
       print("State is: $state");
-      if (state is UserVerificationEmailSent ||
-          state is UserEmailVerificationFailed) {
+      if (state is AuthVerificationEmailSent ||
+          state is AuthEmailVerificationFailed) {
         return Scaffold(
           backgroundColor: kWhite,
           body: SingleChildScrollView(
@@ -262,14 +262,14 @@ class _VerificationViewState extends State<VerificationView>
                               width: 140.h,
                               buttonText: "Resend Email",
                               fontSize: 14,
-                              isActive: state is UserEmailVerificationFailed,
+                              isActive: state is AuthEmailVerificationFailed,
                               onTap: () {
                                 context
-                                    .read<UserBloc>()
-                                    .add(SendVerificationEmailUser());
+                                    .read<AuthBloc>()
+                                    .add(AuthSendVerificationEmail());
                                 context
-                                    .read<UserBloc>()
-                                    .add(WaitForEmailVerificationUser());
+                                    .read<AuthBloc>()
+                                    .add(AuthWaitForEmailVerification());
                               })
                         ]),
                   ),
@@ -278,7 +278,7 @@ class _VerificationViewState extends State<VerificationView>
             ),
           ),
         );
-      } else if (state is UserEmailVerificationSuccess) {
+      } else if (state is AuthEmailVerificationSuccess) {
         return Scaffold(
           backgroundColor: kWhite,
           body: SingleChildScrollView(
@@ -398,8 +398,8 @@ class _VerificationViewState extends State<VerificationView>
             ),
           ),
         );
-      } else if (state is UserVerificationSMSForRegistrationSent ||
-          state is UserVerificationSMSForLoginSent) {
+      } else if (state is AuthVerificationSMSForRegistrationSent ||
+          state is AuthVerificationSMSForLoginSent) {
         return Scaffold(
           backgroundColor: kWhite,
           body: SingleChildScrollView(
@@ -529,9 +529,9 @@ class _VerificationViewState extends State<VerificationView>
                           ).animate(_controller!),
                           onResendOTPTapped: () {
                             if (state
-                                is UserVerificationSMSForRegistrationSent) {
-                              context.read<UserBloc>().add(
-                                    VerifyPhoneNumberForRegistrationUser(
+                                is AuthVerificationSMSForRegistrationSent) {
+                              context.read<AuthBloc>().add(
+                                    AuthVerifyPhoneNumberForRegistration(
                                       SignUpWithPhoneParams(
                                         name:
                                             widget.nameController!.text.trim(),
@@ -543,8 +543,8 @@ class _VerificationViewState extends State<VerificationView>
                                     ),
                                   );
                             } else {
-                              context.read<UserBloc>().add(
-                                    VerifyPhoneNumberForLoginUser(
+                              context.read<AuthBloc>().add(
+                                    AuthVerifyPhoneNumberForLogin(
                                       SignInWithPhoneParams(
                                         phone: widget
                                             .emailOrPhoneController!.text
@@ -575,7 +575,7 @@ class _VerificationViewState extends State<VerificationView>
             ),
           ),
         );
-      } else if (state is UserVerificationEmailSentFailed) {
+      } else if (state is AuthVerificationEmailSentFailed) {
         return Scaffold(
           backgroundColor: kWhite,
           body: SingleChildScrollView(
@@ -687,11 +687,11 @@ class _VerificationViewState extends State<VerificationView>
                               isActive: false,
                               onTap: () {
                                 context
-                                    .read<UserBloc>()
-                                    .add(SendVerificationEmailUser());
+                                    .read<AuthBloc>()
+                                    .add(AuthSendVerificationEmail());
                                 context
-                                    .read<UserBloc>()
-                                    .add(WaitForEmailVerificationUser());
+                                    .read<AuthBloc>()
+                                    .add(AuthWaitForEmailVerification());
                               })
                         ]),
                   ),
@@ -700,7 +700,7 @@ class _VerificationViewState extends State<VerificationView>
             ),
           ),
         );
-      } else if (state is UserLoading) {
+      } else if (state is AuthLoading) {
         return Scaffold(
           body: Center(
             child: Container(
@@ -725,12 +725,12 @@ class _VerificationViewState extends State<VerificationView>
   }
 
   _onVerify(
-      BuildContext context, GlobalKey<FormState> key, UserState state) async {
+      BuildContext context, GlobalKey<FormState> key, AuthState state) async {
     if (key.currentState!.validate()) {
       final verificationCode = pinController.text.trim();
-      if (state is UserVerificationSMSForRegistrationSent) {
-        context.read<UserBloc>().add(
-              SignUpWithPhoneUser(
+      if (state is AuthVerificationSMSForRegistrationSent) {
+        context.read<AuthBloc>().add(
+              AuthSignUpWithPhone(
                 SignUpWithPhoneParams(
                   name: widget.nameController!.text,
                   phone: widget.emailOrPhoneController!.text,
@@ -739,9 +739,9 @@ class _VerificationViewState extends State<VerificationView>
                 ),
               ),
             );
-      } else if (state is UserVerificationSMSForLoginSent) {
-        context.read<UserBloc>().add(
-              SignInWithPhoneUser(
+      } else if (state is AuthVerificationSMSForLoginSent) {
+        context.read<AuthBloc>().add(
+              AuthSignInWithPhone(
                 SignInWithPhoneParams(
                   phone: widget.emailOrPhoneController!.text,
                   code: verificationCode,

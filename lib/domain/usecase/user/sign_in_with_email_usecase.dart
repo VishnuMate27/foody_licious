@@ -6,7 +6,7 @@ import '../../entities/user/user.dart';
 import '../../repositories/user_repository.dart';
 
 class SignInWithEmailUseCase implements UseCase<User, SignInWithEmailParams> {
-  final UserRepository repository;
+  final AuthRepository repository;
   SignInWithEmailUseCase(this.repository);
 
   @override

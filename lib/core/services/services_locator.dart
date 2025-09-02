@@ -16,7 +16,7 @@ import 'package:foody_licious/domain/usecase/user/verify_phone_number_for_login_
 import 'package:foody_licious/domain/usecase/user/verify_phone_number_for_registration_usecase.dart';
 import 'package:foody_licious/domain/usecase/user/wait_for_email_verification_usecase.dart';
 import 'package:foody_licious/firebase_options.dart';
-import 'package:foody_licious/presentation/bloc/user/user_bloc.dart';
+import 'package:foody_licious/presentation/bloc/auth/auth_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
@@ -25,8 +25,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:smart_auth/smart_auth.dart';
 import '../../data/data_sources/local/user_local_data_source.dart';
-import '../../data/data_sources/remote/user_remote_data_source.dart';
-import '../../data/repositories/user_repository_impl.dart';
+import '../../data/data_sources/remote/auth_remote_data_source.dart';
+import '../../data/repositories/auth_repository_impl.dart';
 import '../../domain/repositories/user_repository.dart';
 import '../network/network_info.dart';
 
@@ -42,8 +42,8 @@ Future<void> init() async {
 
   //Features - User
   // Bloc
-  sl.registerFactory(() => UserBloc(sl(), sl(), sl(), sl(), sl(), sl(), sl(),
-      sl(), sl(), sl(), sl(), sl(), sl(), sl()));
+  sl.registerFactory(() => AuthBloc(sl(), sl(), sl(), sl(), sl(), sl(), sl(),
+      sl(), sl(), sl(), sl(), sl(), sl()));
   // Use cases
   sl.registerLazySingleton(() => SignInWithEmailUseCase(sl()));
   sl.registerLazySingleton(() => VerifyPhoneNumberForLoginUseCase(sl()));
@@ -60,8 +60,8 @@ Future<void> init() async {
   sl.registerLazySingleton(() => SignUpWithFacebookUseCase(sl()));
   sl.registerLazySingleton(() => GetLocalUserUseCase(sl()));
   // Repository
-  sl.registerLazySingleton<UserRepository>(
-    () => UserRepositoryImpl(
+  sl.registerLazySingleton<AuthRepository>(
+    () => AuthRepositoryImpl(
       remoteDataSource: sl(),
       localDataSource: sl(),
       networkInfo: sl(),
@@ -71,8 +71,8 @@ Future<void> init() async {
   sl.registerLazySingleton<UserLocalDataSource>(
     () => UserLocalDataSourceImpl(sharedPreferences: sl(), secureStorage: sl()),
   );
-  sl.registerLazySingleton<UserRemoteDataSource>(
-    () => UserRemoteDataSourceImpl(
+  sl.registerLazySingleton<AuthRemoteDataSource>(
+    () => AuthRemoteDataSourceImpl(
         firebaseAuth: sl(), client: sl(), googleSignIn: sl()),
   );
 

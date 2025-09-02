@@ -14,7 +14,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 import '../../../core/constant/strings.dart';
 
-abstract class UserRemoteDataSource {
+abstract class AuthRemoteDataSource {
   Future<AuthenticationResponseModel> signInWithEmail(
       SignInWithEmailParams params);
   Future<Unit> verifyPhoneNumberForLogin(SignInWithPhoneParams params);
@@ -34,12 +34,12 @@ abstract class UserRemoteDataSource {
   Future<AuthenticationResponseModel> signUpWithFacebook();
 }
 
-class UserRemoteDataSourceImpl implements UserRemoteDataSource {
+class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   final http.Client client;
   final FirebaseAuth firebaseAuth;
   final GoogleSignIn googleSignIn;
   User? user;
-  UserRemoteDataSourceImpl(
+  AuthRemoteDataSourceImpl(
       {required this.firebaseAuth,
       required this.client,
       required this.googleSignIn});

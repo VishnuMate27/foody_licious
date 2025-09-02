@@ -24,11 +24,10 @@ import 'package:foody_licious/domain/usecase/user/wait_for_email_verification_us
 import '../../../core/error/failures.dart';
 import '../../../domain/entities/user/user.dart';
 
-part 'user_event.dart';
-part 'user_state.dart';
+part 'auth_event.dart';
+part 'auth_state.dart';
 
-class UserBloc extends Bloc<UserEvent, UserState> {
-  final GetLocalUserUseCase _getCachedUserUseCase;
+class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final SignInWithEmailUseCase _signInWithEmailUseCase;
   final VerifyPhoneNumberForLoginUseCase _verifyPhoneNumberForLoginUseCase;
   final SignInWithPhoneUseCase _signInWithPhoneUseCase;
@@ -43,8 +42,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   final SignUpWithPhoneUseCase _signUpWithPhoneUseCase;
   final SignUpWithGoogleUseCase _signUpWithGoogleUseCase;
   final SignUpWithFacebookUseCase _signUpWithFacebookUseCase;
-  UserBloc(
-    this._getCachedUserUseCase,
+  AuthBloc(
     this._signInWithEmailUseCase,
     this._verifyPhoneNumberForLoginUseCase,
     this._signInWithPhoneUseCase,
@@ -58,231 +56,231 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     this._signUpWithPhoneUseCase,
     this._signUpWithGoogleUseCase,
     this._signUpWithFacebookUseCase,
-  ) : super(UserInitial()) {
-    on<SignInWithEmailUser>(_onSignInWithEmail);
-    on<VerifyPhoneNumberForLoginUser>(_onVerifyPhoneNumberForLogin);
-    on<SignInWithPhoneUser>(_onSignInWithPhone);
-    on<SignInWithGoogleUser>(_onSignInWithGoogle);
-    on<SignInWithFacebookUser>(_onSignInWithFacebook);
-    on<SendPasswordResetEmailUser>(_onSendPasswordResetEmail);
-    on<SignUpWithEmailUser>(_onSignUpWithEmail);
-    on<SendVerificationEmailUser>(_onSendVerificationEmail);
-    on<WaitForEmailVerificationUser>(_onWaitForEmailVerification);
-    on<VerifyPhoneNumberForRegistrationUser>(
+  ) : super(AuthInitial()) {
+    on<AuthSignInWithEmail>(_onSignInWithEmail);
+    on<AuthVerifyPhoneNumberForLogin>(_onVerifyPhoneNumberForLogin);
+    on<AuthSignInWithPhone>(_onSignInWithPhone);
+    on<AuthSignInWithGoogle>(_onSignInWithGoogle);
+    on<AuthSignInWithFacebook>(_onSignInWithFacebook);
+    on<AuthSendPasswordResetEmail>(_onSendPasswordResetEmail);
+    on<AuthSignUpWithEmail>(_onSignUpWithEmail);
+    on<AuthSendVerificationEmail>(_onSendVerificationEmail);
+    on<AuthWaitForEmailVerification>(_onWaitForEmailVerification);
+    on<AuthVerifyPhoneNumberForRegistration>(
         _onVerifyPhoneNumberForRegistration);
-    on<SignUpWithPhoneUser>(_onSignUpWithPhone);
-    on<SignUpWithGoogleUser>(_onSignUpWithGoogle);
-    on<SignUpWithFacebookUser>(_onSignUpWithFacebook);
-    on<CheckUser>(_onCheckUser);
-    on<SignOutUser>(_onSignOut);
+    on<AuthSignUpWithPhone>(_onSignUpWithPhone);
+    on<AuthSignUpWithGoogle>(_onSignUpWithGoogle);
+    on<AuthSignUpWithFacebook>(_onSignUpWithFacebook);
+    on<AuthCheck>(_onCheckAuth);
+    on<AuthSignOut>(_onSignOut);
     on<ValidateEmailOrPhone>(_onValidateEmailOrPhone);
   }
 
   void _onSignInWithEmail(
-      SignInWithEmailUser event, Emitter<UserState> emit) async {
+      AuthSignInWithEmail event, Emitter<AuthState> emit) async {
     try {
-      emit(UserLoading());
+      emit(AuthLoading());
       final result = await _signInWithEmailUseCase(event.params);
       result.fold(
-        (failure) => emit(UserSignInWithEmailFailed(failure)),
-        (user) => emit(UserSignInWithEmailSuccess(user)),
+        (failure) => emit(AuthSignInWithEmailFailed(failure)),
+        (user) => emit(AuthSignInWithEmailSuccess(user)),
       );
     } catch (e) {
-      emit(UserSignInWithEmailFailed(ExceptionFailure()));
+      emit(AuthSignInWithEmailFailed(ExceptionFailure()));
     }
   }
 
   FutureOr<void> _onVerifyPhoneNumberForLogin(
-      VerifyPhoneNumberForLoginUser event, Emitter<UserState> emit) async {
+      AuthVerifyPhoneNumberForLogin event, Emitter<AuthState> emit) async {
     try {
-      emit(UserLoading());
+      emit(AuthLoading());
       final result = await _verifyPhoneNumberForLoginUseCase(event.params);
       result.fold(
-        (failure) => emit(UserVerificationSMSForLoginSentFailed(failure)),
-        (unit) => emit(UserVerificationSMSForLoginSent(unit)),
+        (failure) => emit(AuthVerificationSMSForLoginSentFailed(failure)),
+        (unit) => emit(AuthVerificationSMSForLoginSent(unit)),
       );
     } catch (e) {
-      emit(UserVerificationSMSForLoginSentFailed(ExceptionFailure()));
+      emit(AuthVerificationSMSForLoginSentFailed(ExceptionFailure()));
     }
   }
 
   FutureOr<void> _onSignInWithPhone(
-      SignInWithPhoneUser event, Emitter<UserState> emit) async {
+      AuthSignInWithPhone event, Emitter<AuthState> emit) async {
     try {
       final result = await _signInWithPhoneUseCase(event.params);
       result.fold(
-        (failure) => emit(UserPhoneVerificationForLoginFailed(failure)),
-        (user) => emit(UserPhoneVerificationForLoginSuccess(user)),
+        (failure) => emit(AuthPhoneVerificationForLoginFailed(failure)),
+        (user) => emit(AuthPhoneVerificationForLoginSuccess(user)),
       );
     } catch (e) {
-      emit(UserPhoneVerificationForLoginFailed(ExceptionFailure()));
+      emit(AuthPhoneVerificationForLoginFailed(ExceptionFailure()));
     }
   }
 
   FutureOr<void> _onSignInWithGoogle(
-      SignInWithGoogleUser event, Emitter<UserState> emit) async {
+      AuthSignInWithGoogle event, Emitter<AuthState> emit) async {
     try {
-      emit(UserLoading());
+      emit(AuthLoading());
       final result = await _signInWithGoogleUseCase(event);
       result.fold(
-        (failure) => emit(UserGoogleSignInFailed(failure)),
-        (user) => emit(UserGoogleSignInSuccess(user)),
+        (failure) => emit(AuthGoogleSignInFailed(failure)),
+        (user) => emit(AuthGoogleSignInSuccess(user)),
       );
     } catch (e) {
-      emit(UserGoogleSignInFailed(ExceptionFailure()));
+      emit(AuthGoogleSignInFailed(ExceptionFailure()));
     }
   }
 
   FutureOr<void> _onSignInWithFacebook(
-      SignInWithFacebookUser event, Emitter<UserState> emit) async {
+      AuthSignInWithFacebook event, Emitter<AuthState> emit) async {
     try {
-      emit(UserLoading());
+      emit(AuthLoading());
       final result = await _signInWithFacebookUseCase(event);
       result.fold(
-        (failure) => emit(UserFacebookSignInFailed(failure)),
-        (user) => emit(UserFacebookSignInSuccess(user)),
+        (failure) => emit(AuthFacebookSignInFailed(failure)),
+        (user) => emit(AuthFacebookSignInSuccess(user)),
       );
     } catch (e) {
-      emit(UserFacebookSignInFailed(ExceptionFailure()));
+      emit(AuthFacebookSignInFailed(ExceptionFailure()));
     }
   }
 
   FutureOr<void> _onSendPasswordResetEmail(
-      SendPasswordResetEmailUser event, Emitter<UserState> emit) async {
+      AuthSendPasswordResetEmail event, Emitter<AuthState> emit) async {
     try {
       final result = await _sendPasswordResetEmailUseCase(event.params);
       result.fold(
-        (failure) => emit(UserPasswordResetEmailSentFailed(failure)),
-        (unit) => emit(UserPasswordResetEmailSent()),
+        (failure) => emit(AuthPasswordResetEmailSentFailed(failure)),
+        (unit) => emit(AuthPasswordResetEmailSent()),
       );
     } catch (e) {
-      emit(UserPasswordResetEmailSentFailed(ExceptionFailure()));
+      emit(AuthPasswordResetEmailSentFailed(ExceptionFailure()));
     }
   }
 
   FutureOr<void> _onSignUpWithEmail(
-      SignUpWithEmailUser event, Emitter<UserState> emit) async {
+      AuthSignUpWithEmail event, Emitter<AuthState> emit) async {
     try {
-      emit(UserLoading());
+      emit(AuthLoading());
       final result = await _signUpWithEmailUseCase(event.params);
       result.fold(
-        (failure) => emit(UserVerificationEmailRequestFailed(failure)),
-        (user) => emit(UserVerificationEmailRequested(user)),
+        (failure) => emit(AuthVerificationEmailRequestFailed(failure)),
+        (user) => emit(AuthVerificationEmailRequested(user)),
       );
     } catch (e) {
-      emit(UserVerificationEmailRequestFailed(ExceptionFailure()));
+      emit(AuthVerificationEmailRequestFailed(ExceptionFailure()));
     }
   }
 
   FutureOr<void> _onSendVerificationEmail(
-      SendVerificationEmailUser event, Emitter<UserState> emit) async {
+      AuthSendVerificationEmail event, Emitter<AuthState> emit) async {
     try {
       final result = await _sendVerificationEmailUseCase(NoParams());
       result.fold(
-        (failure) => emit(UserVerificationEmailSentFailed(failure)),
-        (unit) => emit(UserVerificationEmailSent()),
+        (failure) => emit(AuthVerificationEmailSentFailed(failure)),
+        (unit) => emit(AuthVerificationEmailSent()),
       );
     } catch (e) {
-      emit(UserVerificationEmailSentFailed(ExceptionFailure()));
+      emit(AuthVerificationEmailSentFailed(ExceptionFailure()));
     }
   }
 
   FutureOr<void> _onWaitForEmailVerification(
-      WaitForEmailVerificationUser event, Emitter<UserState> emit) async {
+      AuthWaitForEmailVerification event, Emitter<AuthState> emit) async {
     try {
       final result = await _waitForEmailVerificationUseCase(NoParams());
       result.fold(
-        (failure) => emit(UserEmailVerificationFailed(failure)),
-        (unit) => emit(UserEmailVerificationSuccess()),
+        (failure) => emit(AuthEmailVerificationFailed(failure)),
+        (unit) => emit(AuthEmailVerificationSuccess()),
       );
     } catch (e) {
-      emit(UserEmailVerificationFailed(ExceptionFailure()));
+      emit(AuthEmailVerificationFailed(ExceptionFailure()));
     }
   }
 
   FutureOr<void> _onVerifyPhoneNumberForRegistration(
-      VerifyPhoneNumberForRegistrationUser event,
-      Emitter<UserState> emit) async {
+      AuthVerifyPhoneNumberForRegistration event,
+      Emitter<AuthState> emit) async {
     try {
-      emit(UserLoading());
+      emit(AuthLoading());
       final result =
           await _verifyPhoneNumberForRegistrationUseCase(event.params);
       result.fold(
         (failure) =>
-            emit(UserVerificationSMSForRegistrationSentFailed(failure)),
-        (unit) => emit(UserVerificationSMSForRegistrationSent(unit)),
+            emit(AuthVerificationSMSForRegistrationSentFailed(failure)),
+        (unit) => emit(AuthVerificationSMSForRegistrationSent(unit)),
       );
     } catch (e) {
-      emit(UserVerificationSMSForRegistrationSentFailed(ExceptionFailure()));
+      emit(AuthVerificationSMSForRegistrationSentFailed(ExceptionFailure()));
     }
   }
 
   FutureOr<void> _onSignUpWithPhone(
-      SignUpWithPhoneUser event, Emitter<UserState> emit) async {
+      AuthSignUpWithPhone event, Emitter<AuthState> emit) async {
     try {
       final result = await _signUpWithPhoneUseCase(event.params);
       result.fold(
-        (failure) => emit(UserPhoneVerificationForRegistrationFailed(failure)),
-        (user) => emit(UserPhoneVerificationForRegistrationSuccess(user)),
+        (failure) => emit(AuthPhoneVerificationForRegistrationFailed(failure)),
+        (user) => emit(AuthPhoneVerificationForRegistrationSuccess(user)),
       );
     } catch (e) {
-      emit(UserPhoneVerificationForRegistrationFailed(ExceptionFailure()));
+      emit(AuthPhoneVerificationForRegistrationFailed(ExceptionFailure()));
     }
   }
 
   FutureOr<void> _onSignUpWithGoogle(
-      SignUpWithGoogleUser event, Emitter<UserState> emit) async {
+      AuthSignUpWithGoogle event, Emitter<AuthState> emit) async {
     try {
-      emit(UserLoading());
+      emit(AuthLoading());
       final result = await _signUpWithGoogleUseCase(event);
       result.fold(
-        (failure) => emit(UserGoogleSignUpFailed(failure)),
-        (user) => emit(UserGoogleSignUpSuccess(user)),
+        (failure) => emit(AuthGoogleSignUpFailed(failure)),
+        (user) => emit(AuthGoogleSignUpSuccess(user)),
       );
     } catch (e) {
-      emit(UserGoogleSignUpFailed(ExceptionFailure()));
+      emit(AuthGoogleSignUpFailed(ExceptionFailure()));
     }
   }
 
   FutureOr<void> _onSignUpWithFacebook(
-      SignUpWithFacebookUser event, Emitter<UserState> emit) async {
+      AuthSignUpWithFacebook event, Emitter<AuthState> emit) async {
     try {
-      emit(UserLoading());
+      emit(AuthLoading());
       final result = await _signUpWithFacebookUseCase(event);
       result.fold(
-        (failure) => emit(UserFacebookSignUpFailed(failure)),
-        (user) => emit(UserFacebookSignUpSuccess(user)),
+        (failure) => emit(AuthFacebookSignUpFailed(failure)),
+        (user) => emit(AuthFacebookSignUpSuccess(user)),
       );
     } catch (e) {
-      emit(UserFacebookSignUpFailed(ExceptionFailure()));
+      emit(AuthFacebookSignUpFailed(ExceptionFailure()));
     }
   }
 
-  void _onCheckUser(CheckUser event, Emitter<UserState> emit) async {
+  void _onCheckAuth(AuthCheck event, Emitter<AuthState> emit) async {
     try {
-      // emit(UserLoading());
-      // final result = await _getCachedUserUseCase(NoParams());
+      // emit(AuthLoading());
+      // final result = await _getCachedAuthUseCase(NoParams());
       // result.fold(
-      //   (failure) => emit(UserLoggedFail(failure)),
-      //   (user) => emit(UserLogged(user)),
+      //   (failure) => emit(AuthLoggedFail(failure)),
+      //   (user) => emit(AuthLogged(user)),
       // );
     } catch (e) {
-      emit(UserLoggedFail(ExceptionFailure()));
+      emit(AuthLoggedFail(ExceptionFailure()));
     }
   }
 
-  void _onSignOut(SignOutUser event, Emitter<UserState> emit) async {
+  void _onSignOut(AuthSignOut event, Emitter<AuthState> emit) async {
     try {
-      emit(UserLoading());
+      emit(AuthLoading());
       // await _signOutUseCase(NoParams());
-      emit(UserLoggedOut());
+      emit(AuthLoggedOut());
     } catch (e) {
-      emit(UserLoggedFail(ExceptionFailure()));
+      emit(AuthLoggedFail(ExceptionFailure()));
     }
   }
 
   void _onValidateEmailOrPhone(
-      ValidateEmailOrPhone event, Emitter<UserState> emit) {
+      ValidateEmailOrPhone event, Emitter<AuthState> emit) {
     final input = event.input.trim();
 
     if (input.isEmpty) {

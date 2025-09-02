@@ -6,15 +6,14 @@ import '../../../../core/error/failures.dart';
 import '../../core/network/network_info.dart';
 import '../../domain/entities/user/user.dart';
 import '../../domain/repositories/user_repository.dart';
-import '../data_sources/remote/user_remote_data_source.dart';
-import '../models/user/authentication_response_model.dart';
+import '../data_sources/remote/auth_remote_data_source.dart';
 
-class UserRepositoryImpl implements UserRepository {
-  final UserRemoteDataSource remoteDataSource;
+class AuthRepositoryImpl implements AuthRepository {
+  final AuthRemoteDataSource remoteDataSource;
   final UserLocalDataSource localDataSource;
   final NetworkInfo networkInfo;
 
-  UserRepositoryImpl({
+  AuthRepositoryImpl({
     required this.remoteDataSource,
     required this.localDataSource,
     required this.networkInfo,

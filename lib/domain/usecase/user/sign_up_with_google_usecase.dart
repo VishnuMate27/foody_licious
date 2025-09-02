@@ -5,7 +5,7 @@ import 'package:foody_licious/domain/entities/user/user.dart';
 import 'package:foody_licious/domain/repositories/user_repository.dart';
 
 class SignUpWithGoogleUseCase implements UseCase<User, NoParams> {
-  final UserRepository repository;
+  final AuthRepository repository;
   SignUpWithGoogleUseCase(this.repository);
 
   @override

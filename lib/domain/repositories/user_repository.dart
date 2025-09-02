@@ -11,7 +11,7 @@ import '../entities/user/user.dart';
 // import '../usecases/user/sign_in_usecase.dart';
 // import '../usecases/user/sign_up_usecase.dart';
 
-abstract class UserRepository {
+abstract class AuthRepository {
   Future<Either<Failure, User>> signInWithEmail(SignInWithEmailParams params);
   Future<Either<Failure, Unit>> verifyPhoneNumberForLogin(
       SignInWithPhoneParams params);

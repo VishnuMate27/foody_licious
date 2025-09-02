@@ -5,7 +5,7 @@ import 'package:foody_licious/domain/entities/user/user.dart';
 import 'package:foody_licious/domain/repositories/user_repository.dart';
 
 class SignInWithPhoneUseCase implements UseCase<User, SignInWithPhoneParams> {
-  final UserRepository repository;
+  final AuthRepository repository;
   SignInWithPhoneUseCase(this.repository);
 
   @override

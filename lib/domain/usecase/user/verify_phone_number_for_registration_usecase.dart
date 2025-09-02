@@ -6,7 +6,7 @@ import 'package:foody_licious/domain/usecase/user/sign_up_with_phone_usecase.dar
 
 class VerifyPhoneNumberForRegistrationUseCase
     implements UseCase<Unit, SignUpWithPhoneParams> {
-  final UserRepository repository;
+  final AuthRepository repository;
   VerifyPhoneNumberForRegistrationUseCase(this.repository);
 
   @override
