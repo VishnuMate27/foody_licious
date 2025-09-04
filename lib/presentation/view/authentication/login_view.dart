@@ -116,11 +116,14 @@ class _LoginViewState extends State<LoginView> {
                   SizedBox(
                     height: 82.h,
                   ),
-                  Center(
-                    child: Image.asset(
-                      kLogo,
-                      width: 90.w,
-                      height: 90.h,
+                  Hero(
+                    tag: kLogo,
+                    child: Center(
+                      child: Image.asset(
+                        kLogo,
+                        width: 90.w,
+                        height: 90.h,
+                      ),
                     ),
                   ),
                   Text(

@@ -82,7 +82,7 @@ Future<void> init() async {
   sl.registerLazySingleton(() => CheckUserUseCase(sl()));
   // Repository
   sl.registerLazySingleton<UserRepository>(
-    () => UserRepositoryImpl(),
+    () => UserRepositoryImpl(sl()),
   );
   // Data sources
   sl.registerLazySingleton<UserRemoteDataSource>(

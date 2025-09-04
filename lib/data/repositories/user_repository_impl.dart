@@ -12,8 +12,8 @@ class UserRepositoryImpl implements UserRepository {
   @override
   Future<Either<Failure, User>> checkUser() async{
     try {
-      final localResponse = await localDataSource.getUser();
-      return Right(localResponse);
+      final user = await localDataSource.getUser();
+      return Right(user);
     } on Failure catch (failure) {
       return Left(failure);
     }

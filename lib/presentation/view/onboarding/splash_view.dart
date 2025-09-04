@@ -22,17 +22,16 @@ class _SplashViewState extends State<SplashView> {
   @override
   Widget build(BuildContext context) {
     return BlocListener<UserBloc, UserState>(
-      listener: (context, state) {
-        if (state is UserInitial) {
-          context.read<UserBloc>().add(CheckUser());
-        } else if (state is UserLoading) {
-          EasyLoading.show(status: "Loading...");
-        } else if (state is UserAuthenticated) {
+      listener: (context, state) async {
+        EasyLoading.dismiss();
+        if (state is UserAuthenticated) {
+          await Future.delayed(Duration(seconds: 5));
           Navigator.of(context).pushNamedAndRemoveUntil(
-            AppRouter.setLocation,
+            AppRouter.home,
             (Route<dynamic> route) => false,
           );
         } else if (state is UserUnauthenticated) {
+          await Future.delayed(Duration(seconds: 5));
           Navigator.of(context).pushNamedAndRemoveUntil(
             AppRouter.login,
             (Route<dynamic> route) => false,
@@ -45,11 +44,14 @@ class _SplashViewState extends State<SplashView> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Center(
-              child: Image.asset(
-                kLogo,
-                width: 185.w,
-                height: 189.h,
+            Hero(
+              tag: kLogo,
+              child: Center(
+                child: Image.asset(
+                  kLogo,
+                  width: 185.w,
+                  height: 189.h,
+                ),
               ),
             ),
             SizedBox(
