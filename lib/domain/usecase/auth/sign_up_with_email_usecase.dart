@@ -2,7 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:foody_licious/core/usecase/usecase.dart';
 import '../../../../../core/error/failures.dart';
 import '../../entities/user/user.dart';
-import '../../repositories/user_repository.dart';
+import '../../repositories/auth_repository.dart';
 
 class SignUpWithEmailUseCase implements UseCase<User, SignUpWithEmailParams> {
   final AuthRepository repository;

@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:foody_licious/core/error/failures.dart';
 import 'package:foody_licious/core/usecase/usecase.dart';
-import 'package:foody_licious/domain/repositories/user_repository.dart';
+import 'package:foody_licious/domain/repositories/auth_repository.dart';
 
 class SendPasswordResetEmailUseCase
     implements UseCase<Unit, SendPasswordResetEmailParams> {

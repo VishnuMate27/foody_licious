@@ -5,7 +5,7 @@ import 'package:foody_licious/data/data_sources/local/user_local_data_source.dar
 import '../../../../core/error/failures.dart';
 import '../../core/network/network_info.dart';
 import '../../domain/entities/user/user.dart';
-import '../../domain/repositories/user_repository.dart';
+import '../../domain/repositories/auth_repository.dart';
 import '../data_sources/remote/auth_remote_data_source.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
@@ -26,6 +26,7 @@ class AuthRepositoryImpl implements AuthRepository {
     }
     try {
       final remoteResponse = await remoteDataSource.signInWithEmail(params);
+      await localDataSource.saveUser(remoteResponse.user);
       return Right(remoteResponse.user);
     } on Failure catch (failure) {
       return Left(failure);
@@ -53,6 +54,7 @@ class AuthRepositoryImpl implements AuthRepository {
     }
     try {
       final remoteResponse = await remoteDataSource.signInWithPhone(params);
+      await localDataSource.saveUser(remoteResponse.user);
       return Right(remoteResponse.user);
     } on Failure catch (failure) {
       return Left(failure);
@@ -66,6 +68,7 @@ class AuthRepositoryImpl implements AuthRepository {
     }
     try {
       final remoteResponse = await remoteDataSource.signUpWithEmail(params);
+      await localDataSource.saveUser(remoteResponse.user);
       return Right(remoteResponse.user);
     } on Failure catch (failure) {
       return Left(failure);
@@ -79,6 +82,7 @@ class AuthRepositoryImpl implements AuthRepository {
     }
     try {
       final remoteResponse = await remoteDataSource.signInWithGoogle();
+      await localDataSource.saveUser(remoteResponse.user);
       return Right(remoteResponse.user);
     } on Failure catch (failure) {
       return Left(failure);
@@ -92,6 +96,7 @@ class AuthRepositoryImpl implements AuthRepository {
     }
     try {
       final remoteResponse = await remoteDataSource.signInWithFacebook();
+      await localDataSource.saveUser(remoteResponse.user);      
       return Right(remoteResponse.user);
     } on Failure catch (failure) {
       return Left(failure);
@@ -159,6 +164,7 @@ class AuthRepositoryImpl implements AuthRepository {
     }
     try {
       final remoteResponse = await remoteDataSource.signUpWithPhone(params);
+      await localDataSource.saveUser(remoteResponse.user);
       return Right(remoteResponse.user);
     } on Failure catch (failure) {
       return Left(failure);
@@ -172,6 +178,7 @@ class AuthRepositoryImpl implements AuthRepository {
     }
     try {
       final remoteResponse = await remoteDataSource.signUpWithGoogle();
+      await localDataSource.saveUser(remoteResponse.user);
       return Right(remoteResponse.user);
     } on Failure catch (failure) {
       return Left(failure);
@@ -185,29 +192,30 @@ class AuthRepositoryImpl implements AuthRepository {
     }
     try {
       final remoteResponse = await remoteDataSource.signUpWithFacebook();
+      await localDataSource.saveUser(remoteResponse.user);
       return Right(remoteResponse.user);
     } on Failure catch (failure) {
       return Left(failure);
     }
   }
 
-  @override
-  Future<Either<Failure, NoParams>> signOut() async {
-    try {
-      await localDataSource.clearCache();
-      return Right(NoParams());
-    } on CacheFailure {
-      return Left(CacheFailure());
-    }
-  }
+  // @override
+  // Future<Either<Failure, NoParams>> signOut() async {
+  //   try {
+  //     await localDataSource.clearCache();
+  //     return Right(NoParams());
+  //   } on CacheFailure {
+  //     return Left(CacheFailure());
+  //   }
+  // }
 
-  @override
-  Future<Either<Failure, User>> getLocalUser() async {
-    try {
-      final user = await localDataSource.getUser();
-      return Right(user);
-    } on CacheFailure {
-      return Left(CacheFailure());
-    }
-  }
+  // @override
+  // Future<Either<Failure, User>> getLocalUser() async {
+  //   try {
+  //     final user = await localDataSource.getUser();
+  //     return Right(user);
+  //   } on CacheFailure {
+  //     return Left(CacheFailure());
+  //   }
+  // }
 }
