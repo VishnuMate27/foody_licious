@@ -27,7 +27,7 @@ class _SplashViewState extends State<SplashView> {
         if (state is UserAuthenticated) {
           await Future.delayed(Duration(seconds: 5));
           Navigator.of(context).pushNamedAndRemoveUntil(
-            AppRouter.home,
+            AppRouter.setLocation,
             (Route<dynamic> route) => false,
           );
         } else if (state is UserUnauthenticated) {

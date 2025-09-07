@@ -24,15 +24,17 @@ class User extends Equatable {
 
 class Address extends Equatable {
   final String? addressText;
+  final String? city;
   final Coordinates? coordinates;
 
   const Address({
     this.addressText,
+    this.city,
     this.coordinates,
   });
 
   @override
-  List<Object?> get props => [addressText, coordinates];
+  List<Object?> get props => [addressText, city, coordinates];
 }
 
 class Coordinates extends Equatable {

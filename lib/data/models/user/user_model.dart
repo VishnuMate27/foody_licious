@@ -41,21 +41,24 @@ class UserModel extends User {
 class AddressModel extends Address {
   const AddressModel({
     super.addressText,
+    super.city,
     super.coordinates,
   });
 
   factory AddressModel.fromJson(Map<String, dynamic> json) {
     return AddressModel(
       addressText: json['addressText'] as String?,
+      city: json['city'] as String?,
       coordinates: CoordinatesModel.fromJson(json['coordinates'] ?? {}),
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'addressText': addressText,
-      'coordinates': coordinates,
-    };
+    final Map<String, dynamic> data = {};
+    if (addressText != null) data['addressText'] = addressText;
+    if (city != null) data['city'] = city;
+    if (coordinates != null) data['coordinates'] = coordinates;
+    return data;
   }
 }
 
@@ -77,9 +80,9 @@ class CoordinatesModel extends Coordinates {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'type': type,
-      'coordinates': coordinates,
-    };
+    final Map<String, dynamic> data = {};
+    if (type != null) data['type'] = type;
+    if (coordinates != null) data['coordinates'] = coordinates;
+    return data;
   }
 }

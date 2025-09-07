@@ -29,3 +29,31 @@ class UserUnauthenticated extends UserState {
   @override
   List<Object> get props => [];
 }
+
+class UserUpdateSuccess extends UserState {
+  final User user;
+  UserUpdateSuccess(this.user);
+  @override
+  List<Object> get props => [user];
+}
+
+class UserUpdateFailed extends UserState {
+  final Failure failure;
+  UserUpdateFailed(this.failure);
+  @override
+  List<Object> get props => [];
+}
+
+class UserUpdateLocationSuccess extends UserState {
+  final User user;
+  UserUpdateLocationSuccess(this.user);
+  @override
+  List<Object> get props => [user];
+}
+
+class UserUpdateLocationFailed extends UserState {
+  final Failure failure;
+  UserUpdateLocationFailed(this.failure);
+  @override
+  List<Object> get props => [];
+}

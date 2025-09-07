@@ -5,7 +5,8 @@
       "name": "foody_licious",
       "request": "launch",
       "type": "dart",
-      "preLaunchTask": "update-env"
+      "preLaunchTask": "update-env",
+      "toolArgs": ["-d CEAMZ9EA9PQCEMXS"]
     },
     {
       "name": "foody_licious (profile mode)",

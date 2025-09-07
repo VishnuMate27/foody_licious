@@ -18,6 +18,8 @@ import 'package:foody_licious/domain/usecase/auth/verify_phone_number_for_login_
 import 'package:foody_licious/domain/usecase/auth/verify_phone_number_for_registration_usecase.dart';
 import 'package:foody_licious/domain/usecase/auth/wait_for_email_verification_usecase.dart';
 import 'package:foody_licious/domain/usecase/user/check_user_usecase.dart';
+import 'package:foody_licious/domain/usecase/user/update_user_location_usecase.dart';
+import 'package:foody_licious/domain/usecase/user/update_user_usecase.dart';
 import 'package:foody_licious/firebase_options.dart';
 import 'package:foody_licious/presentation/bloc/auth/auth_bloc.dart';
 import 'package:foody_licious/presentation/bloc/user/user_bloc.dart';
@@ -77,16 +79,18 @@ Future<void> init() async {
 
   //Features - User
   // Bloc
-  sl.registerFactory(() => UserBloc(sl()));
+  sl.registerFactory(() => UserBloc(sl(),sl(),sl()));
   // Use cases
   sl.registerLazySingleton(() => CheckUserUseCase(sl()));
+  sl.registerLazySingleton(() => UpdateUserLocationUseCase(sl()));
+  sl.registerLazySingleton(() => UpdateUserUseCase(sl()));
   // Repository
   sl.registerLazySingleton<UserRepository>(
-    () => UserRepositoryImpl(sl()),
+    () => UserRepositoryImpl(remoteDataSource: sl(), localDataSource: sl(), networkInfo: sl(),),
   );
   // Data sources
   sl.registerLazySingleton<UserRemoteDataSource>(
-    () => UserRemoteDataSourceImpl(firebaseAuth: sl()),
+    () => UserRemoteDataSourceImpl(),
   );
   sl.registerLazySingleton<UserLocalDataSource>(
     () => UserLocalDataSourceImpl(sharedPreferences: sl(), secureStorage: sl()),

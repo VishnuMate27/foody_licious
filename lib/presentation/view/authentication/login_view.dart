@@ -51,7 +51,6 @@ class _LoginViewState extends State<LoginView> {
   Widget build(BuildContext context) {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
-        String? errorMessage;
         EasyLoading.dismiss();
         if (state is AuthLoading) {
           EasyLoading.show(status: 'Loading...');
