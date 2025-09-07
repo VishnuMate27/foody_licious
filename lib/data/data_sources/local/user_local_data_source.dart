@@ -5,20 +5,14 @@ import '../../../core/error/exceptions.dart';
 import '../../models/user/user_model.dart';
 
 abstract class UserLocalDataSource {
-  Future<String> getToken();
 
   Future<UserModel> getUser();
-
-  Future<void> saveToken(String token);
 
   Future<void> saveUser(UserModel user);
 
   Future<void> clearCache();
-
-  Future<bool> isTokenAvailable();
 }
 
-const cachedToken = 'TOKEN';
 const cachedUser = 'USER';
 
 class UserLocalDataSourceImpl implements UserLocalDataSource {
@@ -27,20 +21,6 @@ class UserLocalDataSourceImpl implements UserLocalDataSource {
   UserLocalDataSourceImpl(
       {required this.sharedPreferences, required this.secureStorage});
 
-  @override
-  Future<String> getToken() async {
-    String? token = await secureStorage.read(key: cachedToken);
-    if (token != null) {
-      return Future.value(token);
-    } else {
-      throw CacheException();
-    }
-  }
-
-  @override
-  Future<void> saveToken(String token) async {
-    await secureStorage.write(key: cachedToken, value: token);
-  }
 
   @override
   Future<UserModel> getUser() async {
@@ -62,12 +42,6 @@ class UserLocalDataSourceImpl implements UserLocalDataSource {
       cachedUser,
       userModelToJson(user),
     );
-  }
-
-  @override
-  Future<bool> isTokenAvailable() async {
-    String? token = await secureStorage.read(key: cachedToken);
-    return Future.value((token != null));
   }
 
   @override

@@ -1,11 +1,10 @@
-
 import 'package:dartz/dartz.dart';
 import 'package:foody_licious/core/error/failures.dart';
 import 'package:foody_licious/core/usecase/usecase.dart';
-import 'package:foody_licious/domain/repositories/user_repository.dart';
+import 'package:foody_licious/domain/repositories/auth_repository.dart';
 
 class SendVerificationEmailUseCase implements UseCase<Unit, void> {
-  final UserRepository repository;
+  final AuthRepository repository;
   SendVerificationEmailUseCase(this.repository);
 
   @override

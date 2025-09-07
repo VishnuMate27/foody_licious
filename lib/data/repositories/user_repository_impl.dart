@@ -1,19 +1,19 @@
 import 'package:dartz/dartz.dart';
-import 'package:foody_licious/core/usecase/usecase.dart';
+import 'package:foody_licious/core/error/failures.dart';
+import 'package:foody_licious/core/network/network_info.dart';
 import 'package:foody_licious/data/data_sources/local/user_local_data_source.dart';
-
-import '../../../../core/error/failures.dart';
-import '../../core/network/network_info.dart';
-import '../../domain/entities/user/user.dart';
-import '../../domain/repositories/user_repository.dart';
-import '../data_sources/remote/user_remote_data_source.dart';
-import '../models/user/authentication_response_model.dart';
+import 'package:foody_licious/data/data_sources/remote/user_remote_data_source.dart';
+import 'package:foody_licious/domain/entities/user/user.dart';
+import 'package:foody_licious/domain/repositories/user_repository.dart';
+import 'package:foody_licious/domain/usecase/user/update_user_usecase.dart';
+import 'package:foody_licious/presentation/bloc/user/user_state.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class UserRepositoryImpl implements UserRepository {
   final UserRemoteDataSource remoteDataSource;
   final UserLocalDataSource localDataSource;
   final NetworkInfo networkInfo;
-
   UserRepositoryImpl({
     required this.remoteDataSource,
     required this.localDataSource,
@@ -21,180 +21,43 @@ class UserRepositoryImpl implements UserRepository {
   });
 
   @override
-  Future<Either<Failure, User>> signInWithEmail(params) async {
-    if (!await networkInfo.isConnected) {
-      return Left(NetworkFailure());
-    }
-    try {
-      final remoteResponse = await remoteDataSource.signInWithEmail(params);
-      return Right(remoteResponse.user);
-    } on Failure catch (failure) {
-      return Left(failure);
-    }
-  }
-
-  @override
-  Future<Either<Failure, Unit>> verifyPhoneNumberForLogin(params) async {
-    if (!await networkInfo.isConnected) {
-      return Left(NetworkFailure());
-    }
-    try {
-      final remoteResponse =
-          await remoteDataSource.verifyPhoneNumberForLogin(params);
-      return Right(remoteResponse);
-    } on Failure catch (failure) {
-      return Left(failure);
-    }
-  }
-
-  @override
-  Future<Either<Failure, User>> signInWithPhone(params) async {
-    if (!await networkInfo.isConnected) {
-      return Left(NetworkFailure());
-    }
-    try {
-      final remoteResponse = await remoteDataSource.signInWithPhone(params);
-      return Right(remoteResponse.user);
-    } on Failure catch (failure) {
-      return Left(failure);
-    }
-  }
-
-  @override
-  Future<Either<Failure, User>> signUpWithEmail(params) async {
-    if (!await networkInfo.isConnected) {
-      return Left(NetworkFailure());
-    }
-    try {
-      final remoteResponse = await remoteDataSource.signUpWithEmail(params);
-      return Right(remoteResponse.user);
-    } on Failure catch (failure) {
-      return Left(failure);
-    }
-  }
-
-  @override
-  Future<Either<Failure, User>> signInWithGoogle() async {
-    if (!await networkInfo.isConnected) {
-      return Left(NetworkFailure());
-    }
-    try {
-      final remoteResponse = await remoteDataSource.signInWithGoogle();
-      return Right(remoteResponse.user);
-    } on Failure catch (failure) {
-      return Left(failure);
-    }
-  }
-
-  @override
-  Future<Either<Failure, User>> signInWithFacebook() async {
-    if (!await networkInfo.isConnected) {
-      return Left(NetworkFailure());
-    }
-    try {
-      final remoteResponse = await remoteDataSource.signInWithFacebook();
-      return Right(remoteResponse.user);
-    } on Failure catch (failure) {
-      return Left(failure);
-    }
-  }
-
-  @override
-  Future<Either<Failure, Unit>> sendVerificationEmail() async {
-    if (!await networkInfo.isConnected) {
-      return Left(NetworkFailure());
-    }
-    try {
-      final remoteResponse = await remoteDataSource.sendVerificationEmail();
-      return Right(remoteResponse);
-    } on Failure catch (failure) {
-      return Left(failure);
-    }
-  }
-
-  @override
-  Future<Either<Failure, Unit>> waitForEmailVerification() async {
-    if (!await networkInfo.isConnected) {
-      return Left(NetworkFailure());
-    }
-    try {
-      final remoteResponse = await remoteDataSource.waitForEmailVerification();
-      return Right(remoteResponse);
-    } on Failure catch (failure) {
-      return Left(failure);
-    }
-  }
-
-  @override
-  Future<Either<Failure, Unit>> verifyPhoneNumberForRegistration(params) async {
-    if (!await networkInfo.isConnected) {
-      return Left(NetworkFailure());
-    }
-    try {
-      final remoteResponse =
-          await remoteDataSource.verifyPhoneNumberForRegistration(params);
-      return Right(remoteResponse);
-    } on Failure catch (failure) {
-      return Left(failure);
-    }
-  }
-
-  @override
-  Future<Either<Failure, User>> signUpWithPhone(params) async {
-    if (!await networkInfo.isConnected) {
-      return Left(NetworkFailure());
-    }
-    try {
-      final remoteResponse = await remoteDataSource.signUpWithPhone(params);
-      return Right(remoteResponse.user);
-    } on Failure catch (failure) {
-      return Left(failure);
-    }
-  }
-
-  @override
-  Future<Either<Failure, User>> signUpWithGoogle() async {
-    if (!await networkInfo.isConnected) {
-      return Left(NetworkFailure());
-    }
-    try {
-      final remoteResponse = await remoteDataSource.signUpWithGoogle();
-      return Right(remoteResponse.user);
-    } on Failure catch (failure) {
-      return Left(failure);
-    }
-  }
-
-  @override
-  Future<Either<Failure, User>> signUpWithFacebook() async {
-    if (!await networkInfo.isConnected) {
-      return Left(NetworkFailure());
-    }
-    try {
-      final remoteResponse = await remoteDataSource.signUpWithFacebook();
-      return Right(remoteResponse.user);
-    } on Failure catch (failure) {
-      return Left(failure);
-    }
-  }
-
-  @override
-  Future<Either<Failure, NoParams>> signOut() async {
-    try {
-      await localDataSource.clearCache();
-      return Right(NoParams());
-    } on CacheFailure {
-      return Left(CacheFailure());
-    }
-  }
-
-  @override
-  Future<Either<Failure, User>> getLocalUser() async {
+  Future<Either<Failure, User>> checkUser() async {
     try {
       final user = await localDataSource.getUser();
       return Right(user);
-    } on CacheFailure {
-      return Left(CacheFailure());
+    } on Failure catch (failure) {
+      return Left(failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, User>> updateUser(UpdateUserParams params) async {
+    if (!await networkInfo.isConnected) {
+      return Left(NetworkFailure());
+    }
+    try {
+      final user = await localDataSource.getUser();
+      params.id = user.id;
+      final remoteResponse = await remoteDataSource.updateUser(params);
+      await localDataSource.saveUser(remoteResponse.user);
+      return Right(remoteResponse.user);
+    } on Failure catch (failure) {
+      return Left(failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, User>> updateUserLocation() async {
+    if (!await networkInfo.isConnected) {
+      return Left(NetworkFailure());
+    }
+    try {
+      final user = await localDataSource.getUser();
+      final remoteResponse = await remoteDataSource.updateUserLocation(user.id);
+      await localDataSource.saveUser(remoteResponse.user);
+      return Right(remoteResponse.user);
+    } on Failure catch (failure) {
+      return Left(failure);
     }
   }
 }

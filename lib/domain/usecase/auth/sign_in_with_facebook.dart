@@ -2,11 +2,11 @@ import 'package:dartz/dartz.dart';
 import 'package:foody_licious/core/error/failures.dart';
 import 'package:foody_licious/core/usecase/usecase.dart';
 import 'package:foody_licious/domain/entities/user/user.dart';
-import 'package:foody_licious/domain/repositories/user_repository.dart';
+import 'package:foody_licious/domain/repositories/auth_repository.dart';
 
-class SignUpWithFacebookUseCase implements UseCase<User, NoParams> {
-  final UserRepository repository;
-  SignUpWithFacebookUseCase(this.repository);
+class SignInWithFacebookUseCase implements UseCase<User, NoParams> {
+  final AuthRepository repository;
+  SignInWithFacebookUseCase(this.repository);
 
   @override
   Future<Either<Failure, User>> call(void params) async {

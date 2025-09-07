@@ -2,14 +2,14 @@ import 'package:dartz/dartz.dart';
 import 'package:foody_licious/core/error/failures.dart';
 import 'package:foody_licious/core/usecase/usecase.dart';
 import 'package:foody_licious/domain/entities/user/user.dart';
-import 'package:foody_licious/domain/repositories/user_repository.dart';
+import 'package:foody_licious/domain/repositories/auth_repository.dart';
 
-class SignInWithGoogleUseCase implements UseCase<User, NoParams> {
-  final UserRepository repository;
-  SignInWithGoogleUseCase(this.repository);
+class SignUpWithGoogleUseCase implements UseCase<User, NoParams> {
+  final AuthRepository repository;
+  SignUpWithGoogleUseCase(this.repository);
 
   @override
   Future<Either<Failure, User>> call(void params) async {
-    return await repository.signInWithGoogle();
+    return await repository.signUpWithGoogle();
   }
 }

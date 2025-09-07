@@ -38,10 +38,12 @@ dependencies:
   pinput: ^5.0.1
   smart_auth: ^3.2.0
   carousel_slider: ^5.0.0
-  flutter_easyloading: ^3.0.5 
+  flutter_easyloading: ^3.0.5
   flutter_dotenv: ^5.2.1
   url_launcher: ^6.3.2
   open_mail_app_plus: ^0.0.2
+  permission_handler: ^12.0.1
+  geolocator: ^14.0.2
 
   #ui
   flutter_screenutil: ^5.9.3

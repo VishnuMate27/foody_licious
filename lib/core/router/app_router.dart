@@ -16,10 +16,10 @@ import '../../presentation/view/order/payout_view.dart';
 
 class AppRouter {
   //splash & onboarding
-  static const String splash = '/splash';
+  static const String splash = '/';
   static const String onboarding = '/onboarding';
   //main menu
-  static const String home = '/';
+  static const String home = '/h';
   //authentication
   static const String login = '/login';
   static const String signUp = '/sign-up';

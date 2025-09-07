@@ -3,10 +3,10 @@ import 'package:foody_licious/core/usecase/usecase.dart';
 
 import '../../../../../core/error/failures.dart';
 import '../../entities/user/user.dart';
-import '../../repositories/user_repository.dart';
+import '../../repositories/auth_repository.dart';
 
 class SignInWithEmailUseCase implements UseCase<User, SignInWithEmailParams> {
-  final UserRepository repository;
+  final AuthRepository repository;
   SignInWithEmailUseCase(this.repository);
 
   @override

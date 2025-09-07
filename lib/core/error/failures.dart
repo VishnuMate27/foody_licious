@@ -31,3 +31,9 @@ class UserAlreadyExistsFailure extends Failure {}
 class TooManyRequestsFailure extends Failure {}
 
 class AuthProviderMissMatchFailure extends Failure {}
+
+class LocationServicesDisabledFailure extends Failure {}
+
+class LocationPermissionDeniedFailure extends Failure {}
+
+class LocationPermissionPermanentlyDeniedFailure extends Failure {}

@@ -4,12 +4,12 @@ import 'package:foody_licious/core/usecase/usecase.dart';
 import 'package:foody_licious/domain/entities/user/user.dart';
 import 'package:foody_licious/domain/repositories/user_repository.dart';
 
-class SignUpWithGoogleUseCase implements UseCase<User, NoParams> {
+class UpdateUserLocationUseCase extends UseCase<User, void> {
   final UserRepository repository;
-  SignUpWithGoogleUseCase(this.repository);
+  UpdateUserLocationUseCase(this.repository);
 
   @override
   Future<Either<Failure, User>> call(void params) async {
-    return await repository.signUpWithGoogle();
+    return await repository.updateUserLocation();
   }
 }

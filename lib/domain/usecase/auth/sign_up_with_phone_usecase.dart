@@ -2,10 +2,10 @@ import 'package:dartz/dartz.dart';
 import 'package:foody_licious/core/usecase/usecase.dart';
 import '../../../../../core/error/failures.dart';
 import '../../entities/user/user.dart';
-import '../../repositories/user_repository.dart';
+import '../../repositories/auth_repository.dart';
 
 class SignUpWithPhoneUseCase implements UseCase<User, SignUpWithPhoneParams> {
-  final UserRepository repository;
+  final AuthRepository repository;
   SignUpWithPhoneUseCase(this.repository);
 
   @override
@@ -19,5 +19,6 @@ class SignUpWithPhoneParams {
   final String? phone;
   final String? code;
   final String authProvider;
-  const SignUpWithPhoneParams({this.name, this.phone, this.code, required this.authProvider});
+  const SignUpWithPhoneParams(
+      {this.name, this.phone, this.code, required this.authProvider});
 }

@@ -2,10 +2,10 @@ import 'package:dartz/dartz.dart';
 import 'package:foody_licious/core/usecase/usecase.dart';
 import '../../../../../core/error/failures.dart';
 import '../../entities/user/user.dart';
-import '../../repositories/user_repository.dart';
+import '../../repositories/auth_repository.dart';
 
 class SignUpWithEmailUseCase implements UseCase<User, SignUpWithEmailParams> {
-  final UserRepository repository;
+  final AuthRepository repository;
   SignUpWithEmailUseCase(this.repository);
 
   @override
@@ -20,8 +20,5 @@ class SignUpWithEmailParams {
   final String? password;
   final String authProvider;
   const SignUpWithEmailParams(
-      {this.name,
-      this.email,
-      this.password,
-      required this.authProvider});
+      {this.name, this.email, this.password, required this.authProvider});
 }

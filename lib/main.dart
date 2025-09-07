@@ -7,7 +7,9 @@ import 'package:foody_licious/core/constant/strings.dart';
 import 'package:foody_licious/core/router/app_router.dart';
 import 'package:foody_licious/core/services/services_locator.dart';
 import 'package:foody_licious/firebase_options.dart';
+import 'package:foody_licious/presentation/bloc/auth/auth_bloc.dart';
 import 'package:foody_licious/presentation/bloc/user/user_bloc.dart';
+import 'package:foody_licious/presentation/bloc/user/user_event.dart';
 import 'package:foody_licious/presentation/view/main/main_view.dart';
 import 'package:foody_licious/core/services/services_locator.dart' as di;
 import 'cubit/navigation_cubit.dart';
@@ -33,6 +35,9 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => di.sl<UserBloc>()..add(CheckUser()),
         ),
+        BlocProvider(
+          create: (context) => di.sl<AuthBloc>()..add(AuthCheck()),
+        ),
       ],
       child: ScreenUtilInit(
         designSize: const Size(360, 800),
@@ -45,7 +50,7 @@ class MyApp extends StatelessWidget {
             appBarTheme: AppBarTheme(backgroundColor: kWhite),
             useMaterial3: true,
           ),
-          initialRoute: AppRouter.login,
+          initialRoute: AppRouter.splash,
           onGenerateRoute: AppRouter.onGenerateRoute,
           builder: EasyLoading.init(),
         ),
