@@ -15,6 +15,7 @@ import 'package:foody_licious/presentation/bloc/auth/auth_bloc.dart';
 import 'package:foody_licious/presentation/bloc/user/user_bloc.dart';
 import 'package:foody_licious/presentation/bloc/user/user_event.dart';
 import 'package:foody_licious/presentation/bloc/user/user_state.dart';
+import 'package:foody_licious/presentation/view/authentication/login_view.dart';
 import 'package:foody_licious/presentation/widgets/input_text_form_field.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -99,10 +100,12 @@ class _ProfileViewState extends State<ProfileView> {
           actions: [
             BlocListener<AuthBloc, AuthState>(
               listener: (context, state) {
-                if (state is UserLoading) {
+                if (state is AuthLoading) {
                   EasyLoading.show(status: "Logging Out...");
                 } else if (state is AuthLoggedOut) {
-                  Navigator.of(context).pushNamedAndRemoveUntil(
+                  EasyLoading.dismiss();
+                  Navigator.of(context, rootNavigator: true)
+                      .pushNamedAndRemoveUntil(
                     AppRouter.login,
                     (Route<dynamic> route) => false,
                   );
