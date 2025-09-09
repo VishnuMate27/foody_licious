@@ -11,6 +11,7 @@ class UserModel extends User {
     required super.name,
     super.email,
     super.phone,
+    super.authProvider,
     super.address,
     super.orderHistory,
   });
@@ -21,6 +22,7 @@ class UserModel extends User {
       name: json['name'] as String,
       email: json['email'] as String?,
       phone: json['phone'] as String?,
+      authProvider: json['authProvider'] as String?, 
       address: AddressModel.fromJson(json['address'] ?? {}),
       orderHistory: List<String>.from(json['orderHistory'] ?? {}),
     );
@@ -32,6 +34,7 @@ class UserModel extends User {
       'name': name,
       'email': email,
       'phone': phone,
+      'authProvider': authProvider,
       'address': address!.toJson(),
       'orderHistory': orderHistory,
     };

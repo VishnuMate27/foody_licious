@@ -10,6 +10,7 @@ import 'package:foody_licious/domain/usecase/auth/sign_in_with_email_usecase.dar
 import 'package:foody_licious/domain/usecase/auth/sign_in_with_facebook.dart';
 import 'package:foody_licious/domain/usecase/auth/sign_in_with_google_usecase.dart';
 import 'package:foody_licious/domain/usecase/auth/sign_in_with_phone_usecase.dart';
+import 'package:foody_licious/domain/usecase/auth/sign_out_usecase.dart';
 import 'package:foody_licious/domain/usecase/auth/sign_up_with_email_usecase.dart';
 import 'package:foody_licious/domain/usecase/auth/sign_up_with_facebook_usecase.dart';
 import 'package:foody_licious/domain/usecase/auth/sign_up_with_google_usecase.dart';
@@ -49,7 +50,7 @@ Future<void> init() async {
   //Features - Auth
   // Bloc
   sl.registerFactory(() => AuthBloc(sl(), sl(), sl(), sl(), sl(), sl(), sl(),
-      sl(), sl(), sl(), sl(), sl(), sl()));
+      sl(), sl(), sl(), sl(), sl(), sl(), sl()));
   // Use cases
   sl.registerLazySingleton(() => SignInWithEmailUseCase(sl()));
   sl.registerLazySingleton(() => VerifyPhoneNumberForLoginUseCase(sl()));
@@ -64,6 +65,7 @@ Future<void> init() async {
   sl.registerLazySingleton(() => SignUpWithPhoneUseCase(sl()));
   sl.registerLazySingleton(() => SignUpWithGoogleUseCase(sl()));
   sl.registerLazySingleton(() => SignUpWithFacebookUseCase(sl()));
+  sl.registerLazySingleton(() => SignOutUseCase(sl()));
   // Repository
   sl.registerLazySingleton<AuthRepository>(
     () => AuthRepositoryImpl(
@@ -79,14 +81,18 @@ Future<void> init() async {
 
   //Features - User
   // Bloc
-  sl.registerFactory(() => UserBloc(sl(),sl(),sl()));
+  sl.registerFactory(() => UserBloc(sl(), sl(), sl()));
   // Use cases
   sl.registerLazySingleton(() => CheckUserUseCase(sl()));
   sl.registerLazySingleton(() => UpdateUserLocationUseCase(sl()));
   sl.registerLazySingleton(() => UpdateUserUseCase(sl()));
   // Repository
   sl.registerLazySingleton<UserRepository>(
-    () => UserRepositoryImpl(remoteDataSource: sl(), localDataSource: sl(), networkInfo: sl(),),
+    () => UserRepositoryImpl(
+      remoteDataSource: sl(),
+      localDataSource: sl(),
+      networkInfo: sl(),
+    ),
   );
   // Data sources
   sl.registerLazySingleton<UserRemoteDataSource>(

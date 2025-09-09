@@ -199,15 +199,15 @@ class AuthRepositoryImpl implements AuthRepository {
     }
   }
 
-  // @override
-  // Future<Either<Failure, NoParams>> signOut() async {
-  //   try {
-  //     await localDataSource.clearCache();
-  //     return Right(NoParams());
-  //   } on CacheFailure {
-  //     return Left(CacheFailure());
-  //   }
-  // }
+  @override
+  Future<Either<Failure, Unit>> signOut() async {
+    try {
+      await localDataSource.clearCache();
+      return Right(unit);
+    } on CacheFailure {
+      return Left(CacheFailure());
+    }
+  }
 
   // @override
   // Future<Either<Failure, User>> getLocalUser() async {

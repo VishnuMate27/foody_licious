@@ -46,8 +46,6 @@ class UserLocalDataSourceImpl implements UserLocalDataSource {
 
   @override
   Future<void> clearCache() async {
-    await secureStorage.deleteAll();
-    // await sharedPreferences.remove(cachedCart);
     await sharedPreferences.remove(cachedUser);
   }
 }

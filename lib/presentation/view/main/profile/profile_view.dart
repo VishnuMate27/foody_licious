@@ -4,11 +4,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:foody_licious/core/constant/colors.dart';
+import 'package:foody_licious/core/constant/images.dart';
 import 'package:foody_licious/core/extension/failure_extension.dart';
+import 'package:foody_licious/core/router/app_router.dart';
 import 'package:foody_licious/core/utils/data.dart';
 import 'package:foody_licious/data/models/user/user_model.dart';
 import 'package:foody_licious/domain/entities/user/user.dart';
 import 'package:foody_licious/domain/usecase/user/update_user_usecase.dart';
+import 'package:foody_licious/presentation/bloc/auth/auth_bloc.dart';
 import 'package:foody_licious/presentation/bloc/user/user_bloc.dart';
 import 'package:foody_licious/presentation/bloc/user/user_event.dart';
 import 'package:foody_licious/presentation/bloc/user/user_state.dart';
@@ -72,7 +75,7 @@ class _ProfileViewState extends State<ProfileView> {
               dropdownValue = state.user.address!.city!;
             });
           }
-          EasyLoading.show(status: "User Info Updated Successfully");
+          EasyLoading.showSuccess("User Info Updated Successfully!");
         } else if (state is UserUpdateFailed) {
           EasyLoading.showError(
             state.failure.toMessage(
@@ -93,6 +96,34 @@ class _ProfileViewState extends State<ProfileView> {
           ),
           centerTitle: true,
           backgroundColor: kWhite,
+          actions: [
+            BlocListener<AuthBloc, AuthState>(
+              listener: (context, state) {
+                if (state is UserLoading) {
+                  EasyLoading.show(status: "Logging Out...");
+                } else if (state is AuthLoggedOut) {
+                  Navigator.of(context).pushNamedAndRemoveUntil(
+                    AppRouter.login,
+                    (Route<dynamic> route) => false,
+                  );
+                } else if (state is AuthLoggedOutFailed) {
+                  EasyLoading.showError(
+                    state.failure.toMessage(
+                      defaultMessage: "Failed to Logout!",
+                    ),
+                  );
+                }
+              },
+              child: IconButton(
+                icon: const Icon(Icons.logout, color: kTextRed),
+                tooltip: "Logout",
+                onPressed: () {
+                  // Dispatch logout event to AuthBloc
+                  context.read<AuthBloc>().add(AuthSignOut());
+                },
+              ),
+            ),
+          ],
         ),
         body: SingleChildScrollView(
           child: Padding(
@@ -254,6 +285,70 @@ class _ProfileViewState extends State<ProfileView> {
                     hintText: "Enter your 10 digit phone number",
                     keyboardType: TextInputType.phone,
                     validatorText: "Please enter your valid phone number",
+                  ),
+                  SizedBox(
+                    height: 12.h,
+                  ),
+                  BlocBuilder<UserBloc, UserState>(
+                    builder: (context, state) {
+                      String? authProviderLogo;
+                      IconData? authProviderIconData;
+                      if (state is UserAuthenticated ||
+                          state is UserUpdateSuccess) {
+                        final user = state is UserAuthenticated
+                            ? state.user
+                            : (state as UserUpdateSuccess).user;
+                        if (user.authProvider != null) {
+                          if (user.authProvider == "google") {
+                            authProviderLogo = kGoogleIcon;
+                          } else if (user.authProvider == "facebook") {
+                            authProviderLogo = kFacebookIcon;
+                          } else if (user.authProvider == "phone") {
+                            authProviderIconData = Icons.phone_outlined;
+                          } else if (user.authProvider == "email") {
+                            authProviderIconData = Icons.mail_outlined;
+                          }
+                        }
+                        return Container(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 12, vertical: 16),
+                          decoration: ShapeDecoration(
+                            shape: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                              borderSide: BorderSide(
+                                color: kBorder, // same as enabledBorder
+                                width: 1,
+                              ),
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "Authentication Provider", // placeholder text
+                                style: GoogleFonts.yeonSung(
+                                  color: kBlack,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.normal,
+                                ),
+                              ),
+                              authProviderLogo != null
+                                  ? Image.asset(
+                                      authProviderLogo,
+                                      width: 25.w,
+                                      height: 25.h,
+                                    )
+                                  : Icon(
+                                      authProviderIconData,
+                                      color: kBlack,
+                                    ),
+                            ],
+                          ),
+                        );
+                      } else {
+                        return SizedBox();
+                      }
+                    },
                   ),
                   SizedBox(
                     height: 24.h,
