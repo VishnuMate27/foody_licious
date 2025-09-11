@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:foody_licious/core/constant/strings.dart';
 import 'package:foody_licious/core/error/failures.dart';
@@ -14,6 +15,7 @@ abstract class UserRemoteDataSource {
   // User checkUser();
   Future<UserResponseModel> updateUser(UpdateUserParams user);
   Future<UserResponseModel> updateUserLocation(String userId);
+  Future<Unit> deleteUser(String userId);
 }
 
 class UserRemoteDataSourceImpl extends UserRemoteDataSource {
@@ -28,8 +30,13 @@ class UserRemoteDataSourceImpl extends UserRemoteDataSource {
   // }
 
   @override
-  Future<UserResponseModel> updateUser(UpdateUserParams params) async{
+  Future<UserResponseModel> updateUser(UpdateUserParams params) async {
     return await _sendUpdateUserRequest(params);
+  }
+
+  @override
+  Future<Unit> deleteUser(String userId) async {
+    return await _sendDeleteUserRequest(userId);
   }
 
   @override
@@ -38,6 +45,30 @@ class UserRemoteDataSourceImpl extends UserRemoteDataSource {
     debugPrint(
         "latitude: ${position.latitude} longitude:${position.longitude}");
     return await _sendUpdateLocationRequest(userId, position);
+  }
+
+  Future<Unit> _sendDeleteUserRequest(String userId) async {
+    final requestBody = json.encode({
+      "id": userId,
+    });
+
+    final response = await client.post(
+      Uri.parse('$kBaseUrl/api/users/delete_user'),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: requestBody,
+    );
+
+    if (response.statusCode == 200) {
+      return unit;
+    } else if (response.statusCode == 400 || response.statusCode == 401) {
+      throw CredentialFailure();
+    } else if (response.statusCode == 404) {
+      throw UserNotExistsFailure();
+    } else {
+      throw ServerFailure();
+    }
   }
 
   Future<UserResponseModel> _sendUpdateUserRequest(

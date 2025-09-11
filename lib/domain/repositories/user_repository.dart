@@ -8,4 +8,5 @@ abstract class UserRepository {
   Future<Either<Failure, User>> checkUser();
   Future<Either<Failure, User>> updateUser(UpdateUserParams params);
   Future<Either<Failure, User>> updateUserLocation();
+  Future<Either<Failure, Unit>> deleteUser();
 }

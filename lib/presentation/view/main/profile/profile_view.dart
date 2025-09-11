@@ -16,6 +16,7 @@ import 'package:foody_licious/presentation/bloc/user/user_bloc.dart';
 import 'package:foody_licious/presentation/bloc/user/user_event.dart';
 import 'package:foody_licious/presentation/bloc/user/user_state.dart';
 import 'package:foody_licious/presentation/view/authentication/login_view.dart';
+import 'package:foody_licious/presentation/widgets/gradient_button.dart';
 import 'package:foody_licious/presentation/widgets/input_text_form_field.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -251,6 +252,8 @@ class _ProfileViewState extends State<ProfileView> {
                     height: 12.h,
                   ),
                   InputTextFormField(
+                    readOnly: (_originalUser?.authProvider == "google" ||
+                        _originalUser?.authProvider == "email"),
                     textController: _emailController,
                     labelText: "Email",
                     labelStyle: GoogleFonts.yeonSung(
@@ -259,11 +262,26 @@ class _ProfileViewState extends State<ProfileView> {
                       fontWeight: FontWeight.normal,
                     ),
                     hintStyle: GoogleFonts.lato(
-                        color: kBlack,
-                        fontSize: 14,
-                        fontWeight: FontWeight.normal,
-                        letterSpacing: 0.5),
-                    suffixIcon: Icon(CupertinoIcons.create, color: kBlack),
+                      color: kBlack,
+                      fontSize: 14,
+                      fontWeight: FontWeight.normal,
+                      letterSpacing: 0.5,
+                    ),
+                    suffixIcon: (_originalUser?.authProvider == "google" ||
+                            _originalUser?.authProvider == "email")
+                        ? Tooltip(
+                            message: _originalUser?.authProvider == "google"
+                                ? "Email linked with Google account can’t be changed"
+                                : "Email linked with your account can’t be changed",
+                            child: Icon(
+                              CupertinoIcons.lock,
+                              color: kBlack,
+                            ),
+                          )
+                        : Icon(
+                            CupertinoIcons.create,
+                            color: kBlack,
+                          ),
                     hintText: "Enter your email address",
                     keyboardType: TextInputType.emailAddress,
                     validatorText: "Please enter your valid email",
@@ -272,6 +290,7 @@ class _ProfileViewState extends State<ProfileView> {
                     height: 12.h,
                   ),
                   InputTextFormField(
+                    readOnly: (_originalUser?.authProvider == "phone"),
                     textController: _phoneController,
                     labelText: "Phone",
                     labelStyle: GoogleFonts.yeonSung(
@@ -284,7 +303,19 @@ class _ProfileViewState extends State<ProfileView> {
                         fontSize: 14,
                         fontWeight: FontWeight.normal,
                         letterSpacing: 0.5),
-                    suffixIcon: Icon(CupertinoIcons.create, color: kBlack),
+                    suffixIcon: (_originalUser?.authProvider == "phone")
+                        ? Tooltip(
+                            message:
+                                "Phone number linked with your account can’t be changed",
+                            child: Icon(
+                              CupertinoIcons.lock,
+                              color: kBlack,
+                            ),
+                          )
+                        : Icon(
+                            CupertinoIcons.create,
+                            color: kBlack,
+                          ),
                     hintText: "Enter your 10 digit phone number",
                     keyboardType: TextInputType.phone,
                     validatorText: "Please enter your valid phone number",
@@ -354,7 +385,7 @@ class _ProfileViewState extends State<ProfileView> {
                     },
                   ),
                   SizedBox(
-                    height: 24.h,
+                    height: 12.h,
                   ),
                   GestureDetector(
                     onTap: () {
@@ -386,6 +417,16 @@ class _ProfileViewState extends State<ProfileView> {
                       ),
                     ),
                   ),
+                  SizedBox(
+                    height: 20.h,
+                  ),
+                  GradientButton(
+                    height: 50.h,
+                    onTap: () {
+                      context.read<UserBloc>().add(DeleteUser());
+                    },
+                    buttonText: "Delete Account",
+                  )
                 ],
               ),
             ),

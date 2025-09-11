@@ -12,3 +12,5 @@ class UpdateUser extends UserEvent {
 }
 
 class UpdateUserLocation extends UserEvent {}
+
+class DeleteUser extends UserEvent {}

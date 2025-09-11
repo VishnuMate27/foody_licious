@@ -1,3 +1,4 @@
+import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:foody_licious/core/error/failures.dart';
@@ -54,6 +55,20 @@ class UserUpdateLocationSuccess extends UserState {
 class UserUpdateLocationFailed extends UserState {
   final Failure failure;
   UserUpdateLocationFailed(this.failure);
+  @override
+  List<Object> get props => [];
+}
+
+class UserDeleteSuccess extends UserState {
+  final Unit unit;
+  UserDeleteSuccess(this.unit);
+  @override
+  List<Object> get props => [unit];
+}
+
+class UserDeleteFailed extends UserState {
+  final Failure failure;
+  UserDeleteFailed(this.failure);
   @override
   List<Object> get props => [];
 }

@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:foody_licious/core/error/failures.dart';
 import 'package:foody_licious/domain/usecase/user/check_user_usecase.dart';
+import 'package:foody_licious/domain/usecase/user/delete_user_usecase.dart';
 import 'package:foody_licious/domain/usecase/user/update_user_location_usecase.dart';
 import 'package:foody_licious/domain/usecase/user/update_user_usecase.dart';
 import 'package:foody_licious/presentation/bloc/user/user_event.dart';
@@ -10,12 +11,15 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   CheckUserUseCase _checkUserUseCase;
   UpdateUserLocationUseCase _updateUserLocationUseCase;
   UpdateUserUseCase _updateUserUseCase;
+  DeleteUserUseCase _deleteUserUseCase;
+
   UserBloc(this._checkUserUseCase, this._updateUserLocationUseCase,
-      this._updateUserUseCase)
+      this._updateUserUseCase, this._deleteUserUseCase)
       : super(UserInitial()) {
     on<CheckUser>(_checkUser);
     on<UpdateUser>(_updateUser);
     on<UpdateUserLocation>(_updateUserLocation);
+    on<DeleteUser>(_deleteUser);
   }
 
   void _checkUser(CheckUser event, Emitter<UserState> emit) async {
@@ -55,6 +59,19 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       );
     } catch (e) {
       emit(UserUpdateLocationFailed(ExceptionFailure()));
+    }
+  }
+
+  void _deleteUser(DeleteUser event, Emitter<UserState> emit) async {
+    try {
+      emit(UserLoading());
+      final result = await _deleteUserUseCase(event);
+      result.fold(
+        (failure) => emit(UserDeleteFailed(failure)),
+        (unit) => emit(UserDeleteSuccess(unit)),
+      );
+    } catch (e) {
+      emit(UserUpdateFailed(ExceptionFailure()));
     }
   }
 }
