@@ -84,6 +84,18 @@ class _ProfileViewState extends State<ProfileView> {
               defaultMessage: "Failed to update user Info!",
             ),
           );
+        } else if (state is UserDeleteSuccess) {
+          EasyLoading.showSuccess("User Account Deleted Successfully!");
+          Navigator.of(context, rootNavigator: true).pushNamedAndRemoveUntil(
+            AppRouter.login,
+            (Route<dynamic> route) => false,
+          );
+        } else if (state is UserDeleteFailed) {
+          EasyLoading.showError(
+            state.failure.toMessage(
+              defaultMessage: "Failed to Delete User Account!",
+            ),
+          );
         }
       },
       child: Scaffold(
