@@ -94,11 +94,21 @@ class _SignUpViewState extends State<SignUpView> {
                 'emailOrPhoneController': _emailOrPhoneController,
                 'authProvider': 'phone',
               });
-        } else if (state is AuthGoogleSignUpSuccess ||
-            state is AuthFacebookSignUpSuccess) {
+        } else if (state is AuthGoogleSignUpSuccess) {
           Navigator.of(context).pushNamedAndRemoveUntil(
             AppRouter.setLocation,
             (Route<dynamic> route) => false,
+            arguments: {
+              'previousCity': state.user.address?.city,
+            },
+          );
+        } else if (state is AuthFacebookSignUpSuccess) {
+          Navigator.of(context).pushNamedAndRemoveUntil(
+            AppRouter.setLocation,
+            (Route<dynamic> route) => false,
+            arguments: {
+              'previousCity': state.user.address?.city,
+            },
           );
         } else if (state is AuthVerificationEmailRequestFailed) {
           EasyLoading.showError(

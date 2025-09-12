@@ -45,6 +45,11 @@ class UserUpdateFailed extends UserState {
   List<Object> get props => [];
 }
 
+class UserLocationUpdating extends UserState {
+  @override
+  List<Object> get props => [];
+}
+
 class UserUpdateLocationSuccess extends UserState {
   final User user;
   UserUpdateLocationSuccess(this.user);

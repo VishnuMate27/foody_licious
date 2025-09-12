@@ -18,7 +18,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class SetLocationView extends StatefulWidget {
-  const SetLocationView({super.key});
+  final String? previousCity;
+  const SetLocationView({this.previousCity,super.key});
 
   @override
   State<SetLocationView> createState() => _SetLocationViewState();
@@ -26,13 +27,14 @@ class SetLocationView extends StatefulWidget {
 
 class _SetLocationViewState extends State<SetLocationView>
     with WidgetsBindingObserver {
-  String dropdownValue = availableCitiesList.first;
+  late String dropdownValue;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     context.read<UserBloc>().add(UpdateUserLocation());
+    dropdownValue = widget.previousCity ?? availableCitiesList.first;
   }
 
   @override
@@ -55,7 +57,9 @@ class _SetLocationViewState extends State<SetLocationView>
         EasyLoading.dismiss();
         if (state is UserLoading) {
           EasyLoading.show(status: 'Loading...');
-        } else if (state is UserUpdateLocationFailed) {
+        } else if(state is UserLocationUpdating){
+          EasyLoading.show(status: 'Fetching Location...');
+        }else if (state is UserUpdateLocationFailed) {
           if (state.failure is LocationServicesDisabledFailure) {
             await showDialog(
               context: context,
@@ -178,7 +182,7 @@ class _SetLocationViewState extends State<SetLocationView>
                       ),
                     ),
                   ),
-                  initialSelection: availableCitiesList.first,
+                  initialSelection: dropdownValue,
                   onSelected: (String? value) {
                     // This is called when the user selects an item.
                     setState(() {

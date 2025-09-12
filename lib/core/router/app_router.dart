@@ -65,7 +65,8 @@ class AppRouter {
           ),
         );
       case setLocation:
-        return MaterialPageRoute(builder: (_) => SetLocationView());
+        final args = routeSettings.arguments as Map<String, dynamic>;
+        return MaterialPageRoute(builder: (_) => SetLocationView(previousCity: args['previousCity']));
       //products
       case menuItemDetails:
         return MaterialPageRoute(builder: (_) => MenuItemDetailsView());
