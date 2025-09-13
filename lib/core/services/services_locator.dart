@@ -101,7 +101,7 @@ Future<void> init() async {
     () => UserRemoteDataSourceImpl(),
   );
   sl.registerLazySingleton<UserLocalDataSource>(
-    () => UserLocalDataSourceImpl(sharedPreferences: sl(), secureStorage: sl()),
+    () => UserLocalDataSourceImpl(sharedPreferences: sl()),
   );
 
   ///***********************************************

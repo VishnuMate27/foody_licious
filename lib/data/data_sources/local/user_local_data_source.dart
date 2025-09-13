@@ -16,16 +16,14 @@ abstract class UserLocalDataSource {
 const cachedUser = 'USER';
 
 class UserLocalDataSourceImpl implements UserLocalDataSource {
-  final FlutterSecureStorage secureStorage;
   final SharedPreferences sharedPreferences;
   UserLocalDataSourceImpl(
-      {required this.sharedPreferences, required this.secureStorage});
+      {required this.sharedPreferences});
 
 
   @override
   Future<UserModel> getUser() async {
     if (sharedPreferences.getBool('first_run') ?? true) {
-      await secureStorage.deleteAll();
       sharedPreferences.setBool('first_run', false);
     }
     final jsonString = sharedPreferences.getString(cachedUser);

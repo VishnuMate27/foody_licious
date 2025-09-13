@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:foody_licious/core/error/failures.dart';
+import 'package:foody_licious/core/usecase/usecase.dart';
 import 'package:foody_licious/domain/usecase/user/check_user_usecase.dart';
 import 'package:foody_licious/domain/usecase/user/delete_user_usecase.dart';
 import 'package:foody_licious/domain/usecase/user/update_user_location_usecase.dart';
@@ -25,7 +26,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   void _checkUser(CheckUser event, Emitter<UserState> emit) async {
     try {
       emit(UserLoading());
-      final result = await _checkUserUseCase(event);
+      final result = await _checkUserUseCase(NoParams());
       result.fold(
         (failure) => emit(UserUnauthenticated(failure)),
         (user) => emit(UserAuthenticated(user)),

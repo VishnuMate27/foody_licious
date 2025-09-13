@@ -35,7 +35,7 @@ class UserModel extends User {
       'email': email,
       'phone': phone,
       'authProvider': authProvider,
-      'address': address!.toJson(),
+      'address': address != null ? (address as AddressModel).toJson() : null,
       'orderHistory': orderHistory,
     };
   }
