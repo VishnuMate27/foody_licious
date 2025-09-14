@@ -1,6 +1,6 @@
 import 'package:foody_licious/domain/entities/user/user.dart';
 import 'package:flutter_test/flutter_test.dart';
-import '../../../fixture/constant_objects.dart';
+import '../../../fixtures/constant_objects.dart';
 
 
 void main() {

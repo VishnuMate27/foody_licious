@@ -6,7 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:foody_licious/domain/usecase/user/check_user_usecase.dart';
 import 'package:mocktail/mocktail.dart';
 
-import '../../../fixture/constant_objects.dart';
+import '../../../fixtures/constant_objects.dart';
 
 
 class MockRepository extends Mock implements UserRepository {}

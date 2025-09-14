@@ -6,8 +6,7 @@ import 'package:foody_licious/data/data_sources/remote/user_remote_data_source.d
 import 'package:foody_licious/data/repositories/user_repository_impl.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-
-import '../../fixture/constant_objects.dart';
+import '../../fixtures/constant_objects.dart';
 
 class MockRemoteDataSource extends Mock implements UserRemoteDataSource {}
 

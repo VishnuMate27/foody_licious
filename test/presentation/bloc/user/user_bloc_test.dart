@@ -13,7 +13,7 @@ import 'package:foody_licious/presentation/bloc/user/user_state.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import '../../../fixture/constant_objects.dart';
+import '../../../fixtures/constant_objects.dart';
 
 class MockCheckUserUseCase extends Mock implements CheckUserUseCase {}
 

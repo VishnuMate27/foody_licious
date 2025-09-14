@@ -8,7 +8,7 @@ import 'package:foody_licious/data/models/user/user_response_model.dart';
 import 'package:foody_licious/domain/entities/user/user.dart';
 import 'package:foody_licious/domain/usecase/user/update_user_usecase.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:http/http.dart' as client;
+import 'package:http/http.dart' as http;
 import 'package:permission_handler/permission_handler.dart';
 
 abstract class UserRemoteDataSource {
@@ -19,8 +19,9 @@ abstract class UserRemoteDataSource {
 }
 
 class UserRemoteDataSourceImpl extends UserRemoteDataSource {
+  final http.Client client;
   User? user;
-  UserRemoteDataSourceImpl();
+  UserRemoteDataSourceImpl({required this.client});
 
   // @override
   // User checkUser() {
