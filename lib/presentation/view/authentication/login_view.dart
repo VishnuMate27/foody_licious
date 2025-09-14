@@ -58,6 +58,9 @@ class _LoginViewState extends State<LoginView> {
           Navigator.of(context).pushNamedAndRemoveUntil(
             AppRouter.setLocation,
             (Route<dynamic> route) => false,
+            arguments: {
+              'previousCity': state.user.address?.city,
+            },
           );
         } else if (state is AuthSignInWithEmailFailed) {
           EasyLoading.showError(
@@ -78,11 +81,21 @@ class _LoginViewState extends State<LoginView> {
               defaultMessage: "Failed to send verification SMS!",
             ),
           );
-        } else if (state is AuthGoogleSignInSuccess ||
-            state is AuthFacebookSignInSuccess) {
+        } else if (state is AuthGoogleSignInSuccess) {
           Navigator.of(context).pushNamedAndRemoveUntil(
             AppRouter.setLocation,
             (Route<dynamic> route) => false,
+            arguments: {
+              'previousCity': state.user.address?.city,
+            },
+          );
+        } else if (state is AuthFacebookSignInSuccess) {
+          Navigator.of(context).pushNamedAndRemoveUntil(
+            AppRouter.setLocation,
+            (Route<dynamic> route) => false,
+            arguments: {
+              'previousCity': state.user.address?.city,
+            },
           );
         } else if (state is AuthPasswordResetEmailSent) {
           EasyLoading.showToast("Password Reset Email Sent!");

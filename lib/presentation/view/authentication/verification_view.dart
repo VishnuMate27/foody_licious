@@ -125,6 +125,9 @@ class _VerificationViewState extends State<VerificationView>
         Navigator.of(context).pushNamedAndRemoveUntil(
           AppRouter.setLocation,
           (Route<dynamic> route) => false,
+               arguments: {
+              'previousCity': state.user.address?.city,
+            },
         );
       } else if (state is AuthPhoneVerificationForLoginFailed) {
         EasyLoading.showError(

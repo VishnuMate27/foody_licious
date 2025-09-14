@@ -208,6 +208,13 @@ class AuthLoggedOut extends AuthState {
   List<Object> get props => [];
 }
 
+class AuthLoggedOutFailed extends AuthState {
+  final Failure failure;
+  AuthLoggedOutFailed(this.failure);
+  @override
+  List<Object> get props => [];
+}
+
 class InputValidationState extends AuthState {
   final bool isEmail;
   final bool isPhone;

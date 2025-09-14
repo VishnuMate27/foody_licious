@@ -12,6 +12,7 @@ import 'package:foody_licious/domain/usecase/auth/sign_in_with_email_usecase.dar
 import 'package:foody_licious/domain/usecase/auth/sign_in_with_facebook.dart';
 import 'package:foody_licious/domain/usecase/auth/sign_in_with_google_usecase.dart';
 import 'package:foody_licious/domain/usecase/auth/sign_in_with_phone_usecase.dart';
+import 'package:foody_licious/domain/usecase/auth/sign_out_usecase.dart';
 import 'package:foody_licious/domain/usecase/auth/sign_up_with_email_usecase.dart';
 import 'package:foody_licious/domain/usecase/auth/sign_up_with_facebook_usecase.dart';
 import 'package:foody_licious/domain/usecase/auth/sign_up_with_google_usecase.dart';
@@ -41,6 +42,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final SignUpWithPhoneUseCase _signUpWithPhoneUseCase;
   final SignUpWithGoogleUseCase _signUpWithGoogleUseCase;
   final SignUpWithFacebookUseCase _signUpWithFacebookUseCase;
+  final SignOutUseCase _signOutUseCase;
   AuthBloc(
     this._signInWithEmailUseCase,
     this._verifyPhoneNumberForLoginUseCase,
@@ -55,6 +57,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     this._signUpWithPhoneUseCase,
     this._signUpWithGoogleUseCase,
     this._signUpWithFacebookUseCase,
+    this._signOutUseCase,
   ) : super(AuthInitial()) {
     on<AuthSignInWithEmail>(_onSignInWithEmail);
     on<AuthVerifyPhoneNumberForLogin>(_onVerifyPhoneNumberForLogin);
@@ -271,7 +274,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   void _onSignOut(AuthSignOut event, Emitter<AuthState> emit) async {
     try {
       emit(AuthLoading());
-      // await _signOutUseCase(NoParams());
+      await _signOutUseCase(NoParams());
       emit(AuthLoggedOut());
     } catch (e) {
       emit(AuthLoggedFail(ExceptionFailure()));

@@ -28,4 +28,5 @@ abstract class AuthRepository {
   Future<Either<Failure, User>> signUpWithPhone(SignUpWithPhoneParams params);
   Future<Either<Failure, User>> signUpWithGoogle();
   Future<Either<Failure, User>> signUpWithFacebook();
+  Future<Either<Failure, Unit>> signOut();
 }

@@ -14,6 +14,7 @@ class InputTextFormField extends StatefulWidget {
   final IconData? prefixIconData;
   final int? minLines;
   final int? maxLines;
+  final bool readOnly;
   final TextInputType? keyboardType;
   final String? validatorText;
   final bool obscureText; // initial value
@@ -30,6 +31,7 @@ class InputTextFormField extends StatefulWidget {
     this.prefixIconData,
     this.minLines,
     this.maxLines,
+    this.readOnly = false,
     this.keyboardType = TextInputType.text,
     this.validatorText = "This field cannot be empty.",
     this.obscureText = false,
@@ -58,6 +60,7 @@ class _InputTextFormFieldState extends State<InputTextFormField> {
       keyboardType: widget.keyboardType,
       obscureText: _obscure,
       onChanged: widget.onChanged,
+      readOnly: widget.readOnly,
       decoration: InputDecoration(
         fillColor: const Color.fromARGB(255, 49, 42, 42),
         labelText: widget.labelText,

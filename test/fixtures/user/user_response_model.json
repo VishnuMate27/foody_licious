@@ -1,0 +1,21 @@
+{
+    "message": "Profile updated successfully",
+    "user": {
+        "id": "RcrNpesIeKSd3afH67ndyDLUaMJ3",
+        "email": "meflutterdev@gmail.com",
+        "name": "Flutter Dev",
+        "phone": "",
+        "authProvider": "google",
+        "address": {
+            "addressText": "23, Shriniwas building, Ganesh Nagar, Nagpur",
+            "city": "Nagpur",
+            "coordinates": {
+                "type": "Point",
+                "coordinates": [
+                    30.0,
+                    40.0
+                ]
+            }
+        }
+    }
+}

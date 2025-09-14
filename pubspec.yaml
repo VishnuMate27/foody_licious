@@ -55,6 +55,10 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^5.0.0
 
+  # test
+  mocktail: ^0.3.0
+  bloc_test: ^9.1.4  
+
 flutter:
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
