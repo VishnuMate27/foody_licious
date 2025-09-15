@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:foody_licious/core/error/exceptions.dart';
 import 'package:foody_licious/core/error/failures.dart';
 import 'package:foody_licious/core/network/network_info.dart';
 import 'package:foody_licious/data/data_sources/local/user_local_data_source.dart';
@@ -51,34 +52,98 @@ void main() {
     });
   }
 
-  group('checkUser', () {
+  runTestsOnline(() {
+    group('updateUser', () {
+      test(
+          'should return Right(User) when remoteDataSource.updateUser succeeds',
+          () async {
+        // arrange
+        when(() => mockLocalDataSource.getUser())
+            .thenAnswer((_) async => tUserModel);
+        when(() => mockRemoteDataSource.updateUser(tUpdateUserParams))
+            .thenAnswer((_) async => tUserResponseModel);
+        when(() => mockLocalDataSource.saveUser(tUserModel))
+            .thenAnswer((_) async {});
 
-    test('should return Right(User) when localDataSource.getUser succeeds',
-        () async {
-      // arrange
-      when(() => mockLocalDataSource.getUser()).thenAnswer((_) async => tUserModel);
+        // act
+        final result = await repository.updateUser(tUpdateUserParams);
 
-      // act
-      final result = await repository.checkUser();
+        // assert
+        verify(() => mockLocalDataSource.getUser()).called(1);
+        verify(() => mockRemoteDataSource.updateUser(tUpdateUserParams))
+            .called(1);
+        verify(() => mockLocalDataSource.saveUser(tUserModel)).called(1);
+        expect(result, Right(tUserModel));
+      });
 
-      // assert
-      verify(() => mockLocalDataSource.getUser()).called(1);
-      expect(result, Right(tUserModel));
+      test(
+          'should return Left(Failure) when remoteDataSource.updateUser throws CredentialFailure',
+          () async {
+        // arrange
+        when(() => mockLocalDataSource.getUser())
+            .thenAnswer((_) async => tUserModel);
+        when(() => mockRemoteDataSource.updateUser(tUpdateUserParams))
+            .thenThrow(CredentialFailure());
+
+        // act
+        final result = await repository.updateUser(tUpdateUserParams);
+
+        // assert
+        verify(() => mockRemoteDataSource.updateUser(tUpdateUserParams))
+            .called(1);
+        expect(result, Left(CredentialFailure()));
+      });
+
+      test(
+          'should return Left(Failure) when remoteDataSource.updateUser throws ServerFailure',
+          () async {
+        // arrange
+        when(() => mockLocalDataSource.getUser())
+            .thenAnswer((_) async => tUserModel);
+        when(() => mockRemoteDataSource.updateUser(tUpdateUserParams))
+            .thenThrow(ServerFailure());
+
+        // act
+        final result = await repository.updateUser(tUpdateUserParams);
+
+        // assert
+        verify(() => mockRemoteDataSource.updateUser(tUpdateUserParams))
+            .called(1);
+        expect(result, Left(ServerFailure()));
+      });
     });
+  });
 
-    test(
-        'should return Left(Failure) when localDataSource.getUser throws Failure',
-        () async {
-      // arrange
-      final tFailure = CacheFailure();
-      when(() => mockLocalDataSource.getUser()).thenThrow(tFailure);
+  runTestsOffline(() {
+    group('checkUser', () {
+      test('should return Right(User) when localDataSource.getUser succeeds',
+          () async {
+        // arrange
+        when(() => mockLocalDataSource.getUser())
+            .thenAnswer((_) async => tUserModel);
 
-      // act
-      final result = await repository.checkUser();
+        // act
+        final result = await repository.checkUser();
 
-      // assert
-      verify(() => mockLocalDataSource.getUser()).called(1);
-      expect(result, Left(tFailure));
+        // assert
+        verify(() => mockLocalDataSource.getUser()).called(1);
+        expect(result, Right(tUserModel));
+      });
+
+      test(
+          'should return Left(Failure) when localDataSource.getUser throws Failure',
+          () async {
+        // arrange
+        final tFailure = CacheFailure();
+        when(() => mockLocalDataSource.getUser()).thenThrow(tFailure);
+
+        // act
+        final result = await repository.checkUser();
+
+        // assert
+        verify(() => mockLocalDataSource.getUser()).called(1);
+        expect(result, Left(tFailure));
+      });
     });
   });
 }

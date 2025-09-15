@@ -1,5 +1,7 @@
 import 'package:foody_licious/data/models/user/authentication_response_model.dart';
 import 'package:foody_licious/data/models/user/user_model.dart';
+import 'package:foody_licious/data/models/user/user_response_model.dart';
+import 'package:foody_licious/domain/usecase/user/update_user_usecase.dart';
 
 //user
 const tUserModel = UserModel(
@@ -17,10 +19,8 @@ const tUserModel = UserModel(
 
 const tAuthenticationResponseModel =
     AuthenticationResponseModel(user: tUserModel);
-// //params
-// const tSignInParams = SignInParams(username: 'username', password: 'password');
-// const tSignUpParams = SignUpParams(
-//     firstName: 'firstName',
-//     lastName: 'lastName',
-//     email: 'email',
-//     password: 'password');
+const tUserResponseModel =
+    UserResponseModel(user: tUserModel);
+
+//params
+var tUpdateUserParams = UpdateUserParams(id: "RcrNpesIeKSd3afH67ndyDLUaMJ3", name: "Test Name", phone: "+919876543210");
