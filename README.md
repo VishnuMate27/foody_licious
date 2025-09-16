@@ -1,7 +1,7 @@
 # 🍔 Foody Licious App  
 
-[![Flutter](https://img.shields.io/badge/Flutter-3.x-blue?logo=flutter)](https://flutter.dev)  
-[![Dart](https://img.shields.io/badge/Dart-3.x-blue?logo=dart)](https://dart.dev)  
+[![Flutter](https://img.shields.io/badge/Flutter-3.29.3-blue?logo=flutter)](https://flutter.dev)  
+[![Dart](https://img.shields.io/badge/Dart-3.7.2-blue?logo=dart)](https://dart.dev)  
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)  
 [![Build](https://github.com/VishnuMate27/foody_licious/actions/workflows/main.yml/badge.svg)](https://github.com/VishnuMate27/foody_licious/actions)  
 <!--[![Coverage](https://img.shields.io/codecov/c/github/VishnuMate27/foody_licious)](https://codecov.io/gh/VishnuMate27/foody_licious)-->
@@ -68,8 +68,8 @@ test/ # Unit & widget tests
 ## 🚀 Getting Started  
 
 ### Prerequisites  
-- [Flutter SDK](https://docs.flutter.dev/get-started/install) (latest stable)  
-- Dart ≥ 3.0  
+- [Flutter SDK](https://docs.flutter.dev/get-started/install) 3.29.3  
+- Dart ≥ 3.7.2  
 - Android Studio / VS Code  
 - Firebase Project setup  
 
@@ -96,15 +96,15 @@ flutter test
 flutter test --coverage
 ```
 
-###🔑 Environment Variables
+### 🔑 Environment Variables
 The app uses dotenv for environment configuration.
 Create a .env file in the project root:
 ```bash
-BASE_URL=http://your-api-url
-API_KEY=your_api_key
+BASE_URL = "http://your-api-url"
+SERVER_CLIENT_ID = "your_api_key"
 ```
 
-###🤝 Contributing
+### 🤝 Contributing
 
 Contributions are welcome! 🎉
 
