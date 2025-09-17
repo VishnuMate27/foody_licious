@@ -58,10 +58,9 @@ void main() {
         return userBloc;
       },
       act: (bloc) => bloc.add(CheckUser()),
-      expect: () =>
-          [UserLoading(), UserAuthenticated(tUserModel)],
+      expect: () => [UserLoading(), UserAuthenticated(tUserModel)],
     );
-    
+
     blocTest<UserBloc, UserState>(
       'emits [UserLoading, UserUnauthenticated] on CheckUser error',
       build: () {
@@ -73,16 +72,49 @@ void main() {
       expect: () => [UserLoading(), UserUnauthenticated(CacheFailure())],
     );
 
-    // blocTest<UserBloc, UserState>(
-    //   'emits [UserLoading, UserLoggedOut] when SignOutUser is added',
-    //   build: () {
-    //     when(() => mockSignOutUseCase(NoParams()))
-    //         .thenAnswer((_) async => Right(NoParams()));
-    //     return userBloc;
-    //   },
-    //   act: (bloc) => bloc.add(SignOutUser()),
-    //   expect: () => [UserLoading(), UserLoggedOut()],
-    // );
+    blocTest<UserBloc, UserState>(
+      'emits [UserLoading, UserUpdateSuccess] when UpdateUser is added',
+      build: () {
+        when(() => mockUpdateUserUseCase(tUpdateUserParams))
+            .thenAnswer((_) async => Right(tUserModel));
+        return userBloc;
+      },
+      act: (bloc) => bloc.add(UpdateUser(tUpdateUserParams)),
+      expect: () => [UserLoading(), UserUpdateSuccess(tUserModel)],
+    );
+
+    blocTest<UserBloc, UserState>(
+      'emits [UserLoading, UserUpdateFailure] when UpdateUser is added',
+      build: () {
+        when(() => mockUpdateUserUseCase(tUpdateUserParams))
+            .thenAnswer((_) async => Left(NetworkFailure()));
+        return userBloc;
+      },
+      act: (bloc) => bloc.add(UpdateUser(tUpdateUserParams)),
+      expect: () => [UserLoading(), UserUpdateFailed(NetworkFailure())],
+    );
+
+    blocTest<UserBloc, UserState>(
+      'emits [UserLoading, UserUpdateFailure] when UpdateUser is added',
+      build: () {
+        when(() => mockUpdateUserUseCase(tUpdateUserParams))
+            .thenAnswer((_) async => Left(CredentialFailure()));
+        return userBloc;
+      },
+      act: (bloc) => bloc.add(UpdateUser(tUpdateUserParams)),
+      expect: () => [UserLoading(), UserUpdateFailed(CredentialFailure())],
+    );
+
+    blocTest<UserBloc, UserState>(
+      'emits [UserLoading, UserUpdateFailure] when UpdateUser is added',
+      build: () {
+        when(() => mockUpdateUserUseCase(tUpdateUserParams))
+            .thenAnswer((_) async => Left(ServerFailure()));
+        return userBloc;
+      },
+      act: (bloc) => bloc.add(UpdateUser(tUpdateUserParams)),
+      expect: () => [UserLoading(), UserUpdateFailed(ServerFailure())],
+    );
 
     // blocTest<UserBloc, UserState>(
     //   'emits [UserLoading, UserLogged] when SignUpUser is added',
