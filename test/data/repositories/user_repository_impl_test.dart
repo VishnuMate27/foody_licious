@@ -112,6 +112,66 @@ void main() {
         expect(result, Left(ServerFailure()));
       });
     });
+
+    group('updateUserLocation', () {
+      test(
+          'should return Right(User) when remoteDataSource.updateUserLocation succeeds',
+          () async {
+        // arrange
+        when(() => mockLocalDataSource.getUser())
+            .thenAnswer((_) async => tUserModel);
+        when(() => mockRemoteDataSource.updateUserLocation(tUserModel.id))
+            .thenAnswer((_) async => tUserResponseModel);
+        when(() => mockLocalDataSource.saveUser(tUserModel))
+            .thenAnswer((_) async {});
+
+        // act
+        final result = await repository.updateUserLocation();
+
+        // assert
+        verify(() => mockLocalDataSource.getUser()).called(1);
+        verify(() => mockRemoteDataSource.updateUserLocation(tUserModel.id))
+            .called(1);
+        verify(() => mockLocalDataSource.saveUser(tUserModel)).called(1);
+        expect(result, Right(tUserModel));
+      });
+
+      test(
+          'should return Left(Failure) when remoteDataSource.updateUserLocation throws CredentialFailure',
+          () async {
+        // arrange
+        when(() => mockLocalDataSource.getUser())
+            .thenAnswer((_) async => tUserModel);
+        when(() => mockRemoteDataSource.updateUserLocation(tUserModel.id))
+            .thenThrow(CredentialFailure());
+
+        // act
+        final result = await repository.updateUserLocation();
+
+        // assert
+        verify(() => mockRemoteDataSource.updateUserLocation(tUserModel.id))
+            .called(1);
+        expect(result, Left(CredentialFailure()));
+      });
+
+      test(
+          'should return Left(Failure) when remoteDataSource.updateUserLocation throws ServerFailure',
+          () async {
+        // arrange
+        when(() => mockLocalDataSource.getUser())
+            .thenAnswer((_) async => tUserModel);
+        when(() => mockRemoteDataSource.updateUserLocation(tUserModel.id))
+            .thenThrow(ServerFailure());
+
+        // act
+        final result = await repository.updateUserLocation();
+
+        // assert
+        verify(() => mockRemoteDataSource.updateUserLocation(tUserModel.id))
+            .called(1);
+        expect(result, Left(ServerFailure()));
+      });
+    });
   });
 
   runTestsOffline(() {

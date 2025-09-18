@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:foody_licious/core/constant/strings.dart';
 import 'package:foody_licious/core/error/failures.dart';
 import 'package:foody_licious/data/models/user/user_response_model.dart';
+import 'package:foody_licious/data/services/location_service.dart';
 import 'package:foody_licious/domain/entities/user/user.dart';
 import 'package:foody_licious/domain/usecase/user/update_user_usecase.dart';
 import 'package:geolocator/geolocator.dart';
@@ -20,8 +21,9 @@ abstract class UserRemoteDataSource {
 
 class UserRemoteDataSourceImpl extends UserRemoteDataSource {
   final http.Client client;
+  final LocationService locationService;
   User? user;
-  UserRemoteDataSourceImpl({required this.client});
+  UserRemoteDataSourceImpl({required this.client, required this.locationService,});
 
   // @override
   // User checkUser() {
@@ -42,9 +44,7 @@ class UserRemoteDataSourceImpl extends UserRemoteDataSource {
 
   @override
   Future<UserResponseModel> updateUserLocation(String userId) async {
-    Position position = await _determinePosition();
-    debugPrint(
-        "latitude: ${position.latitude} longitude:${position.longitude}");
+    final position = await locationService.determinePosition();
     return await _sendUpdateLocationRequest(userId, position);
   }
 

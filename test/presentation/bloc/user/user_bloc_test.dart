@@ -116,6 +116,50 @@ void main() {
       expect: () => [UserLoading(), UserUpdateFailed(ServerFailure())],
     );
 
+    blocTest<UserBloc, UserState>(
+      'emits [UserLocationUpdating, UserUpdateLocationSuccess] when UpdateUserLocation is added',
+      build: () {
+        when(() => mockUpdateUserLocationUseCase(NoParams()))
+            .thenAnswer((_) async => Right(tUserModel));
+        return userBloc;
+      },
+      act: (bloc) => bloc.add(UpdateUserLocation()),
+      expect: () => [UserLocationUpdating(), UserUpdateLocationSuccess(tUserModel)],
+    );
+
+    blocTest<UserBloc, UserState>(
+      'emits [UserLocationUpdating, UserUpdateLocationFailed] when UpdateUserLocation is added',
+      build: () {
+        when(() => mockUpdateUserLocationUseCase(tUpdateUserParams))
+            .thenAnswer((_) async => Left(NetworkFailure()));
+        return userBloc;
+      },
+      act: (bloc) => bloc.add(UpdateUserLocation()),
+      expect: () => [UserLocationUpdating(), UserUpdateLocationFailed(NetworkFailure())],
+    );
+
+    blocTest<UserBloc, UserState>(
+      'emits [UserLocationUpdating, UserUpdateLocationFailed] when UpdateUserLocation is added',
+      build: () {
+        when(() => mockUpdateUserLocationUseCase(tUpdateUserParams))
+            .thenAnswer((_) async => Left(CredentialFailure()));
+        return userBloc;
+      },
+      act: (bloc) => bloc.add(UpdateUserLocation()),
+      expect: () => [UserLocationUpdating(), UserUpdateLocationFailed(CredentialFailure())],
+    );
+
+    blocTest<UserBloc, UserState>(
+      'emits [UserLocationUpdating, UserUpdateLocationFailed] when UpdateUserLocation is added',
+      build: () {
+        when(() => mockUpdateUserLocationUseCase(tUpdateUserParams))
+            .thenAnswer((_) async => Left(ServerFailure()));
+        return userBloc;
+      },
+      act: (bloc) => bloc.add(UpdateUserLocation()),
+      expect: () => [UserLocationUpdating(), UserUpdateLocationFailed(ServerFailure())],
+    );
+
     // blocTest<UserBloc, UserState>(
     //   'emits [UserLoading, UserLogged] when SignUpUser is added',
     //   build: () {

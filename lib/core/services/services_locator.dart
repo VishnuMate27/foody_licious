@@ -3,6 +3,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:foody_licious/data/data_sources/remote/user_remote_data_source.dart';
 import 'package:foody_licious/data/repositories/user_repository_impl.dart';
+import 'package:foody_licious/data/services/location_service.dart';
 import 'package:foody_licious/domain/repositories/user_repository.dart';
 import 'package:foody_licious/domain/usecase/auth/send_password_reset_email_usecase.dart';
 import 'package:foody_licious/domain/usecase/auth/send_verification_email_usecase.dart';
@@ -82,7 +83,7 @@ Future<void> init() async {
 
   //Features - User
   // Bloc
-  sl.registerFactory(() => UserBloc(sl(), sl(), sl(),sl()));
+  sl.registerFactory(() => UserBloc(sl(), sl(), sl(), sl()));
   // Use cases
   sl.registerLazySingleton(() => CheckUserUseCase(sl()));
   sl.registerLazySingleton(() => UpdateUserLocationUseCase(sl()));
@@ -98,7 +99,7 @@ Future<void> init() async {
   );
   // Data sources
   sl.registerLazySingleton<UserRemoteDataSource>(
-    () => UserRemoteDataSourceImpl(client: sl()),
+    () => UserRemoteDataSourceImpl(client: sl(), locationService: sl()),
   );
   sl.registerLazySingleton<UserLocalDataSource>(
     () => UserLocalDataSourceImpl(sharedPreferences: sl()),
@@ -108,6 +109,7 @@ Future<void> init() async {
   ///! Core
   /// sl.registerLazySingleton(() => InputConverter());
   sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(sl()));
+  sl.registerLazySingleton<LocationService>(() => LocationServiceImpl());
 
   ///! External
   final sharedPreferences = await SharedPreferences.getInstance();

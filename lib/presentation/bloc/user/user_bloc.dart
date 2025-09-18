@@ -53,7 +53,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       UpdateUserLocation event, Emitter<UserState> emit) async {
     try {
       emit(UserLocationUpdating());
-      final result = await _updateUserLocationUseCase(event);
+      final result = await _updateUserLocationUseCase(NoParams());
       result.fold(
         (failure) => emit(UserUpdateLocationFailed(failure)),
         (user) => emit(UserUpdateLocationSuccess(user)),
