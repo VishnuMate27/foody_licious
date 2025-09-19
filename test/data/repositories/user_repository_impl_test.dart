@@ -112,7 +112,6 @@ void main() {
         expect(result, Left(ServerFailure()));
       });
     });
-
     group('updateUserLocation', () {
       test(
           'should return Right(User) when remoteDataSource.updateUserLocation succeeds',
@@ -169,6 +168,78 @@ void main() {
         // assert
         verify(() => mockRemoteDataSource.updateUserLocation(tUserModel.id))
             .called(1);
+        expect(result, Left(ServerFailure()));
+      });
+    });
+
+    group('deleteUser', () {
+      test(
+          'should return Right(Unit) when remoteDataSource.deleteUser succeeds',
+          () async {
+        when(() => mockLocalDataSource.getUser())
+            .thenAnswer((_) async => tUserModel);
+        when(() => mockRemoteDataSource.deleteUser(tUserModel.id))
+            .thenAnswer((_) async => unit);
+        when(() => mockLocalDataSource.clearCache()).thenAnswer((_) async {});
+
+        // act
+        final result = await repository.deleteUser();
+
+        // assert
+        verify(() => mockLocalDataSource.getUser()).called(1);
+        verify(() => mockRemoteDataSource.deleteUser(tUserModel.id)).called(1);
+        verify(() => mockLocalDataSource.clearCache()).called(1);
+        expect(result, Right(unit));
+      });
+
+      test(
+          'should return Left(Failure) when remoteDataSource.deleteUser throws CredentialFailure',
+          () async {
+        // arrange
+        when(() => mockLocalDataSource.getUser())
+            .thenAnswer((_) async => tUserModel);
+        when(() => mockRemoteDataSource.deleteUser(tUserModel.id))
+            .thenThrow(CredentialFailure());
+
+        // act
+        final result = await repository.deleteUser();
+
+        // assert
+        verify(() => mockRemoteDataSource.deleteUser(tUserModel.id)).called(1);
+        expect(result, Left(CredentialFailure()));
+      });
+
+      test(
+          'should return Left(Failure) when remoteDataSource.deleteUser throws UserNotExistsFailure',
+          () async {
+        // arrange
+        when(() => mockLocalDataSource.getUser())
+            .thenAnswer((_) async => tUserModel);
+        when(() => mockRemoteDataSource.deleteUser(tUserModel.id))
+            .thenThrow(UserNotExistsFailure());
+
+        // act
+        final result = await repository.deleteUser();
+
+        // assert
+        verify(() => mockRemoteDataSource.deleteUser(tUserModel.id)).called(1);
+        expect(result, Left(UserNotExistsFailure()));
+      });
+
+      test(
+          'should return Left(Failure) when remoteDataSource.deleteUser throws ServerFailure',
+          () async {
+        // arrange
+        when(() => mockLocalDataSource.getUser())
+            .thenAnswer((_) async => tUserModel);
+        when(() => mockRemoteDataSource.deleteUser(tUserModel.id))
+            .thenThrow(ServerFailure());
+
+        // act
+        final result = await repository.deleteUser();
+
+        // assert
+        verify(() => mockRemoteDataSource.deleteUser(tUserModel.id)).called(1);
         expect(result, Left(ServerFailure()));
       });
     });

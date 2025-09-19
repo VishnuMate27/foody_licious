@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foody_licious/core/constant/strings.dart';
 import 'package:foody_licious/core/error/failures.dart';
@@ -181,6 +182,76 @@ void main() {
 
       expect(
         () async => await dataSource.updateUserLocation(userId),
+        throwsA(isA<ServerFailure>()),
+      );
+    });
+  });
+
+  group('deleteUser', () {
+    String userId = "RcrNpesIeKSd3afH67ndyDLUaMJ3";
+    var expectedUrl = '$kBaseUrlTest/api/users/delete_user';
+
+    test('should perform a POST request to correct URL with params', () async {
+      final fakeParams = {
+        "id": userId,
+      };
+
+      when(() => mockHttpClient.post(
+            Uri.parse('$kBaseUrl/api/users/delete_user'),
+            headers: {'Content-Type': 'application/json'},
+            body: jsonEncode(fakeParams),
+            encoding: any(named: 'encoding'),
+          )).thenAnswer((_) async => http.Response("Response", 200));
+
+      final result = await dataSource.deleteUser(userId);
+
+      verify(() => mockHttpClient.post(
+            Uri.parse('$kBaseUrl/api/users/delete_user'),
+            headers: {'Content-Type': 'application/json'},
+            body: jsonEncode(fakeParams),
+            encoding: null,
+          ));
+      expect(result, isA<Unit>());
+    });
+
+    test('should throw CredentialFailure on 400 or 401', () async {
+      when(() => mockHttpClient.post(
+            any(),
+            headers: any(named: 'headers'),
+            body: any(named: 'body'),
+            encoding: any(named: 'encoding'),
+          )).thenAnswer((_) async => http.Response('Error', 400));
+
+      expect(
+        () async => await dataSource.deleteUser(userId),
+        throwsA(isA<CredentialFailure>()),
+      );
+    });
+
+    test('should throw UserNotExistsFailure on 404', () async {
+      when(() => mockHttpClient.post(
+            any(),
+            headers: any(named: 'headers'),
+            body: any(named: 'body'),
+            encoding: any(named: 'encoding'),
+          )).thenAnswer((_) async => http.Response('Error', 404));
+
+      expect(
+        () async => await dataSource.deleteUser(userId),
+        throwsA(isA<UserNotExistsFailure>()),
+      );
+    });
+
+    test('should throw ServerFailure on non-200 other than 400/401', () async {
+      when(() => mockHttpClient.post(
+            any(),
+            headers: any(named: 'headers'),
+            body: any(named: 'body'),
+            encoding: any(named: 'encoding'),
+          )).thenAnswer((_) async => http.Response('Error', 500));
+
+      expect(
+        () async => await dataSource.deleteUser(userId),
         throwsA(isA<ServerFailure>()),
       );
     });
