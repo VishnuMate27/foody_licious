@@ -1,0 +1,22 @@
+{
+    "message": "Login successful",
+    "user": {
+        "id": "Gt3AucqBoqPCefkNRsHxjtBYcSq2",
+        "email": "vishnu2002mate@gmail.com",
+        "name": "Vishnu Email",
+        "phone": "",
+        "authProvider": "email",
+        "address": {
+            "addressText": "",
+            "city": "Mumbai",
+            "coordinates": {
+                "type": "Point",
+                "coordinates": [
+                    20.7435668,
+                    78.628026
+                ]
+            }
+        },
+        "last_login_at": "2025-09-20T10:24:48.870000Z"
+    }
+}

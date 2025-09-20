@@ -11,6 +11,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:mocktail/mocktail.dart';
 
+import '../../../fixtures/constant_objects.dart';
 import '../../../fixtures/fixture_reader.dart';
 import '../../../helpers/test_loadenv.dart';
 
@@ -55,11 +56,6 @@ void main() {
   });
 
   group('updateUser', () {
-    var fakeParams = UpdateUserParams(
-      id: 'RcrNpesIeKSd3afH67ndyDLUaMJ3',
-      name: 'Test Name',
-      phone: '+919876543210',
-    );
     var expectedUrl = '$kBaseUrlTest/api/users/profile';
     final fakeResponse = fixture('user/user_response_model.json');
 
@@ -73,13 +69,13 @@ void main() {
           )).thenAnswer((_) async => http.Response(fakeResponse, 200));
 
       /// Act
-      final result = await dataSource.updateUser(fakeParams);
+      final result = await dataSource.updateUser(tUpdateUserParams);
 
       /// Assert
       verify(() => mockHttpClient.put(
             any(),
             headers: {'Content-Type': 'application/json'},
-            body: jsonEncode(fakeParams.toJson()),
+            body: jsonEncode(tUpdateUserParams.toJson()),
             encoding: null,
           ));
       expect(result, isA<UserResponseModel>());
@@ -96,7 +92,7 @@ void main() {
 
       /// Act & Assert
       expect(
-        () async => await dataSource.updateUser(fakeParams),
+        () async => await dataSource.updateUser(tUpdateUserParams),
         throwsA(isA<CredentialFailure>()),
       );
     });
@@ -112,7 +108,7 @@ void main() {
 
       /// Act & Assert
       expect(
-        () async => await dataSource.updateUser(fakeParams),
+        () async => await dataSource.updateUser(tUpdateUserParams),
         throwsA(isA<ServerFailure>()),
       );
     });

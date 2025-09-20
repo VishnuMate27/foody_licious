@@ -1,6 +1,8 @@
 import 'package:foody_licious/data/models/user/authentication_response_model.dart';
 import 'package:foody_licious/data/models/user/user_model.dart';
 import 'package:foody_licious/data/models/user/user_response_model.dart';
+import 'package:foody_licious/domain/usecase/auth/sign_in_with_email_usecase.dart';
+import 'package:foody_licious/domain/usecase/auth/sign_in_with_phone_usecase.dart';
 import 'package:foody_licious/domain/usecase/user/update_user_usecase.dart';
 
 //user
@@ -19,8 +21,16 @@ const tUserModel = UserModel(
 
 const tAuthenticationResponseModel =
     AuthenticationResponseModel(user: tUserModel);
-const tUserResponseModel =
-    UserResponseModel(user: tUserModel);
+const tUserResponseModel = UserResponseModel(user: tUserModel);
 
 //params
-var tUpdateUserParams = UpdateUserParams(id: "RcrNpesIeKSd3afH67ndyDLUaMJ3", name: "Test Name", phone: "+919876543210");
+//User
+var tUpdateUserParams = UpdateUserParams(
+    id: "RcrNpesIeKSd3afH67ndyDLUaMJ3",
+    name: "Test Name",
+    phone: "+919876543210");
+//Auth
+var tSignInWithEmailParams = SignInWithEmailParams(
+    email: "test@gmail.com", password: "testPassword", authProvider: "email");
+var tSignInWithPhoneParams = SignInWithPhoneParams(
+    phone: "+9198796543210", code: "1234", authProvider: "phone");
