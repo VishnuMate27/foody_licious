@@ -536,4 +536,263 @@ void main() {
       expect(() => call(), throwsA(isA<ExceptionFailure>()));
     });
   });
+
+  group('sendPasswordResetEmail', () {
+    test('should send password reset email and return unit', () async {
+      // Arrange
+      when(() => mockFirebaseAuth.sendPasswordResetEmail(
+              email: tSendPasswordResetEmailParams.email))
+          .thenAnswer((_) => Future.value(unit));
+
+      // Act
+      final result = await dataSource
+          .sendPasswordResetEmail(tSendPasswordResetEmailParams);
+
+      // Assert
+      expect(result, isA<Unit>());
+      verify(() => mockFirebaseAuth.sendPasswordResetEmail(
+          email: tSendPasswordResetEmailParams.email)).called(1);
+      verifyNoMoreInteractions(mockFirebaseAuth);
+    });
+
+    test(
+        'should throw UserNotExistsFailure when FirebaseAuthException is thrown with code = user-not-found',
+        () async {
+      // Arrange
+      when(() => mockFirebaseAuth.sendPasswordResetEmail(
+              email: tSendPasswordResetEmailParams.email))
+          .thenThrow(FirebaseAuthException(code: 'user-not-found'));
+
+      // Act
+      final call =
+          dataSource.sendPasswordResetEmail(tSendPasswordResetEmailParams);
+
+      // Assert
+      expect(() => call, throwsA(isA<UserNotExistsFailure>()));
+    });
+
+    test(
+        'should throw AuthenticationFailure when FirebaseAuthException with other code',
+        () async {
+      // arrange
+      when(() => mockFirebaseAuth.sendPasswordResetEmail(
+              email: tSendPasswordResetEmailParams.email))
+          .thenThrow(FirebaseAuthException(
+        code: 'invalid-email',
+        message: 'Invalid email',
+      ));
+
+      // act
+      final call =
+          dataSource.sendPasswordResetEmail(tSendPasswordResetEmailParams);
+
+      // assert
+      expect(
+          () => call,
+          throwsA(isA<AuthenticationFailure>()
+              .having((f) => f.failureMessage, 'message', 'Invalid email')));
+    });
+
+    test('should throw AuthenticationFailure when unknown exception occurs',
+        () async {
+      // arrange
+      when(() => mockFirebaseAuth.sendPasswordResetEmail(
+              email: tSendPasswordResetEmailParams.email))
+          .thenThrow(Exception('Some random error'));
+
+      // act
+      final call =
+          dataSource.sendPasswordResetEmail(tSendPasswordResetEmailParams);
+
+      // assert
+      expect(
+          () => call,
+          throwsA(isA<AuthenticationFailure>().having((f) => f.failureMessage,
+              'message', contains('Some random error'))));
+    });
+  });
+
+  group('signUpWithEmail', () {
+    final mockUser = MockUser();
+    final mockUserCredential = MockUserCredential();
+
+    setUp(() {
+      when(() => mockUser.uid).thenReturn('123');
+      when(() => mockUser.email).thenReturn(tSignInWithEmailParams.email);
+      when(() => mockUser.phoneNumber).thenReturn('+919876543210');
+      when(() => mockUserCredential.user).thenReturn(mockUser);
+      when(() => mockFirebaseAuth.createUserWithEmailAndPassword(
+            email: tSignInWithEmailParams.email,
+            password: tSignInWithEmailParams.password,
+          )).thenAnswer((_) async => mockUserCredential);
+    });
+
+    test('should perform a POST request to correct URL with params', () async {
+      // Arrange
+      final fakeResponse = fixture('auth/authentication_response_model.json');
+
+      when(() => mockHttpClient.post(
+            Uri.parse('$kBaseUrlTest/api/auth/register'),
+            headers: {'Content-Type': 'application/json'},
+            body: any(named: 'body'),
+          )).thenAnswer((_) async => http.Response(fakeResponse, 201));
+
+      // Act
+      final result = await dataSource.signUpWithEmail(tSignUpWithEmailParams);
+
+      // Assert
+      verify(() => mockHttpClient.post(
+            Uri.parse('$kBaseUrlTest/api/auth/register'),
+            headers: {'Content-Type': 'application/json'},
+            body: jsonEncode({
+              "email": tSignUpWithEmailParams.email,
+              "id": "123",
+              "name": tSignUpWithEmailParams.name,
+              "phone": "+919876543210",
+              "authProvider": tSignUpWithEmailParams.authProvider,
+            }),
+          ));
+      expect(result, isA<AuthenticationResponseModel>());
+    });
+
+    test('should throw CredentialFailure on 400', () async {
+      // Arrange
+      when(() => mockHttpClient.post(
+            any(),
+            headers: any(named: 'headers'),
+            body: any(named: 'body'),
+          )).thenAnswer((_) async => http.Response('Error', 400));
+
+      // Act & Assert
+      expect(
+        () async => dataSource.signUpWithEmail(tSignUpWithEmailParams),
+        throwsA(isA<CredentialFailure>()),
+      );
+    });
+
+    test('should throw CredentialFailure on 401', () async {
+      // Arrange
+      when(() => mockHttpClient.post(
+            any(),
+            headers: any(named: 'headers'),
+            body: any(named: 'body'),
+          )).thenAnswer((_) async => http.Response('Error', 401));
+
+      // Act & Assert
+      expect(
+        () async => dataSource.signUpWithEmail(tSignUpWithEmailParams),
+        throwsA(isA<CredentialFailure>()),
+      );
+    });
+
+    test('should throw UserAlreadyExistsFailure on 404', () async {
+      // Arrange
+      when(() => mockHttpClient.post(
+            any(),
+            headers: any(named: 'headers'),
+            body: any(named: 'body'),
+          )).thenAnswer((_) async => http.Response('Error', 409));
+
+      // Act & Assert
+      expect(
+        () async => dataSource.signUpWithEmail(tSignUpWithEmailParams),
+        throwsA(isA<UserAlreadyExistsFailure>()),
+      );
+    });
+
+    test('should throw ServerFailure on non-200 other than 400/401/404',
+        () async {
+      // Arrange
+      when(() => mockHttpClient.post(
+            any(),
+            headers: any(named: 'headers'),
+            body: any(named: 'body'),
+          )).thenAnswer((_) async => http.Response('Error', 500));
+
+      // Act & Assert
+      expect(
+        () async => dataSource.signUpWithEmail(tSignUpWithEmailParams),
+        throwsA(isA<ServerFailure>()),
+      );
+    });
+  });
+
+  group('sendVerificationEmail', () {
+    final mockUser = MockUser();
+    test('should return unit when reload and sendEmailVerification succeed',
+        () async {
+      // arrange
+      when(() => mockFirebaseAuth.currentUser).thenReturn(mockUser);
+      when(() => mockUser.reload()).thenAnswer((_) async => Future.value());
+      when(() => mockUser.sendEmailVerification())
+          .thenAnswer((_) async => Future.value());
+
+      // act
+      final result = await dataSource.sendVerificationEmail();
+
+      // assert
+      expect(result, unit);
+      verify(() => mockFirebaseAuth.currentUser).called(1);
+      verify(() => mockUser.reload()).called(1);
+      verify(() => mockUser.sendEmailVerification()).called(1);
+    });
+
+    test('should throw UserNotExistsFailure when currentUser is null',
+        () async {
+      // arrange
+      when(() => mockFirebaseAuth.currentUser).thenReturn(null);
+
+      // act
+      final call = dataSource.sendVerificationEmail;
+
+      // assert
+      expect(() => call(), throwsA(isA<UserNotExistsFailure>()));
+    });
+
+    test(
+        'should throw TooManyRequestsFailure when FirebaseAuthException with too-many-requests code',
+        () async {
+      // arrange
+      when(() => mockFirebaseAuth.currentUser).thenReturn(mockUser);
+      when(() => mockUser.reload()).thenAnswer((_) async => Future.value());
+      when(() => mockUser.sendEmailVerification())
+          .thenThrow(FirebaseAuthException(code: 'too-many-requests'));
+
+      // act
+      final call = dataSource.sendVerificationEmail;
+
+      // assert
+      expect(() => call(), throwsA(isA<TooManyRequestsFailure>()));
+    });
+
+    test(
+        'should throw ServerFailure when FirebaseAuthException with other code',
+        () async {
+      // arrange
+      when(() => mockFirebaseAuth.currentUser).thenReturn(mockUser);
+      when(() => mockUser.reload()).thenAnswer((_) async => Future.value());
+      when(() => mockUser.sendEmailVerification())
+          .thenThrow(FirebaseAuthException(code: 'network-request-failed'));
+
+      // act
+      final call = dataSource.sendVerificationEmail;
+
+      // assert
+      expect(() => call(), throwsA(isA<ServerFailure>()));
+    });
+
+    test('should throw ServerFailure when unknown exception occurs', () async {
+      // arrange
+      when(() => mockFirebaseAuth.currentUser).thenReturn(mockUser);
+      when(() => mockUser.reload()).thenAnswer((_) async => Future.value());
+      when(() => mockUser.sendEmailVerification())
+          .thenThrow(Exception('Random error'));
+
+      // act
+      final call = dataSource.sendVerificationEmail;
+
+      // assert
+      expect(() => call(), throwsA(isA<ServerFailure>()));
+    });
+  });
 }
