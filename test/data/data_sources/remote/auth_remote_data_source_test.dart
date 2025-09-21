@@ -1,7 +1,8 @@
 import 'dart:convert';
-
+import 'dart:async';
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foody_licious/core/error/failures.dart';
 import 'package:foody_licious/data/data_sources/remote/auth_remote_data_source.dart';
@@ -26,15 +27,32 @@ class MockUserCredential extends Mock implements UserCredential {}
 
 class MockUser extends Mock implements User {}
 
+class MockGoogleSignInAccount extends Mock implements GoogleSignInAccount {}
+
+class MockGoogleSignInAuthentication extends Mock
+    implements GoogleSignInAuthentication {}
+
+class FakeAuthCredential extends Mock implements AuthCredential {}
+
+class MockFacebookAuth extends Mock implements FacebookAuth {}
+
+class MockLoginResult extends Mock implements LoginResult {}
+
+class MockFacebookAuthProvider extends Mock implements FacebookAuthProvider {}
+
+class MockAccessToken extends Mock implements AccessToken {}
+
 void main() {
   late AuthRemoteDataSourceImpl dataSource;
   late MockHttpClient mockHttpClient;
   late MockFirebaseAuth mockFirebaseAuth;
   late MockGoogleSignIn mockGoogleSignIn;
+  late MockFacebookAuth mockFacebookAuth;
 
   setUpAll(() {
     // Register fallback values for mocktail
     registerFallbackValue(Uri.parse('https://example.com'));
+    registerFallbackValue(FakeAuthCredential());
   });
 
   setUp(() async {
@@ -42,10 +60,12 @@ void main() {
     mockHttpClient = MockHttpClient();
     mockFirebaseAuth = MockFirebaseAuth();
     mockGoogleSignIn = MockGoogleSignIn();
+    mockFacebookAuth = MockFacebookAuth();
     dataSource = AuthRemoteDataSourceImpl(
         client: mockHttpClient,
         firebaseAuth: mockFirebaseAuth,
-        googleSignIn: mockGoogleSignIn);
+        googleSignIn: mockGoogleSignIn,
+        facebookAuth: mockFacebookAuth);
   });
 
   test('use BASE_URL from env', () {
@@ -255,96 +275,265 @@ void main() {
     });
   });
 
-  // group('signInWithPhone', () {
-  //   final mockUser = MockUser();
-  //   final mockUserCredential = MockUserCredential();
+  group('signInWithPhone', () {
+    final mockUser = MockUser();
+    final mockUserCredential = MockUserCredential();
 
-  //   test('should perform a POST request to correct URL with params', () async {
-  //     // Arrange
-  //     final fakeResponse = fixture('auth/authentication_response_model.json');
+    test('should perform a POST request to correct URL with params', () async {
+      // Arrange
+      final fakeResponse = fixture('auth/authentication_response_model.json');
 
-  //     when(() => mockHttpClient.post(
-  //           any(),
-  //           headers: any(named: 'headers'),
-  //           body: any(named: 'body'),
-  //         )).thenAnswer((_) async => http.Response(fakeResponse, 200));
+      when(() => mockHttpClient.post(
+            any(),
+            headers: any(named: 'headers'),
+            body: any(named: 'body'),
+          )).thenAnswer((_) async => http.Response(fakeResponse, 200));
 
-  //     // Act
-  //     final result = await dataSource.signInWithPhone(tSignInWithPhoneParams);
+      // Act
+      final result = await dataSource.signInWithPhone(tSignInWithPhoneParams);
 
-  //     // Assert
-  //     verify(() => mockHttpClient.post(
-  //           Uri.parse(
-  //               '$kBaseUrlTest/api/auth/sendVerificationCodeForLogin'), // 👈 must match datasource
-  //           headers: {'Content-Type': 'application/json'},
-  //           body: jsonEncode({
-  //             "phone": tSignInWithPhoneParams.phone ?? "",
-  //             "authProvider": tSignInWithPhoneParams.authProvider,
-  //             "code": tSignInWithPhoneParams.code,
-  //           }),
-  //         ));
-  //     expect(result, isA<AuthenticationResponseModel>());
-  //   });
+      // Assert
+      verify(() => mockHttpClient.post(
+            Uri.parse(
+                '$kBaseUrlTest/api/auth/verifyCodeAndLoginWithPhone'), // 👈 must match datasource
+            headers: {'Content-Type': 'application/json'},
+            body: jsonEncode({
+              "phone": tSignInWithPhoneParams.phone ?? "",
+              "authProvider": tSignInWithPhoneParams.authProvider,
+              "code": tSignInWithPhoneParams.code,
+            }),
+          ));
+      expect(result, isA<AuthenticationResponseModel>());
+    });
 
-  //   test('should throw CredentialFailure on 400', () async {
-  //     // Arrange
-  //     when(() => mockHttpClient.post(
-  //           any(),
-  //           headers: any(named: 'headers'),
-  //           body: any(named: 'body'),
-  //         )).thenAnswer((_) async => http.Response('Error', 400));
+    test('should throw CredentialFailure on 400', () async {
+      // Arrange
+      when(() => mockHttpClient.post(
+            any(),
+            headers: any(named: 'headers'),
+            body: any(named: 'body'),
+          )).thenAnswer((_) async => http.Response('Error', 400));
 
-  //     // Act & Assert
-  //     expect(
-  //       () async => dataSource.signInWithPhone(tSignInWithPhoneParams),
-  //       throwsA(isA<CredentialFailure>()),
-  //     );
-  //   });
+      // Act & Assert
+      expect(
+        () async => dataSource.signInWithPhone(tSignInWithPhoneParams),
+        throwsA(isA<CredentialFailure>()),
+      );
+    });
 
-  //   test('should throw CredentialFailure on 401', () async {
-  //     // Arrange
-  //     when(() => mockHttpClient.post(
-  //           any(),
-  //           headers: any(named: 'headers'),
-  //           body: any(named: 'body'),
-  //         )).thenAnswer((_) async => http.Response('Error', 401));
+    test('should throw CredentialFailure on 401', () async {
+      // Arrange
+      when(() => mockHttpClient.post(
+            any(),
+            headers: any(named: 'headers'),
+            body: any(named: 'body'),
+          )).thenAnswer((_) async => http.Response('Error', 401));
 
-  //     // Act & Assert
-  //     expect(
-  //       () async => dataSource.signInWithPhone(tSignInWithPhoneParams),
-  //       throwsA(isA<CredentialFailure>()),
-  //     );
-  //   });
+      // Act & Assert
+      expect(
+        () async => dataSource.signInWithPhone(tSignInWithPhoneParams),
+        throwsA(isA<CredentialFailure>()),
+      );
+    });
 
-  //   test('should throw UserNotExistsFailure on 404', () async {
-  //     // Arrange
-  //     when(() => mockHttpClient.post(
-  //           any(),
-  //           headers: any(named: 'headers'),
-  //           body: any(named: 'body'),
-  //         )).thenAnswer((_) async => http.Response('Error', 404));
+    test('should throw UserNotExistsFailure on 404', () async {
+      // Arrange
+      when(() => mockHttpClient.post(
+            any(),
+            headers: any(named: 'headers'),
+            body: any(named: 'body'),
+          )).thenAnswer((_) async => http.Response('Error', 404));
 
-  //     // Act & Assert
-  //     expect(
-  //       () async => dataSource.signInWithPhone(tSignInWithPhoneParams),
-  //       throwsA(isA<UserNotExistsFailure>()),
-  //     );
-  //   });
+      // Act & Assert
+      expect(
+        () async => dataSource.signInWithPhone(tSignInWithPhoneParams),
+        throwsA(isA<UserNotExistsFailure>()),
+      );
+    });
 
-  //   test('should throw ServerFailure on non-200 other than 400/401/404',
-  //       () async {
-  //     // Arrange
-  //     when(() => mockHttpClient.post(
-  //           any(),
-  //           headers: any(named: 'headers'),
-  //           body: any(named: 'body'),
-  //         )).thenAnswer((_) async => http.Response('Error', 500));
+    test('should throw ServerFailure on non-200 other than 400/401/404',
+        () async {
+      // Arrange
+      when(() => mockHttpClient.post(
+            any(),
+            headers: any(named: 'headers'),
+            body: any(named: 'body'),
+          )).thenAnswer((_) async => http.Response('Error', 500));
 
-  //     // Act & Assert
-  //     expect(
-  //       () async => dataSource.signInWithPhone(tSignInWithPhoneParams),
-  //       throwsA(isA<ServerFailure>()),
-  //     );
-  //   });
-  // });
+      // Act & Assert
+      expect(
+        () async => dataSource.signInWithPhone(tSignInWithPhoneParams),
+        throwsA(isA<ServerFailure>()),
+      );
+    });
+  });
+
+  group('signInWithGoogle', () {
+    final mockUser = MockUser();
+    final mockUserCredential = MockUserCredential();
+    final mockGoogleUser = MockGoogleSignInAccount();
+    final mockGoogleAuth = MockGoogleSignInAuthentication();
+
+    test('should sign in with Google and return AuthenticationResponseModel',
+        () async {
+      // Arrange
+      when(() => mockGoogleSignIn.initialize(
+              serverClientId: any(named: 'serverClientId')))
+          .thenAnswer((_) async => {});
+
+      when(() => mockGoogleSignIn.authenticate())
+          .thenAnswer((_) async => mockGoogleUser);
+
+      when(() => mockGoogleUser.authentication)
+          .thenAnswer((_) => mockGoogleAuth);
+
+      when(() => mockGoogleAuth.idToken).thenReturn("fake_id_token");
+
+      when(() => mockFirebaseAuth.signInWithCredential(any()))
+          .thenAnswer((_) async => mockUserCredential);
+
+      when(() => mockUserCredential.user).thenReturn(mockUser);
+      when(() => mockUser.uid).thenReturn("uid_123");
+      when(() => mockUser.email).thenReturn("test@example.com");
+
+      final fakeResponse = fixture('auth/authentication_response_model.json');
+      when(() => mockHttpClient.post(
+            any(),
+            headers: any(named: 'headers'),
+            body: any(named: 'body'),
+          )).thenAnswer((_) async => http.Response(fakeResponse, 200));
+
+      // Act
+      final result = await dataSource.signInWithGoogle();
+
+      // Assert
+      expect(result, isA<AuthenticationResponseModel>());
+      verify(() => mockGoogleSignIn.authenticate()).called(1);
+      verify(() => mockFirebaseAuth.signInWithCredential(any())).called(1);
+      verify(() => mockHttpClient.post(
+            Uri.parse('$kBaseUrlTest/api/auth/login'),
+            headers: {'Content-Type': 'application/json'},
+            body: any(named: 'body'),
+          )).called(1);
+    });
+
+    test('should throw ExceptionFailure when Google user is null', () async {
+      // Arrange
+      when(() => mockGoogleSignIn.initialize(
+              serverClientId: any(named: 'serverClientId')))
+          .thenAnswer((_) async => {});
+      when(() => mockGoogleSignIn.authenticate())
+          .thenAnswer((_) => Future.value(null));
+
+      // Act
+      final call = dataSource.signInWithGoogle;
+
+      // Assert
+      expect(() => call(), throwsA(isA<ExceptionFailure>()));
+    });
+
+    test('should throw ExceptionFailure when firebase user is null', () async {
+      // Arrange
+      when(() => mockGoogleSignIn.initialize(
+              serverClientId: any(named: 'serverClientId')))
+          .thenAnswer((_) async => {});
+      when(() => mockGoogleSignIn.authenticate())
+          .thenAnswer((_) async => mockGoogleUser);
+      when(() => mockGoogleUser.authentication)
+          .thenAnswer((_) => mockGoogleAuth);
+      when(() => mockGoogleAuth.idToken).thenReturn("fake_id_token");
+      when(() => mockFirebaseAuth.signInWithCredential(any()))
+          .thenAnswer((_) async => mockUserCredential);
+      when(() => mockUserCredential.user).thenReturn(null);
+
+      // Act
+      final call = dataSource.signInWithGoogle;
+
+      // Assert
+      expect(() => call(), throwsA(isA<ExceptionFailure>()));
+    });
+  });
+
+  group('signInWithFacebook', () {
+    final mockUser = MockUser();
+    final mockUserCredential = MockUserCredential();
+    final mockLoginResult = MockLoginResult();
+    final mockAccessToken = MockAccessToken();
+
+    test('should sign in with Facebook and return AuthenticationResponseModel',
+        () async {
+      // Arrange
+      when(() => mockFacebookAuth.login())
+          .thenAnswer((_) async => mockLoginResult);
+
+      when(() => mockLoginResult.status).thenReturn(LoginStatus.success);
+
+      when(() => mockLoginResult.accessToken).thenReturn(mockAccessToken);
+
+      when(() => mockAccessToken.tokenString).thenReturn("fake_id_token");
+
+      when(() => mockFirebaseAuth.signInWithCredential(any()))
+          .thenAnswer((_) async => mockUserCredential);
+
+      when(() => mockUserCredential.user).thenReturn(mockUser);
+      when(() => mockUser.uid).thenReturn("uid_123");
+      when(() => mockUser.email).thenReturn("test@example.com");
+
+      final fakeResponse = fixture('auth/authentication_response_model.json');
+      when(() => mockHttpClient.post(
+            any(),
+            headers: any(named: 'headers'),
+            body: any(named: 'body'),
+          )).thenAnswer((_) async => http.Response(fakeResponse, 200));
+
+      // Act
+      final result = await dataSource.signInWithFacebook();
+
+      // Assert
+      expect(result, isA<AuthenticationResponseModel>());
+      verify(() => mockFacebookAuth.login()).called(1);
+      verify(() => mockFirebaseAuth.signInWithCredential(any())).called(1);
+      verify(() => mockHttpClient.post(
+            Uri.parse('$kBaseUrlTest/api/auth/login'),
+            headers: {'Content-Type': 'application/json'},
+            body: any(named: 'body'),
+          )).called(1);
+    });
+
+    test('should throw ExceptionFailure when Facebook user is null', () async {
+      // Arrange
+      when(() => mockFacebookAuth.login())
+          .thenAnswer((_) async => mockLoginResult);
+      when(() => mockLoginResult.status).thenAnswer((_) => LoginStatus.failed);
+
+      // Act
+      final call = dataSource.signInWithFacebook;
+
+      // Assert
+      expect(() => call(), throwsA(isA<ExceptionFailure>()));
+    });
+
+    test('should throw ExceptionFailure when firebase user is null', () async {
+      // Arrange
+      when(() => mockFacebookAuth.login())
+          .thenAnswer((_) async => mockLoginResult);
+
+      when(() => mockLoginResult.status).thenReturn(LoginStatus.success);
+
+      when(() => mockLoginResult.accessToken).thenReturn(mockAccessToken);
+
+      when(() => mockAccessToken.tokenString).thenReturn("fake_id_token");
+
+      when(() => mockFirebaseAuth.signInWithCredential(any()))
+          .thenAnswer((_) async => mockUserCredential);
+
+      when(() => mockUserCredential.user).thenReturn(null);
+
+      // Act
+      final call = dataSource.signInWithFacebook;
+
+      // Assert
+      expect(() => call(), throwsA(isA<ExceptionFailure>()));
+    });
+  });
 }

@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:foody_licious/data/data_sources/remote/user_remote_data_source.dart';
 import 'package:foody_licious/data/repositories/user_repository_impl.dart';
@@ -78,7 +79,7 @@ Future<void> init() async {
   );
   sl.registerLazySingleton<AuthRemoteDataSource>(
     () => AuthRemoteDataSourceImpl(
-        firebaseAuth: sl(), client: sl(), googleSignIn: sl()),
+        firebaseAuth: sl(), client: sl(), googleSignIn: sl(),facebookAuth:sl()),
   );
 
   //Features - User
@@ -118,6 +119,7 @@ Future<void> init() async {
   sl.registerLazySingleton(() => secureStorage);
   sl.registerLazySingleton(() => http.Client());
   sl.registerLazySingleton(() => GoogleSignIn.instance);
+  sl.registerLazySingleton(() => FacebookAuth.instance);
   sl.registerLazySingleton(() => FirebaseAuth.instance);
   sl.registerLazySingleton(() => SmartAuth.instance);
   sl.registerLazySingleton(() => InternetConnectionChecker());

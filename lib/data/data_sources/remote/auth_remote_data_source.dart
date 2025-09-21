@@ -38,11 +38,14 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   final http.Client client;
   final FirebaseAuth firebaseAuth;
   final GoogleSignIn googleSignIn;
+  final FacebookAuth facebookAuth;
   User? user;
-  AuthRemoteDataSourceImpl(
-      {required this.firebaseAuth,
-      required this.client,
-      required this.googleSignIn});
+  AuthRemoteDataSourceImpl({
+    required this.firebaseAuth,
+    required this.client,
+    required this.googleSignIn,
+    required this.facebookAuth,
+  });
 
   @override
   Future<AuthenticationResponseModel> signInWithEmail(
@@ -125,7 +128,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   @override
   Future<AuthenticationResponseModel> signInWithFacebook() async {
     try {
-      final LoginResult loginResult = await FacebookAuth.instance.login();
+      final LoginResult loginResult = await facebookAuth.login();
       if (loginResult.status != LoginStatus.success) {
         throw Exception("Facebook login failed.");
       }
@@ -141,7 +144,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     } catch (e) {
       throw ExceptionFailure();
     }
-    return await _sendRegisterRequest(user!, authProvider: "facebook");
+    return await _sendLoginRequest(user!, authProvider: "facebook");
   }
 
   @override
