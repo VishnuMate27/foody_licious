@@ -5,6 +5,7 @@ import 'package:foody_licious/domain/usecase/auth/send_password_reset_email_usec
 import 'package:foody_licious/domain/usecase/auth/sign_in_with_email_usecase.dart';
 import 'package:foody_licious/domain/usecase/auth/sign_in_with_phone_usecase.dart';
 import 'package:foody_licious/domain/usecase/auth/sign_up_with_email_usecase.dart';
+import 'package:foody_licious/domain/usecase/auth/sign_up_with_phone_usecase.dart';
 import 'package:foody_licious/domain/usecase/user/update_user_usecase.dart';
 
 //user
@@ -38,4 +39,13 @@ var tSignInWithPhoneParams = SignInWithPhoneParams(
     phone: "+9198796543210", code: "1234", authProvider: "phone");
 var tSendPasswordResetEmailParams =
     SendPasswordResetEmailParams(email: "test@gmail.com");
-var tSignUpWithEmailParams = SignUpWithEmailParams(name:"Test User", email: "test@gmail.com", password: "testPassword", authProvider: "email");
+var tSignUpWithEmailParams = SignUpWithEmailParams(
+    name: "Test User",
+    email: "test@gmail.com",
+    password: "testPassword",
+    authProvider: "email");
+var tSignUpWithPhoneParams = SignUpWithPhoneParams(
+    name: "Test User",
+    phone: "+9198796543210",
+    code: "1234",
+    authProvider: "phone");

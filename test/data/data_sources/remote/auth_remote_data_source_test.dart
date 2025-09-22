@@ -795,4 +795,283 @@ void main() {
       expect(() => call(), throwsA(isA<ServerFailure>()));
     });
   });
+
+  group('waitForEmailVerification', () {
+    final mockUser = MockUser();
+    test('should return unit immediately if currentUser is already verified',
+        () async {
+      // arrange
+      when(() => mockFirebaseAuth.currentUser).thenReturn(mockUser);
+      when(() => mockUser.reload()).thenAnswer((_) async => Future.value());
+      when(() => mockUser.emailVerified).thenReturn(true);
+
+      // act
+      final result = await dataSource.waitForEmailVerification(
+        checkInterval: const Duration(milliseconds: 3),
+        timeout: const Duration(milliseconds: 5),
+      );
+
+      // assert
+      expect(result, unit);
+      verify(() => mockUser.reload()).called(1);
+    });
+
+    test('should throw UserNotExistsFailure when currentUser is null',
+        () async {
+      // arrange
+      when(() => mockFirebaseAuth.currentUser).thenReturn(null);
+
+      // act
+      final call = () => dataSource.waitForEmailVerification(
+            checkInterval: const Duration(milliseconds: 3),
+            timeout: const Duration(milliseconds: 5),
+          );
+
+      // assert
+      expect(call, throwsA(isA<UserNotExistsFailure>()));
+    });
+
+    test('should throw TimeOutFailure if email not verified within timeout',
+        () async {
+      // arrange
+      when(() => mockFirebaseAuth.currentUser).thenReturn(mockUser);
+      when(() => mockUser.reload()).thenAnswer((_) async => Future.value());
+      // Always unverified
+      when(() => mockUser.emailVerified).thenReturn(false);
+
+      // act
+      final call = () => dataSource.waitForEmailVerification(
+            checkInterval: const Duration(milliseconds: 3),
+            timeout: const Duration(milliseconds: 5),
+          );
+
+      // assert
+      expect(call, throwsA(isA<TimeOutFailure>()));
+    });
+  });
+
+  group('verifyPhoneNumberForRegistration', () {
+    test('should perform a POST request to correct URL with params', () async {
+      // Arrange
+      when(() => mockHttpClient.post(
+            Uri.parse(
+                '$kBaseUrlTest/api/auth/sendVerificationCodeForRegistration'),
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: jsonEncode({
+              "phone": tSignUpWithPhoneParams.phone ?? "",
+            }),
+          )).thenAnswer((_) async => http.Response('', 201));
+      // Act
+      final result = await dataSource
+          .verifyPhoneNumberForRegistration(tSignUpWithPhoneParams);
+      // Assert
+      verify(() => mockHttpClient.post(
+            Uri.parse(
+                '$kBaseUrlTest/api/auth/sendVerificationCodeForRegistration'),
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: jsonEncode({
+              "phone": tSignUpWithPhoneParams.phone ?? "",
+            }),
+          )).called(1);
+      expect(result, unit);
+    });
+
+    test('should throw CredentialFailure on 400', () async {
+      // Arrange
+      when(() => mockHttpClient.post(
+            Uri.parse(
+                '$kBaseUrlTest/api/auth/sendVerificationCodeForRegistration'),
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: jsonEncode({
+              "phone": tSignUpWithPhoneParams.phone ?? "",
+            }),
+          )).thenAnswer((_) async => http.Response('', 400));
+      // act
+      final call = dataSource.verifyPhoneNumberForRegistration;
+
+      // assert
+      expect(() => call(tSignUpWithPhoneParams),
+          throwsA(isA<CredentialFailure>()));
+    });
+
+    test('should throw CredentialFailure on 401', () async {
+      // Arrange
+      when(() => mockHttpClient.post(
+            Uri.parse(
+                '$kBaseUrlTest/api/auth/sendVerificationCodeForRegistration'),
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: jsonEncode({
+              "phone": tSignUpWithPhoneParams.phone ?? "",
+            }),
+          )).thenAnswer((_) async => http.Response('', 401));
+      // act
+      final call = dataSource.verifyPhoneNumberForRegistration;
+
+      // assert
+      expect(() => call(tSignUpWithPhoneParams),
+          throwsA(isA<CredentialFailure>()));
+    });
+
+    test('should throw UserAlreadyExistsFailure on 409', () async {
+      // Arrange
+      when(() => mockHttpClient.post(
+            Uri.parse(
+                '$kBaseUrlTest/api/auth/sendVerificationCodeForRegistration'),
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: jsonEncode({
+              "phone": tSignUpWithPhoneParams.phone ?? "",
+            }),
+          )).thenAnswer((_) async => http.Response('', 409));
+      // act
+      final call = dataSource.verifyPhoneNumberForRegistration;
+
+      // assert
+      expect(() => call(tSignUpWithPhoneParams),
+          throwsA(isA<UserAlreadyExistsFailure>()));
+    });
+
+    test('should throw ServerFailure on failures other than 400/401/409',
+        () async {
+      // Arrange
+      when(() => mockHttpClient.post(
+            Uri.parse(
+                '$kBaseUrlTest/api/auth/sendVerificationCodeForRegistration'),
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: jsonEncode({"phone": tSignUpWithPhoneParams.phone ?? ""}),
+          )).thenAnswer((_) async => http.Response('', 500));
+
+      // Act
+      final call = dataSource.verifyPhoneNumberForRegistration;
+
+      // Assert
+      expect(call(tSignUpWithPhoneParams), throwsA(isA<ServerFailure>()));
+    });
+  });
+
+  group('signUpWithPhone', () {
+    test('should perform a POST request to correct URL with params', () async {
+      // Arrange
+      final fakeResponse = fixture('auth/authentication_response_model.json');
+      // Arrange
+      when(() => mockHttpClient.post(
+            Uri.parse('$kBaseUrlTest/api/auth/verifyCodeAndRegisterWithPhone'),
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: jsonEncode({
+              "phone": tSignUpWithPhoneParams.phone ?? "",
+              "name": tSignUpWithPhoneParams.name ?? "",
+              "authProvider": tSignUpWithPhoneParams.authProvider,
+              "code": tSignUpWithPhoneParams.code
+            }),
+          )).thenAnswer((_) async => http.Response(fakeResponse, 201));
+
+// Act
+      final result = await dataSource.signUpWithPhone(tSignUpWithPhoneParams);
+
+      // Assert
+      verify(() => mockHttpClient.post(
+            Uri.parse('$kBaseUrlTest/api/auth/verifyCodeAndRegisterWithPhone'),
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: jsonEncode({
+              "phone": tSignUpWithPhoneParams.phone ?? "",
+              "name": tSignUpWithPhoneParams.name ?? "",
+              "authProvider": tSignUpWithPhoneParams.authProvider,
+              "code": tSignUpWithPhoneParams.code
+            }),
+          )).called(1);
+      expect(result, isA<AuthenticationResponseModel>());
+    });
+
+    test('should throw CredentialFailure on 400', () {
+      when(() => mockHttpClient.post(
+            Uri.parse('$kBaseUrlTest/api/auth/verifyCodeAndRegisterWithPhone'),
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: jsonEncode({
+              "phone": tSignUpWithPhoneParams.phone ?? "",
+              "name": tSignUpWithPhoneParams.name ?? "",
+              "authProvider": tSignUpWithPhoneParams.authProvider,
+              "code": tSignUpWithPhoneParams.code
+            }),
+          )).thenAnswer((_) async => http.Response('Error', 400));
+
+      final call = dataSource.signUpWithPhone;
+
+      expect(call(tSignUpWithPhoneParams), throwsA(isA<CredentialFailure>()));
+    });
+
+    test('should throw CredentialFailure on 401', () {
+      when(() => mockHttpClient.post(
+            Uri.parse('$kBaseUrlTest/api/auth/verifyCodeAndRegisterWithPhone'),
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: jsonEncode({
+              "phone": tSignUpWithPhoneParams.phone ?? "",
+              "name": tSignUpWithPhoneParams.name ?? "",
+              "authProvider": tSignUpWithPhoneParams.authProvider,
+              "code": tSignUpWithPhoneParams.code
+            }),
+          )).thenAnswer((_) async => http.Response('Error', 401));
+
+      final call = dataSource.signUpWithPhone;
+
+      expect(call(tSignUpWithPhoneParams), throwsA(isA<CredentialFailure>()));
+    });
+
+    test('should throw UserAlreadyExistsFailure on 409', () {
+      when(() => mockHttpClient.post(
+            Uri.parse('$kBaseUrlTest/api/auth/verifyCodeAndRegisterWithPhone'),
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: jsonEncode({
+              "phone": tSignUpWithPhoneParams.phone ?? "",
+              "name": tSignUpWithPhoneParams.name ?? "",
+              "authProvider": tSignUpWithPhoneParams.authProvider,
+              "code": tSignUpWithPhoneParams.code
+            }),
+          )).thenAnswer((_) async => http.Response('Error', 409));
+
+      final call = dataSource.signUpWithPhone;
+
+      expect(call(tSignUpWithPhoneParams),
+          throwsA(isA<UserAlreadyExistsFailure>()));
+    });
+
+    test('should throw ServerFailure on failures other than 400/401/409', () {
+      when(() => mockHttpClient.post(
+            Uri.parse('$kBaseUrlTest/api/auth/verifyCodeAndRegisterWithPhone'),
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: jsonEncode({
+              "phone": tSignUpWithPhoneParams.phone ?? "",
+              "name": tSignUpWithPhoneParams.name ?? "",
+              "authProvider": tSignUpWithPhoneParams.authProvider,
+              "code": tSignUpWithPhoneParams.code
+            }),
+          )).thenAnswer((_) async => http.Response('Error', 500));
+
+      final call = dataSource.signUpWithPhone;
+
+      expect(call(tSignUpWithPhoneParams), throwsA(isA<ServerFailure>()));
+    });
+  });
 }
