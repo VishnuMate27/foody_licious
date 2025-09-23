@@ -290,7 +290,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   @override
   Future<AuthenticationResponseModel> signUpWithFacebook() async {
     try {
-      final LoginResult loginResult = await FacebookAuth.instance.login();
+      final LoginResult loginResult = await facebookAuth.login();
       if (loginResult.status != LoginStatus.success) {
         throw Exception("Facebook login failed.");
       }

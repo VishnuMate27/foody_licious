@@ -1074,4 +1074,180 @@ void main() {
       expect(call(tSignUpWithPhoneParams), throwsA(isA<ServerFailure>()));
     });
   });
+
+  group('signUpWithGoogle', () {
+    final mockUser = MockUser();
+    final mockUserCredential = MockUserCredential();
+    final mockGoogleUser = MockGoogleSignInAccount();
+    final mockGoogleAuth = MockGoogleSignInAuthentication();
+
+ test('should sign up with Google and return AuthenticationResponseModel',
+      () async {
+    // Arrange Google sign-in flow
+    when(() => mockGoogleSignIn.initialize(
+            serverClientId: any(named: 'serverClientId')))
+        .thenAnswer((_) async => {});
+
+    when(() => mockGoogleSignIn.authenticate())
+        .thenAnswer((_) async => mockGoogleUser);
+
+    // Important: authentication must return a Future
+    when(() => mockGoogleUser.authentication)
+        .thenAnswer((_) => mockGoogleAuth);
+
+    when(() => mockGoogleAuth.idToken).thenReturn("fake_id_token");
+
+    when(() => mockFirebaseAuth.signInWithCredential(any()))
+        .thenAnswer((_) async => mockUserCredential);
+
+    when(() => mockUserCredential.user).thenReturn(mockUser);
+
+    // --- Stub all User getters used in _sendRegisterRequest ---
+    when(() => mockUser.uid).thenReturn("uid_123");
+    when(() => mockUser.email).thenReturn("test@example.com");
+    when(() => mockUser.displayName).thenReturn("Test User");
+    when(() => mockUser.phoneNumber).thenReturn("+919876543210");
+
+    // --- Stub HTTP response ---
+    final fakeResponse =
+        fixture('auth/authentication_response_model.json'); // loads json string
+    when(() => mockHttpClient.post(
+          any(),
+          headers: any(named: 'headers'),
+          body: any(named: 'body'),
+        )).thenAnswer((_) async => http.Response(fakeResponse, 201));
+
+    // Act
+    final result = await dataSource.signUpWithGoogle();
+
+    // Assert
+    expect(result, isA<AuthenticationResponseModel>());
+    verify(() => mockGoogleSignIn.authenticate()).called(1);
+    verify(() => mockFirebaseAuth.signInWithCredential(any())).called(1);
+    verify(() => mockHttpClient.post(
+          any(),
+          headers: any(named: 'headers'),
+          body: any(named: 'body'),
+        )).called(1);
+  });
+
+    test('should throw ExceptionFailure when Google user is null', () async {
+      // Arrange
+      when(() => mockGoogleSignIn.initialize(
+              serverClientId: any(named: 'serverClientId')))
+          .thenAnswer((_) async => {});
+      when(() => mockGoogleSignIn.authenticate())
+          .thenAnswer((_) => Future.value(null));
+
+      // Act
+      final call = dataSource.signInWithGoogle;
+
+      // Assert
+      expect(() => call(), throwsA(isA<ExceptionFailure>()));
+    });
+
+    test('should throw ExceptionFailure when firebase user is null', () async {
+      // Arrange
+      when(() => mockGoogleSignIn.initialize(
+              serverClientId: any(named: 'serverClientId')))
+          .thenAnswer((_) async => {});
+      when(() => mockGoogleSignIn.authenticate())
+          .thenAnswer((_) async => mockGoogleUser);
+      when(() => mockGoogleUser.authentication)
+          .thenAnswer((_) => mockGoogleAuth);
+      when(() => mockGoogleAuth.idToken).thenReturn("fake_id_token");
+      when(() => mockFirebaseAuth.signInWithCredential(any()))
+          .thenAnswer((_) async => mockUserCredential);
+      when(() => mockUserCredential.user).thenReturn(null);
+
+      // Act
+      final call = dataSource.signInWithGoogle;
+
+      // Assert
+      expect(() => call(), throwsA(isA<ExceptionFailure>()));
+    });
+  });
+
+  group('signUpWithFacebook', () {
+    final mockUser = MockUser();
+    final mockUserCredential = MockUserCredential();
+    final mockLoginResult = MockLoginResult();
+    final mockAccessToken = MockAccessToken();
+
+    test('should sign Up with Facebook and return AuthenticationResponseModel',
+        () async {
+      // Arrange
+      when(() => mockFacebookAuth.login())
+          .thenAnswer((_) async => mockLoginResult);
+
+      when(() => mockLoginResult.status).thenReturn(LoginStatus.success);
+
+      when(() => mockLoginResult.accessToken).thenReturn(mockAccessToken);
+
+      when(() => mockAccessToken.tokenString).thenReturn("fake_id_token");
+
+      when(() => mockFirebaseAuth.signInWithCredential(any()))
+          .thenAnswer((_) async => mockUserCredential);
+
+      when(() => mockUserCredential.user).thenReturn(mockUser);
+      when(() => mockUser.uid).thenReturn("uid_123");
+      when(() => mockUser.email).thenReturn("test@example.com");
+
+      final fakeResponse = fixture('auth/authentication_response_model.json');
+      when(() => mockHttpClient.post(
+            any(),
+            headers: any(named: 'headers'),
+            body: any(named: 'body'),
+          )).thenAnswer((_) async => http.Response(fakeResponse, 201));
+
+      // Act
+      final result = await dataSource.signUpWithFacebook();
+
+      // Assert
+      expect(result, isA<AuthenticationResponseModel>());
+      verify(() => mockFacebookAuth.login()).called(1);
+      verify(() => mockFirebaseAuth.signInWithCredential(any())).called(1);
+      verify(() => mockHttpClient.post(
+            Uri.parse('$kBaseUrlTest/api/auth/register'),
+            headers: {'Content-Type': 'application/json'},
+            body: any(named: 'body'),
+          )).called(1);
+    });
+
+    test('should throw ExceptionFailure when Facebook user is null', () async {
+      // Arrange
+      when(() => mockFacebookAuth.login())
+          .thenAnswer((_) async => mockLoginResult);
+      when(() => mockLoginResult.status).thenAnswer((_) => LoginStatus.failed);
+
+      // Act
+      final call = dataSource.signUpWithFacebook;
+
+      // Assert
+      expect(() => call(), throwsA(isA<ExceptionFailure>()));
+    });
+
+    test('should throw ExceptionFailure when firebase user is null', () async {
+      // Arrange
+      when(() => mockFacebookAuth.login())
+          .thenAnswer((_) async => mockLoginResult);
+
+      when(() => mockLoginResult.status).thenReturn(LoginStatus.success);
+
+      when(() => mockLoginResult.accessToken).thenReturn(mockAccessToken);
+
+      when(() => mockAccessToken.tokenString).thenReturn("fake_id_token");
+
+      when(() => mockFirebaseAuth.signInWithCredential(any()))
+          .thenAnswer((_) async => mockUserCredential);
+
+      when(() => mockUserCredential.user).thenReturn(null);
+
+      // Act
+      final call = dataSource.signUpWithFacebook;
+
+      // Assert
+      expect(() => call(), throwsA(isA<ExceptionFailure>()));
+    });
+  });
 }
