@@ -62,20 +62,6 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<Failure, User>> signUpWithEmail(params) async {
-    if (!await networkInfo.isConnected) {
-      return Left(NetworkFailure());
-    }
-    try {
-      final remoteResponse = await remoteDataSource.signUpWithEmail(params);
-      await localDataSource.saveUser(remoteResponse.user);
-      return Right(remoteResponse.user);
-    } on Failure catch (failure) {
-      return Left(failure);
-    }
-  }
-
-  @override
   Future<Either<Failure, User>> signInWithGoogle() async {
     if (!await networkInfo.isConnected) {
       return Left(NetworkFailure());
@@ -96,7 +82,7 @@ class AuthRepositoryImpl implements AuthRepository {
     }
     try {
       final remoteResponse = await remoteDataSource.signInWithFacebook();
-      await localDataSource.saveUser(remoteResponse.user);      
+      await localDataSource.saveUser(remoteResponse.user);
       return Right(remoteResponse.user);
     } on Failure catch (failure) {
       return Left(failure);
@@ -112,6 +98,20 @@ class AuthRepositoryImpl implements AuthRepository {
       final remoteResponse =
           await remoteDataSource.sendPasswordResetEmail(params);
       return Right(remoteResponse);
+    } on Failure catch (failure) {
+      return Left(failure);
+    }
+  }
+  
+  @override
+  Future<Either<Failure, User>> signUpWithEmail(params) async {
+    if (!await networkInfo.isConnected) {
+      return Left(NetworkFailure());
+    }
+    try {
+      final remoteResponse = await remoteDataSource.signUpWithEmail(params);
+      await localDataSource.saveUser(remoteResponse.user);
+      return Right(remoteResponse.user);
     } on Failure catch (failure) {
       return Left(failure);
     }
