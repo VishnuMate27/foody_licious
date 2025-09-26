@@ -32,7 +32,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         (user) => emit(UserAuthenticated(user)),
       );
     } catch (e) {
-      emit(UserUnauthenticated(ExceptionFailure()));
+      emit(UserUnauthenticated(ExceptionFailure(e.toString())));
     }
   }
 
@@ -45,7 +45,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         (user) => emit(UserUpdateSuccess(user)),
       );
     } catch (e) {
-      emit(UserUpdateFailed(ExceptionFailure()));
+      emit(UserUpdateFailed(ExceptionFailure(e.toString())));
     }
   }
 
@@ -59,7 +59,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         (user) => emit(UserUpdateLocationSuccess(user)),
       );
     } catch (e) {
-      emit(UserUpdateLocationFailed(ExceptionFailure()));
+      emit(UserUpdateLocationFailed(ExceptionFailure(e.toString())));
     }
   }
 
@@ -72,7 +72,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         (unit) => emit(UserDeleteSuccess(unit)),
       );
     } catch (e) {
-      emit(UserUpdateFailed(ExceptionFailure()));
+      emit(UserUpdateFailed(ExceptionFailure(e.toString())));
     }
   }
 }

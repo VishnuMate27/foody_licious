@@ -88,7 +88,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         (user) => emit(AuthSignInWithEmailSuccess(user)),
       );
     } catch (e) {
-      emit(AuthSignInWithEmailFailed(ExceptionFailure()));
+      emit(AuthSignInWithEmailFailed(ExceptionFailure(e.toString())));
     }
   }
 
@@ -102,7 +102,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         (unit) => emit(AuthVerificationSMSForLoginSent(unit)),
       );
     } catch (e) {
-      emit(AuthVerificationSMSForLoginSentFailed(ExceptionFailure()));
+      emit(AuthVerificationSMSForLoginSentFailed(ExceptionFailure(e.toString())));
     }
   }
 
@@ -115,7 +115,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         (user) => emit(AuthPhoneVerificationForLoginSuccess(user)),
       );
     } catch (e) {
-      emit(AuthPhoneVerificationForLoginFailed(ExceptionFailure()));
+      emit(AuthPhoneVerificationForLoginFailed(ExceptionFailure(e.toString())));
     }
   }
 
@@ -129,7 +129,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         (user) => emit(AuthGoogleSignInSuccess(user)),
       );
     } catch (e) {
-      emit(AuthGoogleSignInFailed(ExceptionFailure()));
+      emit(AuthGoogleSignInFailed(ExceptionFailure(e.toString())));
     }
   }
 
@@ -143,7 +143,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         (user) => emit(AuthFacebookSignInSuccess(user)),
       );
     } catch (e) {
-      emit(AuthFacebookSignInFailed(ExceptionFailure()));
+      emit(AuthFacebookSignInFailed(ExceptionFailure(e.toString())));
     }
   }
 
@@ -156,7 +156,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         (unit) => emit(AuthPasswordResetEmailSent()),
       );
     } catch (e) {
-      emit(AuthPasswordResetEmailSentFailed(ExceptionFailure()));
+      emit(AuthPasswordResetEmailSentFailed(ExceptionFailure(e.toString())));
     }
   }
 
@@ -170,7 +170,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         (user) => emit(AuthVerificationEmailRequested(user)),
       );
     } catch (e) {
-      emit(AuthVerificationEmailRequestFailed(ExceptionFailure()));
+      emit(AuthVerificationEmailRequestFailed(ExceptionFailure(e.toString())));
     }
   }
 
@@ -183,7 +183,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         (unit) => emit(AuthVerificationEmailSent()),
       );
     } catch (e) {
-      emit(AuthVerificationEmailSentFailed(ExceptionFailure()));
+      emit(AuthVerificationEmailSentFailed(ExceptionFailure(e.toString())));
     }
   }
 
@@ -196,7 +196,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         (unit) => emit(AuthEmailVerificationSuccess()),
       );
     } catch (e) {
-      emit(AuthEmailVerificationFailed(ExceptionFailure()));
+      emit(AuthEmailVerificationFailed(ExceptionFailure(e.toString())));
     }
   }
 
@@ -213,7 +213,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         (unit) => emit(AuthVerificationSMSForRegistrationSent(unit)),
       );
     } catch (e) {
-      emit(AuthVerificationSMSForRegistrationSentFailed(ExceptionFailure()));
+      emit(AuthVerificationSMSForRegistrationSentFailed(ExceptionFailure(e.toString())));
     }
   }
 
@@ -226,7 +226,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         (user) => emit(AuthPhoneVerificationForRegistrationSuccess(user)),
       );
     } catch (e) {
-      emit(AuthPhoneVerificationForRegistrationFailed(ExceptionFailure()));
+      emit(AuthPhoneVerificationForRegistrationFailed(ExceptionFailure(e.toString())));
     }
   }
 
@@ -240,7 +240,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         (user) => emit(AuthGoogleSignUpSuccess(user)),
       );
     } catch (e) {
-      emit(AuthGoogleSignUpFailed(ExceptionFailure()));
+      emit(AuthGoogleSignUpFailed(ExceptionFailure(e.toString())));
     }
   }
 
@@ -254,7 +254,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         (user) => emit(AuthFacebookSignUpSuccess(user)),
       );
     } catch (e) {
-      emit(AuthFacebookSignUpFailed(ExceptionFailure()));
+      emit(AuthFacebookSignUpFailed(ExceptionFailure(e.toString())));
     }
   }
 
@@ -267,7 +267,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       //   (user) => emit(AuthLogged(user)),
       // );
     } catch (e) {
-      emit(AuthLoggedFail(ExceptionFailure()));
+      emit(AuthLoggedFail(ExceptionFailure(e.toString())));
     }
   }
 
@@ -277,7 +277,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       await _signOutUseCase(NoParams());
       emit(AuthLoggedOut());
     } catch (e) {
-      emit(AuthLoggedFail(ExceptionFailure()));
+      emit(AuthLoggedFail(ExceptionFailure(e.toString())));
     }
   }
 

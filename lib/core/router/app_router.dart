@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:foody_licious/core/error/failures.dart';
 import 'package:foody_licious/presentation/view/authentication/login_view.dart';
 import 'package:foody_licious/presentation/view/authentication/signup_view.dart';
 import 'package:foody_licious/presentation/view/authentication/verification_view.dart';
@@ -84,7 +85,7 @@ class AppRouter {
       case notifications:
         return MaterialPageRoute(builder: (_) => NotificationView());
       default:
-        throw Exception("Route not found!");
+        throw ExceptionFailure("Route not found!");
       // throw const RouteException('Route not found!');
     }
   }

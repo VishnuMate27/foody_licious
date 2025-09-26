@@ -552,8 +552,7 @@ void main() {
         verify(() => mockAuthRemoteDataSource
             .signUpWithEmail(tSignUpWithEmailParams)).called(1);
         verify(() =>
-                mockLocalDataSource.saveUser(tAuthenticationResponseModel.user))
-            .called(1);
+            mockLocalDataSource.saveUser(tAuthenticationResponseModel.user));
       });
 
       test(
@@ -782,6 +781,295 @@ void main() {
         expect(result, Left(ServerFailure()));
         verify(() => mockAuthRemoteDataSource.verifyPhoneNumberForRegistration(
             tSignUpWithPhoneParams)).called(1);
+      });
+    });
+
+    group('signUpWithPhone', () {
+      test(
+          'Should return Right(User) when remoteDataSource.signUpWithPhone successed',
+          () async {
+        // Arrange
+        when(() => mockAuthRemoteDataSource
+                .signUpWithPhone(tSignUpWithPhoneParams))
+            .thenAnswer((_) async => tAuthenticationResponseModel);
+        when(() =>
+                mockLocalDataSource.saveUser(tAuthenticationResponseModel.user))
+            .thenAnswer((_) async {});
+
+        // Act
+        final result = await repository.signUpWithPhone(tSignUpWithPhoneParams);
+
+        // Assert
+        expect(result, Right(tUserModel));
+        verify(() => mockAuthRemoteDataSource
+            .signUpWithPhone(tSignUpWithPhoneParams)).called(1);
+        verify(() =>
+                mockLocalDataSource.saveUser(tAuthenticationResponseModel.user))
+            .called(1);
+      });
+
+      test(
+          'Should return Left(Failure) when remoteDataSource.signUpWithPhone throws CredentialFailure',
+          () async {
+        // Arrange
+        when(() => mockAuthRemoteDataSource.signUpWithPhone(
+            tSignUpWithPhoneParams)).thenThrow(CredentialFailure());
+        when(() =>
+                mockLocalDataSource.saveUser(tAuthenticationResponseModel.user))
+            .thenAnswer((_) async {});
+
+        // Act
+        final result = await repository.signUpWithPhone(tSignUpWithPhoneParams);
+
+        // Assert
+        expect(result, Left(CredentialFailure()));
+        verify(() => mockAuthRemoteDataSource
+            .signUpWithPhone(tSignUpWithPhoneParams)).called(1);
+        verifyNever(() =>
+            mockLocalDataSource.saveUser(tAuthenticationResponseModel.user));
+      });
+
+      test(
+          'Should return Left(Failure) when remoteDataSource.signUpWithPhone throws UserAlreadyExistsFailure',
+          () async {
+        // Arrange
+        when(() => mockAuthRemoteDataSource.signUpWithPhone(
+            tSignUpWithPhoneParams)).thenThrow(UserAlreadyExistsFailure());
+        when(() =>
+                mockLocalDataSource.saveUser(tAuthenticationResponseModel.user))
+            .thenAnswer((_) async {});
+
+        // Act
+        final result = await repository.signUpWithPhone(tSignUpWithPhoneParams);
+
+        // Assert
+        expect(result, Left(UserAlreadyExistsFailure()));
+        verify(() => mockAuthRemoteDataSource
+            .signUpWithPhone(tSignUpWithPhoneParams)).called(1);
+        verifyNever(() =>
+            mockLocalDataSource.saveUser(tAuthenticationResponseModel.user));
+      });
+
+      test(
+          'Should return Left(Failure) when remoteDataSource.signUpWithPhone throws ServerFailure',
+          () async {
+        // Arrange
+        when(() => mockAuthRemoteDataSource.signUpWithPhone(
+            tSignUpWithPhoneParams)).thenThrow(ServerFailure());
+        when(() =>
+                mockLocalDataSource.saveUser(tAuthenticationResponseModel.user))
+            .thenAnswer((_) async {});
+
+        // Act
+        final result = await repository.signUpWithPhone(tSignUpWithPhoneParams);
+
+        // Assert
+        expect(result, Left(ServerFailure()));
+        verify(() => mockAuthRemoteDataSource
+            .signUpWithPhone(tSignUpWithPhoneParams)).called(1);
+        verifyNever(() =>
+            mockLocalDataSource.saveUser(tAuthenticationResponseModel.user));
+      });
+    });
+
+    group('signUpWithGoogle', () {
+      test(
+          'Should return Right(User) when remoteDataSource.signUpWithGoogle successed',
+          () async {
+        // Arrange
+        when(() => mockAuthRemoteDataSource.signUpWithGoogle())
+            .thenAnswer((_) async => tAuthenticationResponseModel);
+        when(() =>
+                mockLocalDataSource.saveUser(tAuthenticationResponseModel.user))
+            .thenAnswer((_) async {});
+
+        // Act
+        final result = await repository.signUpWithGoogle();
+
+        // Assert
+        expect(result, Right(tUserModel));
+        verify(() => mockAuthRemoteDataSource.signUpWithGoogle()).called(1);
+        verify(() =>
+                mockLocalDataSource.saveUser(tAuthenticationResponseModel.user))
+            .called(1);
+      });
+
+      test(
+          'Should return Left(Failure) when remoteDataSource.signUpWithGoogle throws ExceptionFailure',
+          () async {
+        // Arrange
+        when(() => mockAuthRemoteDataSource.signUpWithGoogle())
+            .thenThrow(ExceptionFailure("Failure message"));
+        when(() =>
+                mockLocalDataSource.saveUser(tAuthenticationResponseModel.user))
+            .thenAnswer((_) async {});
+
+        // Act
+        final result = await repository.signUpWithGoogle();
+
+        // Assert
+        expect(result, Left(ExceptionFailure("Failure Message")));
+        verify(() => mockAuthRemoteDataSource.signUpWithGoogle()).called(1);
+        verifyNever(() =>
+            mockLocalDataSource.saveUser(tAuthenticationResponseModel.user));
+      });
+
+      test(
+          'Should return Left(Failure) when remoteDataSource.signUpWithGoogle throws CredentialFailure',
+          () async {
+        // Arrange
+        when(() => mockAuthRemoteDataSource.signUpWithGoogle())
+            .thenThrow(CredentialFailure());
+        when(() =>
+                mockLocalDataSource.saveUser(tAuthenticationResponseModel.user))
+            .thenAnswer((_) async {});
+
+        // Act
+        final result = await repository.signUpWithGoogle();
+
+        // Assert
+        expect(result, Left(CredentialFailure()));
+        verify(() => mockAuthRemoteDataSource.signUpWithGoogle()).called(1);
+        verifyNever(() =>
+            mockLocalDataSource.saveUser(tAuthenticationResponseModel.user));
+      });
+
+      test(
+          'Should return Left(Failure) when remoteDataSource.signUpWithGoogle throws UserAlreadyExistsFailure',
+          () async {
+        // Arrange
+        when(() => mockAuthRemoteDataSource.signUpWithGoogle())
+            .thenThrow(UserAlreadyExistsFailure());
+        when(() =>
+                mockLocalDataSource.saveUser(tAuthenticationResponseModel.user))
+            .thenAnswer((_) async {});
+
+        // Act
+        final result = await repository.signUpWithGoogle();
+
+        // Assert
+        expect(result, Left(UserAlreadyExistsFailure()));
+        verify(() => mockAuthRemoteDataSource.signUpWithGoogle()).called(1);
+        verifyNever(() =>
+            mockLocalDataSource.saveUser(tAuthenticationResponseModel.user));
+      });
+
+      test(
+          'Should return Left(Failure) when remoteDataSource.signUpWithGoogle throws ServerFailure',
+          () async {
+        // Arrange
+        when(() => mockAuthRemoteDataSource.signUpWithGoogle())
+            .thenThrow(ServerFailure());
+        when(() =>
+                mockLocalDataSource.saveUser(tAuthenticationResponseModel.user))
+            .thenAnswer((_) async {});
+
+        // Act
+        final result = await repository.signUpWithGoogle();
+
+        // Assert
+        expect(result, Left(ServerFailure()));
+        verify(() => mockAuthRemoteDataSource.signUpWithGoogle()).called(1);
+        verifyNever(() =>
+            mockLocalDataSource.saveUser(tAuthenticationResponseModel.user));
+      });
+    });
+
+    group('signUpWithFacebook', () {
+      test(
+          'Should Return Right(User) when remoteDataSource.signUpWithFacebook sucessed',
+          () async {
+        // Arrange
+        when(() => mockAuthRemoteDataSource.signUpWithFacebook())
+            .thenAnswer((_) async => tAuthenticationResponseModel);
+        when(() =>
+                mockLocalDataSource.saveUser(tAuthenticationResponseModel.user))
+            .thenAnswer((_) async {});
+
+        // Act
+        final result = await repository.signUpWithFacebook();
+
+        expect(result, Right(tUserModel));
+        verify(() => mockAuthRemoteDataSource.signUpWithFacebook()).called(1);
+        verify(() =>
+                mockLocalDataSource.saveUser(tAuthenticationResponseModel.user))
+            .called(1);
+      });
+
+      test(
+          'Should Return Left(Failure) when remoteDataSource.signUpWithFacebook throws ExceptionFailure',
+          () async {
+        // Arrange
+        when(() => mockAuthRemoteDataSource.signUpWithFacebook())
+            .thenThrow(ExceptionFailure("Failure Message"));
+        when(() =>
+                mockLocalDataSource.saveUser(tAuthenticationResponseModel.user))
+            .thenAnswer((_) async {});
+
+        // Act
+        final result = await repository.signUpWithFacebook();
+
+        expect(result, Left(ExceptionFailure("Failure Message")));
+        verify(() => mockAuthRemoteDataSource.signUpWithFacebook()).called(1);
+        verifyNever(() =>
+            mockLocalDataSource.saveUser(tAuthenticationResponseModel.user));
+      });
+
+      test(
+          'Should Return Left(Failure) when remoteDataSource.signUpWithFacebook throws CredentialFailure',
+          () async {
+        // Arrange
+        when(() => mockAuthRemoteDataSource.signUpWithFacebook())
+            .thenThrow(CredentialFailure());
+        when(() =>
+                mockLocalDataSource.saveUser(tAuthenticationResponseModel.user))
+            .thenAnswer((_) async {});
+
+        // Act
+        final result = await repository.signUpWithFacebook();
+
+        expect(result, Left(CredentialFailure()));
+        verify(() => mockAuthRemoteDataSource.signUpWithFacebook()).called(1);
+        verifyNever(() =>
+            mockLocalDataSource.saveUser(tAuthenticationResponseModel.user));
+      });
+
+      test(
+          'Should Return Left(Failure) when remoteDataSource.signUpWithFacebook throws UserAlreadyExistsFailure',
+          () async {
+        // Arrange
+        when(() => mockAuthRemoteDataSource.signUpWithFacebook())
+            .thenThrow(UserAlreadyExistsFailure());
+        when(() =>
+                mockLocalDataSource.saveUser(tAuthenticationResponseModel.user))
+            .thenAnswer((_) async {});
+
+        // Act
+        final result = await repository.signUpWithFacebook();
+
+        expect(result, Left(UserAlreadyExistsFailure()));
+        verify(() => mockAuthRemoteDataSource.signUpWithFacebook()).called(1);
+        verifyNever(() =>
+            mockLocalDataSource.saveUser(tAuthenticationResponseModel.user));
+      });
+
+      test(
+          'Should Return Left(Failure) when remoteDataSource.signUpWithFacebook throws ServerFailure',
+          () async {
+        // Arrange
+        when(() => mockAuthRemoteDataSource.signUpWithFacebook())
+            .thenThrow(ServerFailure());
+        when(() =>
+                mockLocalDataSource.saveUser(tAuthenticationResponseModel.user))
+            .thenAnswer((_) async {});
+
+        // Act
+        final result = await repository.signUpWithFacebook();
+
+        expect(result, Left(ServerFailure()));
+        verify(() => mockAuthRemoteDataSource.signUpWithFacebook()).called(1);
+        verifyNever(() =>
+            mockLocalDataSource.saveUser(tAuthenticationResponseModel.user));
       });
     });
   });

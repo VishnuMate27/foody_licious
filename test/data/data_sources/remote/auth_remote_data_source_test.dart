@@ -610,6 +610,7 @@ void main() {
           throwsA(isA<AuthenticationFailure>().having((f) => f.failureMessage,
               'message', contains('Some random error'))));
     });
+  
   });
 
   group('signUpWithEmail', () {
@@ -786,7 +787,7 @@ void main() {
       when(() => mockFirebaseAuth.currentUser).thenReturn(mockUser);
       when(() => mockUser.reload()).thenAnswer((_) async => Future.value());
       when(() => mockUser.sendEmailVerification())
-          .thenThrow(Exception('Random error'));
+          .thenThrow(ExceptionFailure('Random error'));
 
       // act
       final call = dataSource.sendVerificationEmail;

@@ -104,7 +104,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       googleSignIn.initialize(serverClientId: kServerClientId);
       final GoogleSignInAccount? googleUser = await googleSignIn.authenticate();
       if (googleUser == null) {
-        throw Exception("Google authentication cancelled.");
+        throw ExceptionFailure("Google authentication cancelled.");
       }
 
       final GoogleSignInAuthentication googleAuth =
@@ -118,9 +118,9 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
           await firebaseAuth.signInWithCredential(credential);
       user = userCredential.user;
 
-      if (user == null) throw Exception("Google sign-in failed.");
+      if (user == null) throw ExceptionFailure("Google sign-in failed.");
     } catch (e) {
-      throw ExceptionFailure();
+      throw ExceptionFailure(e.toString());
     }
     return await _sendLoginRequest(user!, authProvider: "google");
   }
@@ -130,7 +130,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     try {
       final LoginResult loginResult = await facebookAuth.login();
       if (loginResult.status != LoginStatus.success) {
-        throw Exception("Facebook login failed.");
+        throw ExceptionFailure("Facebook login failed.");
       }
 
       final OAuthCredential facebookAuthCredential =
@@ -140,9 +140,9 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
           await firebaseAuth.signInWithCredential(facebookAuthCredential);
       user = userCredential.user;
 
-      if (user == null) throw Exception("Facebook sign-in failed.");
+      if (user == null) throw ExceptionFailure("Facebook sign-in failed.");
     } catch (e) {
-      throw ExceptionFailure();
+      throw ExceptionFailure(e.toString());
     }
     return await _sendLoginRequest(user!, authProvider: "facebook");
   }
@@ -266,7 +266,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       googleSignIn.initialize(serverClientId: kServerClientId);
       final GoogleSignInAccount? googleUser = await googleSignIn.authenticate();
       if (googleUser == null) {
-        throw Exception("Google authentication cancelled.");
+        throw ExceptionFailure("Google authentication cancelled.");
       }
 
       final GoogleSignInAuthentication googleAuth =
@@ -280,9 +280,9 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
           await firebaseAuth.signInWithCredential(credential);
       user = userCredential.user;
 
-      if (user == null) throw Exception("Google sign-in failed.");
+      if (user == null) throw ExceptionFailure("Google sign-in failed.");
     } catch (e) {
-      throw ExceptionFailure();
+      throw ExceptionFailure(e.toString());
     }
     return await _sendRegisterRequest(user!, authProvider: "google");
   }
@@ -292,7 +292,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     try {
       final LoginResult loginResult = await facebookAuth.login();
       if (loginResult.status != LoginStatus.success) {
-        throw Exception("Facebook login failed.");
+        throw ExceptionFailure("Facebook login failed.");
       }
 
       final OAuthCredential facebookAuthCredential =
@@ -302,9 +302,9 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
           await firebaseAuth.signInWithCredential(facebookAuthCredential);
       user = userCredential.user;
 
-      if (user == null) throw Exception("Facebook sign-in failed.");
+      if (user == null) throw ExceptionFailure("Facebook sign-in failed.");
     } catch (e) {
-      throw ExceptionFailure();
+      throw ExceptionFailure(e.toString());
     }
     return await _sendRegisterRequest(user!, authProvider: "facebook");
   }

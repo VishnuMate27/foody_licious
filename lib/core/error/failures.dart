@@ -12,7 +12,11 @@ class CacheFailure extends Failure {}
 
 class NetworkFailure extends Failure {}
 
-class ExceptionFailure extends Failure {}
+// ignore: must_be_immutable
+class ExceptionFailure extends Failure {
+  String? failureMessage;
+  ExceptionFailure(this.failureMessage);
+}
 
 class CredentialFailure extends Failure {}
 
