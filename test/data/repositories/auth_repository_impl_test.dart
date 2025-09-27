@@ -53,6 +53,38 @@ void main() {
     });
   }
 
+  runTestsOffline(() {
+    group('signOut', () {
+      test(
+          'Should return Right(unit) when localDataSource.clearCache is successed',
+          () async {
+        // arrange
+        when(() => mockLocalDataSource.clearCache()).thenAnswer((_) async {});
+
+        // act
+        final result = await repository.signOut();
+
+        // assert
+        expect(result, Right(unit));
+        verify(() => mockLocalDataSource.clearCache()).called(1);
+      });
+
+      test(
+          'Should return Left(Failure) when localDataSource.clearCache throws CacheFailure',
+          () async {
+        // arrange
+        when(() => mockLocalDataSource.clearCache()).thenThrow(CacheFailure());
+
+        // act
+        final result = await repository.signOut();
+
+        // assert
+        expect(result, Left(CacheFailure()));
+        verify(() => mockLocalDataSource.clearCache()).called(1);
+      });
+    });
+  });
+
   runTestsOnline(() {
     group('signInWithEmail', () {
       test(

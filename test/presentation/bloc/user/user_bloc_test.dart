@@ -50,6 +50,7 @@ void main() {
       expect(userBloc.state, UserInitial());
     });
 
+    // CheckUser
     blocTest<UserBloc, UserState>(
       'emits [UserLoading, UserAuthenticated] when CheckUser is added',
       build: () {
@@ -71,7 +72,8 @@ void main() {
       act: (bloc) => bloc.add(CheckUser()),
       expect: () => [UserLoading(), UserUnauthenticated(CacheFailure())],
     );
-
+      
+    // UpdateUser
     blocTest<UserBloc, UserState>(
       'emits [UserLoading, UserUpdateSuccess] when UpdateUser is added',
       build: () {
@@ -116,6 +118,7 @@ void main() {
       expect: () => [UserLoading(), UserUpdateFailed(ServerFailure())],
     );
 
+    // UpdateUserLocation
     blocTest<UserBloc, UserState>(
       'emits [UserLocationUpdating, UserUpdateLocationSuccess] when UpdateUserLocation is added',
       build: () {
@@ -160,50 +163,7 @@ void main() {
       expect: () => [UserLocationUpdating(), UserUpdateLocationFailed(ServerFailure())],
     );
 
-    // blocTest<UserBloc, UserState>(
-    //   'emits [UserLoading, UserLogged] when SignUpUser is added',
-    //   build: () {
-    //     when(() => mockSignUpUseCase(tSignUpParams))
-    //         .thenAnswer((_) async => const Right(tUserModel));
-    //     return userBloc;
-    //   },
-    //   act: (bloc) => bloc.add(SignUpUser(tSignUpParams)),
-    //   expect: () => [UserLoading(), UserLogged(tUserModel)],
-    // );
-
-    blocTest<UserBloc, UserState>(
-      'emits [UserLocationUpdating, UserUpdateLocationFailed] when UpdateUserLocation is added',
-      build: () {
-        when(() => mockUpdateUserLocationUseCase(tUpdateUserParams))
-            .thenAnswer((_) async => Left(NetworkFailure()));
-        return userBloc;
-      },
-      act: (bloc) => bloc.add(UpdateUserLocation()),
-      expect: () => [UserLocationUpdating(), UserUpdateLocationFailed(NetworkFailure())],
-    );
-
-    blocTest<UserBloc, UserState>(
-      'emits [UserLocationUpdating, UserUpdateLocationFailed] when UpdateUserLocation is added',
-      build: () {
-        when(() => mockUpdateUserLocationUseCase(tUpdateUserParams))
-            .thenAnswer((_) async => Left(CredentialFailure()));
-        return userBloc;
-      },
-      act: (bloc) => bloc.add(UpdateUserLocation()),
-      expect: () => [UserLocationUpdating(), UserUpdateLocationFailed(CredentialFailure())],
-    );
-
-    blocTest<UserBloc, UserState>(
-      'emits [UserLocationUpdating, UserUpdateLocationFailed] when UpdateUserLocation is added',
-      build: () {
-        when(() => mockUpdateUserLocationUseCase(tUpdateUserParams))
-            .thenAnswer((_) async => Left(ServerFailure()));
-        return userBloc;
-      },
-      act: (bloc) => bloc.add(UpdateUserLocation()),
-      expect: () => [UserLocationUpdating(), UserUpdateLocationFailed(ServerFailure())],
-    );
-
+    // DeleteUser
     blocTest<UserBloc, UserState>(
       'emits [UserLoading, UserDeleteSuccess] when DeleteUser is added',
       build: () {
@@ -228,7 +188,7 @@ void main() {
     );
 
     blocTest<UserBloc, UserState>(
-      'emits [UserLocationUpdating, UserUpdateLocationFailed] when DeleteUser is added',
+      'emits [UserLoading, UserDeleteFailed] when DeleteUser is added',
       build: () {
         when(() => mockDeleteUserUseCase(NoParams()))
             .thenAnswer((_) async => Left(CredentialFailure()));
@@ -242,7 +202,7 @@ void main() {
     );
 
     blocTest<UserBloc, UserState>(
-      'emits [UserLocationUpdating, UserUpdateLocationFailed] when DeleteUser is added',
+      'emits [UserLoading, UserDeleteFailed] when DeleteUser is added',
       build: () {
         when(() => mockDeleteUserUseCase(NoParams()))
             .thenAnswer((_) async => Left(ServerFailure()));
