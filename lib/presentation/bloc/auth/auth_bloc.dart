@@ -102,13 +102,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         (unit) => emit(AuthVerificationSMSForLoginSent(unit)),
       );
     } catch (e) {
-      emit(AuthVerificationSMSForLoginSentFailed(ExceptionFailure(e.toString())));
+      emit(AuthVerificationSMSForLoginSentFailed(
+          ExceptionFailure(e.toString())));
     }
   }
 
   FutureOr<void> _onSignInWithPhone(
       AuthSignInWithPhone event, Emitter<AuthState> emit) async {
     try {
+      emit(AuthLoading());
       final result = await _signInWithPhoneUseCase(event.params);
       result.fold(
         (failure) => emit(AuthPhoneVerificationForLoginFailed(failure)),
@@ -150,6 +152,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   FutureOr<void> _onSendPasswordResetEmail(
       AuthSendPasswordResetEmail event, Emitter<AuthState> emit) async {
     try {
+      emit(AuthLoading());
       final result = await _sendPasswordResetEmailUseCase(event.params);
       result.fold(
         (failure) => emit(AuthPasswordResetEmailSentFailed(failure)),
@@ -213,7 +216,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         (unit) => emit(AuthVerificationSMSForRegistrationSent(unit)),
       );
     } catch (e) {
-      emit(AuthVerificationSMSForRegistrationSentFailed(ExceptionFailure(e.toString())));
+      emit(AuthVerificationSMSForRegistrationSentFailed(
+          ExceptionFailure(e.toString())));
     }
   }
 
@@ -226,7 +230,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         (user) => emit(AuthPhoneVerificationForRegistrationSuccess(user)),
       );
     } catch (e) {
-      emit(AuthPhoneVerificationForRegistrationFailed(ExceptionFailure(e.toString())));
+      emit(AuthPhoneVerificationForRegistrationFailed(
+          ExceptionFailure(e.toString())));
     }
   }
 
