@@ -606,5 +606,408 @@ void main() {
       expect: () =>
           [AuthLoading(), AuthVerificationEmailRequestFailed(ServerFailure())],
     );
+
+    // _onSendVerificationEmail
+    blocTest<AuthBloc, AuthState>(
+      'emits [AuthLoading, AuthVerificationEmailSent] when AuthSendVerificationEmail is added.',
+      build: () {
+        when(() => mockSendVerificationEmailUseCase(any()))
+            .thenAnswer((_) async => Right(unit));
+        return authBloc;
+      },
+      act: (bloc) => bloc.add(AuthSendVerificationEmail()),
+      expect: () => [AuthLoading(), AuthVerificationEmailSent()],
+    );
+
+    blocTest<AuthBloc, AuthState>(
+      'emits [AuthLoading, AuthVerificationEmailSentFailed] when AuthSendVerificationEmail is added.',
+      build: () {
+        when(() => mockSendVerificationEmailUseCase(any()))
+            .thenAnswer((_) async => Left(ExceptionFailure("Error Message")));
+        return authBloc;
+      },
+      act: (bloc) => bloc.add(AuthSendVerificationEmail()),
+      expect: () => [
+        AuthLoading(),
+        AuthVerificationEmailSentFailed(ExceptionFailure("Error Message"))
+      ],
+    );
+
+    blocTest<AuthBloc, AuthState>(
+      'emits [AuthLoading, AuthVerificationEmailSentFailed] when AuthSendVerificationEmail is added.',
+      build: () {
+        when(() => mockSendVerificationEmailUseCase(any()))
+            .thenAnswer((_) async => Left(TooManyRequestsFailure()));
+        return authBloc;
+      },
+      act: (bloc) => bloc.add(AuthSendVerificationEmail()),
+      expect: () => [
+        AuthLoading(),
+        AuthVerificationEmailSentFailed(TooManyRequestsFailure())
+      ],
+    );
+
+    blocTest<AuthBloc, AuthState>(
+      'emits [AuthLoading, AuthVerificationEmailSentFailed] when AuthSendVerificationEmail is added.',
+      build: () {
+        when(() => mockSendVerificationEmailUseCase(any()))
+            .thenAnswer((_) async => Left(UserNotExistsFailure()));
+        return authBloc;
+      },
+      act: (bloc) => bloc.add(AuthSendVerificationEmail()),
+      expect: () => [
+        AuthLoading(),
+        AuthVerificationEmailSentFailed(UserNotExistsFailure())
+      ],
+    );
+
+    blocTest<AuthBloc, AuthState>(
+      'emits [AuthLoading, AuthVerificationEmailSentFailed] when AuthSendVerificationEmail is added.',
+      build: () {
+        when(() => mockSendVerificationEmailUseCase(any()))
+            .thenAnswer((_) async => Left(ServerFailure()));
+        return authBloc;
+      },
+      act: (bloc) => bloc.add(AuthSendVerificationEmail()),
+      expect: () =>
+          [AuthLoading(), AuthVerificationEmailSentFailed(ServerFailure())],
+    );
+
+    // _onWaitForEmailVerification
+    blocTest<AuthBloc, AuthState>(
+      'emits [AuthLoading, AuthEmailVerificationSuccess when AuthWaitForEmailVerification is added]',
+      build: () {
+        when(() => mockWaitForEmailVerificationUseCase(any()))
+            .thenAnswer((_) async => Right(unit));
+        return authBloc;
+      },
+      act: (bloc) => bloc.add(AuthWaitForEmailVerification()),
+      expect: () => [AuthLoading(), AuthEmailVerificationSuccess()],
+    );
+
+    blocTest<AuthBloc, AuthState>(
+      'emits [AuthLoading, AuthEmailVerificationFailed when AuthWaitForEmailVerification is added]',
+      build: () {
+        when(() => mockWaitForEmailVerificationUseCase(any()))
+            .thenAnswer((_) async => Left(ExceptionFailure("Error Message")));
+        return authBloc;
+      },
+      act: (bloc) => bloc.add(AuthWaitForEmailVerification()),
+      expect: () => [
+        AuthLoading(),
+        AuthEmailVerificationFailed(ExceptionFailure("Error Message"))
+      ],
+    );
+
+    blocTest<AuthBloc, AuthState>(
+      'emits [AuthLoading, AuthEmailVerificationFailed when AuthWaitForEmailVerification is added]',
+      build: () {
+        when(() => mockWaitForEmailVerificationUseCase(any()))
+            .thenAnswer((_) async => Left(UserNotExistsFailure()));
+        return authBloc;
+      },
+      act: (bloc) => bloc.add(AuthWaitForEmailVerification()),
+      expect: () =>
+          [AuthLoading(), AuthEmailVerificationFailed(UserNotExistsFailure())],
+    );
+
+    blocTest<AuthBloc, AuthState>(
+      'emits [AuthLoading, AuthEmailVerificationFailed when AuthWaitForEmailVerification is added]',
+      build: () {
+        when(() => mockWaitForEmailVerificationUseCase(any()))
+            .thenAnswer((_) async => Left(TimeOutFailure()));
+        return authBloc;
+      },
+      act: (bloc) => bloc.add(AuthWaitForEmailVerification()),
+      expect: () =>
+          [AuthLoading(), AuthEmailVerificationFailed(TimeOutFailure())],
+    );
+
+    // _onVerifyPhoneNumberForRegistration
+    blocTest<AuthBloc, AuthState>(
+      'emits[AuthLoading, AuthVerificationSMSForRegistrationSent] when AuthVerifyPhoneNumberForRegistration is added',
+      build: () {
+        when(() => mockVerifyPhoneNumberForRegistrationUseCase(
+            tSignUpWithPhoneParams)).thenAnswer((_) async => Right(unit));
+        return authBloc;
+      },
+      act: (bloc) => bloc
+          .add(AuthVerifyPhoneNumberForRegistration(tSignUpWithPhoneParams)),
+      expect: () =>
+          [AuthLoading(), AuthVerificationSMSForRegistrationSent(unit)],
+    );
+
+    blocTest<AuthBloc, AuthState>(
+      'emits[AuthLoading, AuthVerificationSMSForRegistrationSentFailed] when AuthVerifyPhoneNumberForRegistration is added',
+      build: () {
+        when(() => mockVerifyPhoneNumberForRegistrationUseCase(
+                tSignUpWithPhoneParams))
+            .thenAnswer((_) async => Left(ExceptionFailure("Error Message")));
+        return authBloc;
+      },
+      act: (bloc) => bloc
+          .add(AuthVerifyPhoneNumberForRegistration(tSignUpWithPhoneParams)),
+      expect: () => [
+        AuthLoading(),
+        AuthVerificationSMSForRegistrationSentFailed(
+            ExceptionFailure("Error Message"))
+      ],
+    );
+
+    blocTest<AuthBloc, AuthState>(
+      'emits[AuthLoading, AuthVerificationSMSForRegistrationSentFailed] when AuthVerifyPhoneNumberForRegistration is added',
+      build: () {
+        when(() => mockVerifyPhoneNumberForRegistrationUseCase(
+                tSignUpWithPhoneParams))
+            .thenAnswer((_) async => Left(UserAlreadyExistsFailure()));
+        return authBloc;
+      },
+      act: (bloc) => bloc
+          .add(AuthVerifyPhoneNumberForRegistration(tSignUpWithPhoneParams)),
+      expect: () => [
+        AuthLoading(),
+        AuthVerificationSMSForRegistrationSentFailed(UserAlreadyExistsFailure())
+      ],
+    );
+
+    blocTest<AuthBloc, AuthState>(
+      'emits[AuthLoading, AuthVerificationSMSForRegistrationSentFailed] when AuthVerifyPhoneNumberForRegistration is added',
+      build: () {
+        when(() => mockVerifyPhoneNumberForRegistrationUseCase(
+                tSignUpWithPhoneParams))
+            .thenAnswer((_) async => Left(ServerFailure()));
+        return authBloc;
+      },
+      act: (bloc) => bloc
+          .add(AuthVerifyPhoneNumberForRegistration(tSignUpWithPhoneParams)),
+      expect: () => [
+        AuthLoading(),
+        AuthVerificationSMSForRegistrationSentFailed(ServerFailure())
+      ],
+    );
+
+    // _onSignUpWithPhone
+    blocTest<AuthBloc, AuthState>(
+      'emits [AuthLoading, AuthPhoneVerificationForRegistrationSuccess] when AuthSignUpWithPhone is added',
+      build: () {
+        when(() => mockSignUpWithPhoneUseCase(tSignUpWithPhoneParams))
+            .thenAnswer((_) async => Right(tUserModel));
+        return authBloc;
+      },
+      act: (bloc) => bloc.add(AuthSignUpWithPhone(tSignUpWithPhoneParams)),
+      expect: () => [
+        AuthLoading(),
+        AuthPhoneVerificationForRegistrationSuccess(tUserModel)
+      ],
+    );
+
+    blocTest<AuthBloc, AuthState>(
+      'emits [AuthLoading, AuthPhoneVerificationForRegistrationFailed] when AuthSignUpWithPhone is added',
+      build: () {
+        when(() => mockSignUpWithPhoneUseCase(tSignUpWithPhoneParams))
+            .thenAnswer((_) async => Left(ExceptionFailure("Failure Message")));
+        return authBloc;
+      },
+      act: (bloc) => bloc.add(AuthSignUpWithPhone(tSignUpWithPhoneParams)),
+      expect: () => [
+        AuthLoading(),
+        AuthPhoneVerificationForRegistrationFailed(
+            ExceptionFailure("Failure Message"))
+      ],
+    );
+
+    blocTest<AuthBloc, AuthState>(
+      'emits [AuthLoading, AuthPhoneVerificationForRegistrationFailed] when AuthSignUpWithPhone is added',
+      build: () {
+        when(() => mockSignUpWithPhoneUseCase(tSignUpWithPhoneParams))
+            .thenAnswer((_) async => Left(CredentialFailure()));
+        return authBloc;
+      },
+      act: (bloc) => bloc.add(AuthSignUpWithPhone(tSignUpWithPhoneParams)),
+      expect: () => [
+        AuthLoading(),
+        AuthPhoneVerificationForRegistrationFailed(CredentialFailure())
+      ],
+    );
+
+    blocTest<AuthBloc, AuthState>(
+      'emits [AuthLoading, AuthPhoneVerificationForRegistrationFailed] when AuthSignUpWithPhone is added',
+      build: () {
+        when(() => mockSignUpWithPhoneUseCase(tSignUpWithPhoneParams))
+            .thenAnswer((_) async => Left(UserAlreadyExistsFailure()));
+        return authBloc;
+      },
+      act: (bloc) => bloc.add(AuthSignUpWithPhone(tSignUpWithPhoneParams)),
+      expect: () => [
+        AuthLoading(),
+        AuthPhoneVerificationForRegistrationFailed(UserAlreadyExistsFailure())
+      ],
+    );
+
+    blocTest<AuthBloc, AuthState>(
+      'emits [AuthLoading, AuthPhoneVerificationForRegistrationFailed] when AuthSignUpWithPhone is added',
+      build: () {
+        when(() => mockSignUpWithPhoneUseCase(tSignUpWithPhoneParams))
+            .thenAnswer((_) async => Left(ServerFailure()));
+        return authBloc;
+      },
+      act: (bloc) => bloc.add(AuthSignUpWithPhone(tSignUpWithPhoneParams)),
+      expect: () => [
+        AuthLoading(),
+        AuthPhoneVerificationForRegistrationFailed(ServerFailure())
+      ],
+    );
+
+    // _onSignUpWithGoogle
+    blocTest<AuthBloc, AuthState>(
+      'emits [AuthLoading, AuthGoogleSignUpSuccess] when AuthSignUpWithGoogle is added',
+      build: () {
+        when(() => mockSignUpWithGoogleUseCase(any()))
+            .thenAnswer((_) async => Right(tUserModel));
+        return authBloc;
+      },
+      act: (bloc) => bloc.add(AuthSignUpWithGoogle()),
+      expect: () => [AuthLoading(), AuthGoogleSignUpSuccess(tUserModel)],
+    );
+
+    blocTest<AuthBloc, AuthState>(
+      'emits [AuthLoading, AuthGoogleSignUpFailed] when AuthSignUpWithGoogle is added',
+      build: () {
+        when(() => mockSignUpWithGoogleUseCase(any()))
+            .thenAnswer((_) async => Left(ExceptionFailure("Error Message")));
+        return authBloc;
+      },
+      act: (bloc) => bloc.add(AuthSignUpWithGoogle()),
+      expect: () => [
+        AuthLoading(),
+        AuthGoogleSignUpFailed(ExceptionFailure("Error Message"))
+      ],
+    );
+
+    blocTest<AuthBloc, AuthState>(
+      'emits [AuthLoading, AuthGoogleSignUpFailed] when AuthSignUpWithGoogle is added',
+      build: () {
+        when(() => mockSignUpWithGoogleUseCase(any()))
+            .thenAnswer((_) async => Left(CredentialFailure()));
+        return authBloc;
+      },
+      act: (bloc) => bloc.add(AuthSignUpWithGoogle()),
+      expect: () =>
+          [AuthLoading(), AuthGoogleSignUpFailed(CredentialFailure())],
+    );
+
+    blocTest<AuthBloc, AuthState>(
+      'emits [AuthLoading, AuthGoogleSignUpFailed] when AuthSignUpWithGoogle is added',
+      build: () {
+        when(() => mockSignUpWithGoogleUseCase(any()))
+            .thenAnswer((_) async => Left(UserAlreadyExistsFailure()));
+        return authBloc;
+      },
+      act: (bloc) => bloc.add(AuthSignUpWithGoogle()),
+      expect: () =>
+          [AuthLoading(), AuthGoogleSignUpFailed(UserAlreadyExistsFailure())],
+    );
+
+    blocTest<AuthBloc, AuthState>(
+      'emits [AuthLoading, AuthGoogleSignUpFailed] when AuthSignUpWithGoogle is added',
+      build: () {
+        when(() => mockSignUpWithGoogleUseCase(any()))
+            .thenAnswer((_) async => Left(ServerFailure()));
+        return authBloc;
+      },
+      act: (bloc) => bloc.add(AuthSignUpWithGoogle()),
+      expect: () => [AuthLoading(), AuthGoogleSignUpFailed(ServerFailure())],
+    );
+
+    // _onSignUpWithFacebook
+    blocTest<AuthBloc, AuthState>(
+      'emits [AuthLoading, AuthFacebookSignUpSuccess] when AuthSignUpWithFacebook is added',
+      build: () {
+        when(() => mockSignUpWithFacebookUseCase(any()))
+            .thenAnswer((_) async => Right(tUserModel));
+        return authBloc;
+      },
+      act: (bloc) => bloc.add(AuthSignUpWithFacebook()),
+      expect: () => [AuthLoading(), AuthFacebookSignUpSuccess(tUserModel)],
+    );
+
+    blocTest<AuthBloc, AuthState>(
+      'emits [AuthLoading, AuthFacebookSignUpFailed] when AuthSignUpWithFacebook is added',
+      build: () {
+        when(() => mockSignUpWithFacebookUseCase(any()))
+            .thenAnswer((_) async => Left(ExceptionFailure("Error Message")));
+        return authBloc;
+      },
+      act: (bloc) => bloc.add(AuthSignUpWithFacebook()),
+      expect: () => [
+        AuthLoading(),
+        AuthFacebookSignUpFailed(ExceptionFailure("Error Message"))
+      ],
+    );
+
+    blocTest<AuthBloc, AuthState>(
+      'emits [AuthLoading, AuthFacebookSignUpFailed] when AuthSignUpWithFacebook is added',
+      build: () {
+        when(() => mockSignUpWithFacebookUseCase(any()))
+            .thenAnswer((_) async => Left(CredentialFailure()));
+        return authBloc;
+      },
+      act: (bloc) => bloc.add(AuthSignUpWithFacebook()),
+      expect: () =>
+          [AuthLoading(), AuthFacebookSignUpFailed(CredentialFailure())],
+    );
+
+    blocTest<AuthBloc, AuthState>(
+      'emits [AuthLoading, AuthFacebookSignUpFailed] when AuthSignUpWithFacebook is added',
+      build: () {
+        when(() => mockSignUpWithFacebookUseCase(any()))
+            .thenAnswer((_) async => Left(UserAlreadyExistsFailure()));
+        return authBloc;
+      },
+      act: (bloc) => bloc.add(AuthSignUpWithFacebook()),
+      expect: () =>
+          [AuthLoading(), AuthFacebookSignUpFailed(UserAlreadyExistsFailure())],
+    );
+
+    blocTest<AuthBloc, AuthState>(
+      'emits [AuthLoading, AuthFacebookSignUpFailed] when AuthSignUpWithFacebook is added',
+      build: () {
+        when(() => mockSignUpWithFacebookUseCase(any()))
+            .thenAnswer((_) async => Left(ServerFailure()));
+        return authBloc;
+      },
+      act: (bloc) => bloc.add(AuthSignUpWithFacebook()),
+      expect: () => [AuthLoading(), AuthFacebookSignUpFailed(ServerFailure())],
+    );
+
+    // _onSignOut
+    blocTest<AuthBloc, AuthState>(
+      'emits [AuthLoading, AuthLoggedOut] when AuthSignOut is added',
+      build: () {
+        when(() => mockSignOutUseCase(any()))
+            .thenAnswer((_) async => Right(unit));
+        return authBloc;
+      },
+      act: (bloc) => bloc.add(AuthSignOut()),
+      expect: () => [AuthLoading(), AuthLoggedOut()],
+    );
+
+    blocTest<AuthBloc, AuthState>(
+      'emits [AuthLoading, AuthLoggedFail] when signOutUseCase throws',
+      build: () {
+        when(() => mockSignOutUseCase(any()))
+            .thenThrow(Exception('sign out failed')); // simulate error
+        return authBloc;
+      },
+      act: (bloc) => bloc.add(AuthSignOut()),
+      expect: () => [
+        AuthLoading(),
+        isA<AuthLoggedFail>().having(
+          (state) => state.failure,
+          'failure',
+          isA<ExceptionFailure>(),
+        ),
+      ],
+    );
   });
 }

@@ -180,6 +180,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   FutureOr<void> _onSendVerificationEmail(
       AuthSendVerificationEmail event, Emitter<AuthState> emit) async {
     try {
+      emit(AuthLoading());
       final result = await _sendVerificationEmailUseCase(NoParams());
       result.fold(
         (failure) => emit(AuthVerificationEmailSentFailed(failure)),
@@ -193,6 +194,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   FutureOr<void> _onWaitForEmailVerification(
       AuthWaitForEmailVerification event, Emitter<AuthState> emit) async {
     try {
+      emit(AuthLoading());
       final result = await _waitForEmailVerificationUseCase(NoParams());
       result.fold(
         (failure) => emit(AuthEmailVerificationFailed(failure)),
@@ -224,6 +226,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   FutureOr<void> _onSignUpWithPhone(
       AuthSignUpWithPhone event, Emitter<AuthState> emit) async {
     try {
+      emit(AuthLoading());
       final result = await _signUpWithPhoneUseCase(event.params);
       result.fold(
         (failure) => emit(AuthPhoneVerificationForRegistrationFailed(failure)),
