@@ -10,6 +10,6 @@ class SignInWithFacebookUseCase implements UseCase<User, NoParams> {
 
   @override
   Future<Either<Failure, User>> call(void params) async {
-    return await repository.signUpWithFacebook();
+    return await repository.signInWithFacebook();
   }
 }

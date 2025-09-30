@@ -9,7 +9,7 @@ import 'package:foody_licious/core/usecase/usecase.dart';
 import 'package:foody_licious/domain/usecase/auth/send_password_reset_email_usecase.dart';
 import 'package:foody_licious/domain/usecase/auth/send_verification_email_usecase.dart';
 import 'package:foody_licious/domain/usecase/auth/sign_in_with_email_usecase.dart';
-import 'package:foody_licious/domain/usecase/auth/sign_in_with_facebook.dart';
+import 'package:foody_licious/domain/usecase/auth/sign_in_with_facebook_usecase.dart';
 import 'package:foody_licious/domain/usecase/auth/sign_in_with_google_usecase.dart';
 import 'package:foody_licious/domain/usecase/auth/sign_in_with_phone_usecase.dart';
 import 'package:foody_licious/domain/usecase/auth/sign_out_usecase.dart';
