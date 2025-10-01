@@ -7,13 +7,13 @@ import 'package:mocktail/mocktail.dart';
 
 import '../../../fixtures/constant_objects.dart';
 
-class MockAuthRepository extends Mock implements AuthRepository {}
+class MockRepository extends Mock implements AuthRepository {}
 
 void main() {
-  late MockAuthRepository mockRepository;
+  late MockRepository mockRepository;
   late SendPasswordResetEmailUseCase usecase;
   setUp(() {
-    mockRepository = MockAuthRepository();
+    mockRepository = MockRepository();
     usecase = SendPasswordResetEmailUseCase(mockRepository);
   });
 
