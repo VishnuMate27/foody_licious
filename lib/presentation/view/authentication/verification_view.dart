@@ -114,25 +114,36 @@ class _VerificationViewState extends State<VerificationView>
     );
     return BlocConsumer<AuthBloc, AuthState>(listener: (context, state) async {
       _currentState = state;
+
       if (state is AuthLoading) {
         EasyLoading.show(status: 'Loading...');
       } else if (state is AuthPhoneVerificationForRegistrationSuccess) {
         EasyLoading.dismiss();
-        Navigator.of(context).pushNamedAndRemoveUntil(
-          AppRouter.setLocation,
-          (Route<dynamic> route) => false,
-        );
+
+        // Add a small delay to ensure loading is dismissed
+        await Future.delayed(Duration(milliseconds: 100));
+
+        if (mounted) {
+          Navigator.of(context).pushNamedAndRemoveUntil(
+            AppRouter.setLocation,
+            (Route<dynamic> route) => false,
+          );
+        }
       } else if (state is AuthPhoneVerificationForLoginSuccess) {
         EasyLoading.dismiss();
-        Navigator.of(context).pushNamedAndRemoveUntil(
-          AppRouter.setLocation,
-          (Route<dynamic> route) => false,
-               arguments: {
+        await Future.delayed(Duration(milliseconds: 100));
+        if (mounted) {
+          Navigator.of(context).pushNamedAndRemoveUntil(
+            AppRouter.setLocation,
+            (Route<dynamic> route) => false,
+            arguments: {
               'previousCity': state.user.address?.city,
             },
-        );
+          );
+        }
       } else if (state is AuthPhoneVerificationForLoginFailed) {
         EasyLoading.dismiss();
+        await Future.delayed(Duration(milliseconds: 100));
         EasyLoading.showError(
           state.failure.toMessage(
             defaultMessage: "Failed to verify phone number!",
@@ -140,6 +151,7 @@ class _VerificationViewState extends State<VerificationView>
         );
       } else if (state is AuthEmailVerificationFailed) {
         EasyLoading.dismiss();
+        await Future.delayed(Duration(milliseconds: 100));
         EasyLoading.showError(
           state.failure.toMessage(
             defaultMessage: "Email Verification Failed!",
@@ -148,20 +160,17 @@ class _VerificationViewState extends State<VerificationView>
         );
       } else if (state is AuthPhoneVerificationForRegistrationFailed) {
         EasyLoading.dismiss();
+        await Future.delayed(Duration(milliseconds: 100));
         EasyLoading.showError(
           state.failure.toMessage(
             defaultMessage: "Failed to verify phone number!",
           ),
         );
-      } else if (state is AuthVerificationSMSForRegistrationSent) {
+      } else {
         EasyLoading.dismiss();
-        // _controller = AnimationController(
-        //     vsync: this, duration: Duration(seconds: otpTimer));
-        // _controller!.forward();
       }
     }, builder: (context, state) {
       _currentState = state;
-      print("State is: $state");
       if (state is AuthVerificationEmailSent ||
           state is AuthEmailVerificationFailed) {
         return Scaffold(
@@ -408,7 +417,7 @@ class _VerificationViewState extends State<VerificationView>
           ),
         );
       } else if (state is AuthVerificationSMSForRegistrationSent ||
-          state is AuthVerificationSMSForLoginSent) {    
+          state is AuthVerificationSMSForLoginSent) {
         return Scaffold(
           backgroundColor: kWhite,
           body: SingleChildScrollView(
