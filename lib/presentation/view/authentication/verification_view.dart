@@ -117,11 +117,13 @@ class _VerificationViewState extends State<VerificationView>
       if (state is AuthLoading) {
         EasyLoading.show(status: 'Loading...');
       } else if (state is AuthPhoneVerificationForRegistrationSuccess) {
+        EasyLoading.dismiss();
         Navigator.of(context).pushNamedAndRemoveUntil(
           AppRouter.setLocation,
           (Route<dynamic> route) => false,
         );
       } else if (state is AuthPhoneVerificationForLoginSuccess) {
+        EasyLoading.dismiss();
         Navigator.of(context).pushNamedAndRemoveUntil(
           AppRouter.setLocation,
           (Route<dynamic> route) => false,
@@ -130,12 +132,14 @@ class _VerificationViewState extends State<VerificationView>
             },
         );
       } else if (state is AuthPhoneVerificationForLoginFailed) {
+        EasyLoading.dismiss();
         EasyLoading.showError(
           state.failure.toMessage(
             defaultMessage: "Failed to verify phone number!",
           ),
         );
       } else if (state is AuthEmailVerificationFailed) {
+        EasyLoading.dismiss();
         EasyLoading.showError(
           state.failure.toMessage(
             defaultMessage: "Email Verification Failed!",
@@ -143,12 +147,14 @@ class _VerificationViewState extends State<VerificationView>
           duration: const Duration(seconds: 3),
         );
       } else if (state is AuthPhoneVerificationForRegistrationFailed) {
+        EasyLoading.dismiss();
         EasyLoading.showError(
           state.failure.toMessage(
             defaultMessage: "Failed to verify phone number!",
           ),
         );
       } else if (state is AuthVerificationSMSForRegistrationSent) {
+        EasyLoading.dismiss();
         // _controller = AnimationController(
         //     vsync: this, duration: Duration(seconds: otpTimer));
         // _controller!.forward();
@@ -402,7 +408,7 @@ class _VerificationViewState extends State<VerificationView>
           ),
         );
       } else if (state is AuthVerificationSMSForRegistrationSent ||
-          state is AuthVerificationSMSForLoginSent) {
+          state is AuthVerificationSMSForLoginSent) {    
         return Scaffold(
           backgroundColor: kWhite,
           body: SingleChildScrollView(
@@ -700,14 +706,6 @@ class _VerificationViewState extends State<VerificationView>
                   ),
                 ],
               ),
-            ),
-          ),
-        );
-      } else if (state is AuthLoading) {
-        return Scaffold(
-          body: Center(
-            child: Container(
-              child: CircularProgressIndicator(),
             ),
           ),
         );
