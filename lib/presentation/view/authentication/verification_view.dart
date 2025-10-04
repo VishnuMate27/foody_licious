@@ -112,16 +112,16 @@ class _VerificationViewState extends State<VerificationView>
         border: Border.all(color: kBorder),
       ),
     );
-    return BlocConsumer<AuthBloc, AuthState>(listener: (context, state) async {
+    return BlocConsumer<AuthBloc, AuthState>(
+      listener: (context, state) async {
       _currentState = state;
-
       if (state is AuthLoading) {
         EasyLoading.show(status: 'Loading...');
       } else if (state is AuthPhoneVerificationForRegistrationSuccess) {
         EasyLoading.dismiss();
 
         // Add a small delay to ensure loading is dismissed
-        await Future.delayed(Duration(milliseconds: 100));
+        await Future.delayed(Duration(milliseconds: 10));
 
         if (mounted) {
           Navigator.of(context).pushNamedAndRemoveUntil(
@@ -131,7 +131,7 @@ class _VerificationViewState extends State<VerificationView>
         }
       } else if (state is AuthPhoneVerificationForLoginSuccess) {
         EasyLoading.dismiss();
-        await Future.delayed(Duration(milliseconds: 100));
+        await Future.delayed(Duration(milliseconds: 10));
         if (mounted) {
           Navigator.of(context).pushNamedAndRemoveUntil(
             AppRouter.setLocation,
@@ -143,7 +143,7 @@ class _VerificationViewState extends State<VerificationView>
         }
       } else if (state is AuthPhoneVerificationForLoginFailed) {
         EasyLoading.dismiss();
-        await Future.delayed(Duration(milliseconds: 100));
+        await Future.delayed(Duration(milliseconds: 10));
         EasyLoading.showError(
           state.failure.toMessage(
             defaultMessage: "Failed to verify phone number!",
@@ -151,7 +151,7 @@ class _VerificationViewState extends State<VerificationView>
         );
       } else if (state is AuthEmailVerificationFailed) {
         EasyLoading.dismiss();
-        await Future.delayed(Duration(milliseconds: 100));
+        await Future.delayed(Duration(milliseconds: 10));
         EasyLoading.showError(
           state.failure.toMessage(
             defaultMessage: "Email Verification Failed!",
@@ -160,7 +160,7 @@ class _VerificationViewState extends State<VerificationView>
         );
       } else if (state is AuthPhoneVerificationForRegistrationFailed) {
         EasyLoading.dismiss();
-        await Future.delayed(Duration(milliseconds: 100));
+        await Future.delayed(Duration(milliseconds: 10));
         EasyLoading.showError(
           state.failure.toMessage(
             defaultMessage: "Failed to verify phone number!",
@@ -169,6 +169,16 @@ class _VerificationViewState extends State<VerificationView>
       } else {
         EasyLoading.dismiss();
       }
+    }, 
+    buildWhen: (previous, current) {
+      if (current is AuthLoading ||
+          current is AuthPhoneVerificationForLoginSuccess ||
+          current is AuthPhoneVerificationForRegistrationSuccess ||
+          current is AuthPhoneVerificationForLoginFailed ||
+          current is AuthPhoneVerificationForRegistrationFailed) {
+        return false;
+      }
+      return true;
     }, builder: (context, state) {
       _currentState = state;
       if (state is AuthVerificationEmailSent ||
@@ -720,13 +730,11 @@ class _VerificationViewState extends State<VerificationView>
         );
       } else {
         return Scaffold(
-          body: Container(
-            child: Text(
-              "State is $state",
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
+          body: Text(
+            "State is $state",
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
             ),
           ),
         );

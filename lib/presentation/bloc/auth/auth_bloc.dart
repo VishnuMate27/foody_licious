@@ -194,7 +194,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   FutureOr<void> _onWaitForEmailVerification(
       AuthWaitForEmailVerification event, Emitter<AuthState> emit) async {
     try {
-      emit(AuthLoading());
+      emit(AuthVerificationEmailSent());
       final result = await _waitForEmailVerificationUseCase(NoParams());
       result.fold(
         (failure) => emit(AuthEmailVerificationFailed(failure)),

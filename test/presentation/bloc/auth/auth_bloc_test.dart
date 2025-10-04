@@ -675,18 +675,18 @@ void main() {
 
     // _onWaitForEmailVerification
     blocTest<AuthBloc, AuthState>(
-      'emits [AuthLoading, AuthEmailVerificationSuccess when AuthWaitForEmailVerification is added]',
+      'emits [AuthVerificationEmailSent, AuthEmailVerificationSuccess when AuthWaitForEmailVerification is added]',
       build: () {
         when(() => mockWaitForEmailVerificationUseCase(any()))
             .thenAnswer((_) async => Right(unit));
         return authBloc;
       },
       act: (bloc) => bloc.add(AuthWaitForEmailVerification()),
-      expect: () => [AuthLoading(), AuthEmailVerificationSuccess()],
+      expect: () => [AuthVerificationEmailSent(), AuthEmailVerificationSuccess()],
     );
 
     blocTest<AuthBloc, AuthState>(
-      'emits [AuthLoading, AuthEmailVerificationFailed when AuthWaitForEmailVerification is added]',
+      'emits [AuthVerificationEmailSent, AuthEmailVerificationFailed when AuthWaitForEmailVerification is added]',
       build: () {
         when(() => mockWaitForEmailVerificationUseCase(any()))
             .thenAnswer((_) async => Left(ExceptionFailure("Error Message")));
@@ -694,13 +694,13 @@ void main() {
       },
       act: (bloc) => bloc.add(AuthWaitForEmailVerification()),
       expect: () => [
-        AuthLoading(),
+        AuthVerificationEmailSent(),
         AuthEmailVerificationFailed(ExceptionFailure("Error Message"))
       ],
     );
 
     blocTest<AuthBloc, AuthState>(
-      'emits [AuthLoading, AuthEmailVerificationFailed when AuthWaitForEmailVerification is added]',
+      'emits [AuthVerificationEmailSent, AuthEmailVerificationFailed when AuthWaitForEmailVerification is added]',
       build: () {
         when(() => mockWaitForEmailVerificationUseCase(any()))
             .thenAnswer((_) async => Left(UserNotExistsFailure()));
@@ -708,11 +708,11 @@ void main() {
       },
       act: (bloc) => bloc.add(AuthWaitForEmailVerification()),
       expect: () =>
-          [AuthLoading(), AuthEmailVerificationFailed(UserNotExistsFailure())],
+          [AuthVerificationEmailSent(), AuthEmailVerificationFailed(UserNotExistsFailure())],
     );
 
     blocTest<AuthBloc, AuthState>(
-      'emits [AuthLoading, AuthEmailVerificationFailed when AuthWaitForEmailVerification is added]',
+      'emits [AuthVerificationEmailSent, AuthEmailVerificationFailed when AuthWaitForEmailVerification is added]',
       build: () {
         when(() => mockWaitForEmailVerificationUseCase(any()))
             .thenAnswer((_) async => Left(TimeOutFailure()));
@@ -720,7 +720,7 @@ void main() {
       },
       act: (bloc) => bloc.add(AuthWaitForEmailVerification()),
       expect: () =>
-          [AuthLoading(), AuthEmailVerificationFailed(TimeOutFailure())],
+          [AuthVerificationEmailSent(), AuthEmailVerificationFailed(TimeOutFailure())],
     );
 
     // _onVerifyPhoneNumberForRegistration
