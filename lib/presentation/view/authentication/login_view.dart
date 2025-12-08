@@ -26,6 +26,7 @@ class _LoginViewState extends State<LoginView> {
   final TextEditingController _emailOrPhoneController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  bool _showPasswordField = false;
 
   @override
   void initState() {
@@ -117,6 +118,7 @@ class _LoginViewState extends State<LoginView> {
       },
       child: Scaffold(
         backgroundColor: kWhite,
+        resizeToAvoidBottomInset: true,
         body: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -230,10 +232,11 @@ class _LoginViewState extends State<LoginView> {
                   ),
                   BlocBuilder<AuthBloc, AuthState>(
                     builder: (context, state) {
-                      bool showPassword = false;
+                      bool showPassword = _showPasswordField;
 
                       if (state is InputValidationState) {
                         showPassword = state.isEmail && state.isValid;
+                        _showPasswordField = showPassword; 
                       }
 
                       return AnimatedContainer(
