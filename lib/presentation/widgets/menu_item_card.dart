@@ -151,36 +151,52 @@ class _MenuItemCardState extends State<MenuItemCard> {
     return GestureDetector(
       onTap: widget.onTap,
       child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 10.w),
         height: 87.h,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(22),
           border: Border.all(color: kBorder),
         ),
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            SizedBox(width: 10.w),
-            Image.asset(widget.itemImageUrl, width: 64.h, height: 64.h),
-            SizedBox(width: 20.w),
-            Column(
+            Row(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                SizedBox(height: 20.h),
-                Text(
-                  widget.itemName,
-                  style: GoogleFonts.yeonSung(
-                    color: kBlack,
-                    fontSize: 15,
-                  ),
-                ),
-                Text(
-                  widget.hotelName,
-                  style: GoogleFonts.lato(
-                    color: kTextSecondary,
-                    fontSize: 14,
-                  ),
+                Image.network(widget.itemImageUrl, width: 64.h, height: 64.h),
+                SizedBox(width: 20.w),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      width: 140.w,
+                      child: Text(
+                        widget.itemName,
+                        style: GoogleFonts.yeonSung(
+                          color: kBlack,
+                          fontSize: 15,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                        softWrap: false,
+                      ),
+                    ),
+                    SizedBox(
+                      width: 140.w,
+                      child: Text(
+                        widget.hotelName,
+                        style: GoogleFonts.lato(
+                          color: kTextSecondary,
+                          fontSize: 14,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                        softWrap: false,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
-            SizedBox(width: 70.w),
             widget.showCheckBox
                 ? Column(
                     mainAxisSize: MainAxisSize.min,
@@ -206,7 +222,7 @@ class _MenuItemCardState extends State<MenuItemCard> {
                     ],
                   )
                 : Text(
-                    "\$${widget.itemPrice}",
+                    "₹${widget.itemPrice}",
                     style: const TextStyle(
                       fontFamily: 'BentonSans',
                       color: kTextRed,

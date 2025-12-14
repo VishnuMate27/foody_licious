@@ -1,7 +1,5 @@
 import 'dart:convert';
-
 import 'package:dartz/dartz.dart';
-import 'package:flutter/material.dart';
 import 'package:foody_licious/core/constant/strings.dart';
 import 'package:foody_licious/core/error/failures.dart';
 import 'package:foody_licious/data/models/user/user_response_model.dart';

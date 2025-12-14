@@ -74,7 +74,12 @@ class AppRouter {
         );
       //products
       case menuItemDetails:
-        return MaterialPageRoute(builder: (_) => MenuItemDetailsView());
+        final args = routeSettings.arguments as Map<String, dynamic>;
+        return MaterialPageRoute(
+          builder: (_) => MenuItemDetailsView(
+            menuItem: args['menuItem'],
+          ),
+        );
       case restaurantDetails:
         return MaterialPageRoute(builder: (_) => RestaurantDetailsView());
       //order

@@ -1,15 +1,15 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:foody_licious/core/constant/colors.dart';
 import 'package:foody_licious/core/constant/images.dart';
+import 'package:foody_licious/domain/entities/menuItem/menuItem.dart';
 import 'package:foody_licious/presentation/widgets/gradient_button.dart';
-import 'package:foody_licious/presentation/widgets/menu_item_card.dart';
-import 'package:foody_licious/presentation/widgets/custom_check_box.dart';
-import 'package:foody_licious/core/utils/data.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class MenuItemDetailsView extends StatefulWidget {
-  const MenuItemDetailsView({super.key});
+  final MenuItem menuItem;
+  const MenuItemDetailsView({super.key, required this.menuItem});
 
   @override
   State<MenuItemDetailsView> createState() => _MenuItemDetailsViewState();
@@ -37,7 +37,7 @@ class _MenuItemDetailsViewState extends State<MenuItemDetailsView> {
             children: [
               Center(
                 child: Text(
-                  "Food Name",
+                  widget.menuItem.name,
                   style: GoogleFonts.yeonSung(color: kTextRed, fontSize: 28),
                 ),
               ),
@@ -45,13 +45,61 @@ class _MenuItemDetailsViewState extends State<MenuItemDetailsView> {
                 height: 26.h,
               ),
               Center(
-                child: Image.asset(
-                  kMenuItemPhoto,
-                  height: 200.h,
+                child: CarouselSlider(
+                  options: CarouselOptions(
+                    height: 200.h,
+                    autoPlay: true,
+                    viewportFraction: 0.8,
+                    enlargeCenterPage: true,
+                  ),
+                  items: widget.menuItem.images?.map((url) {
+                    return Container(
+                      margin: EdgeInsets.symmetric(horizontal: 5.w),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10.r),
+                        image: DecorationImage(
+                          image: NetworkImage(url),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    );
+                  }).toList(),
                 ),
               ),
               SizedBox(
                 height: 30.h,
+              ),
+              Text(
+                "Restaurant Name",
+                style: GoogleFonts.yeonSung(color: kBlack, fontSize: 20),
+              ),
+              SizedBox(
+                height: 6.h,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    widget.menuItem.restaurantName ??
+                        "Failed to fetch restaurant name.",
+                    style: GoogleFonts.lato(
+                        color: kBlack, fontSize: 14, letterSpacing: 0.5),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      // View Restaurant Details Screen
+                      
+                    },
+                    child: Text(
+                      "view",
+                      style: GoogleFonts.lato(
+                          color: kBlack, fontSize: 14, letterSpacing: 0.5),
+                    ),
+                  )
+                ],
+              ),
+              SizedBox(
+                height: 10.h,
               ),
               Text(
                 "Short description",
@@ -61,30 +109,24 @@ class _MenuItemDetailsViewState extends State<MenuItemDetailsView> {
                 height: 6.h,
               ),
               Text(
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad",
+                widget.menuItem.description ?? "Description not available.",
                 style: GoogleFonts.lato(
                     color: kBlack, fontSize: 14, letterSpacing: 0.5),
               ),
               SizedBox(
-                height: 20.h,
+                height: 10.h,
               ),
-              Text(
-                "Ingredients",
-                style: GoogleFonts.yeonSung(color: kBlack, fontSize: 20),
-              ),
-              SizedBox(
-                child: ListView.builder(
-                    physics:
-                        ScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-                    shrinkWrap: true,
-                    itemCount: 3,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Text(
-                        "\u2022 ${"Strawberry"}",
-                        style: GoogleFonts.lato(color: kBlack, fontSize: 16),
-                      );
-                    }),
-              ),
+              if (widget.menuItem.ingredients != null &&
+                  widget.menuItem.ingredients!.isNotEmpty) ...[
+                Text(
+                  "Ingredients",
+                  style: GoogleFonts.yeonSung(color: kBlack, fontSize: 20),
+                ),
+                ...widget.menuItem.ingredients!.map(
+                  (ingredient) => Text("• $ingredient",
+                      style: GoogleFonts.lato(fontSize: 16)),
+                ),
+              ],
               SizedBox(
                 height: 20.h,
               ),

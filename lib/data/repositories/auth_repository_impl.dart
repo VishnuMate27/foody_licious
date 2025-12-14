@@ -1,7 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:foody_licious/core/usecase/usecase.dart';
 import 'package:foody_licious/data/data_sources/local/user_local_data_source.dart';
-
 import '../../../../core/error/failures.dart';
 import '../../core/network/network_info.dart';
 import '../../domain/entities/user/user.dart';

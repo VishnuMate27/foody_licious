@@ -5,9 +5,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:foody_licious/core/constant/colors.dart';
 import 'package:foody_licious/core/router/app_router.dart';
 import 'package:foody_licious/presentation/bloc/auth/auth_bloc.dart';
+import 'package:foody_licious/presentation/bloc/menuItem/menu_item_bloc.dart';
 import 'package:foody_licious/presentation/bloc/user/user_bloc.dart';
 import 'package:foody_licious/presentation/bloc/user/user_event.dart';
 import 'package:foody_licious/core/services/services_locator.dart' as di;
+import 'package:foody_licious/presentation/cubit/pagination/pagination_cubit.dart';
 import 'cubit/navigation_cubit.dart';
 
 Future<void> main() async {
@@ -28,6 +30,8 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (_) => NavigationCubit(),
         ),
+        BlocProvider(create: (context) => di.sl<PaginationCubit>()),
+        BlocProvider(create: (context) => di.sl<MenuItemBloc>()),
         BlocProvider(
           create: (context) => di.sl<UserBloc>()..add(CheckUser()),
         ),

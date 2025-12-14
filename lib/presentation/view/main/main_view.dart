@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:foody_licious/core/constant/colors.dart';
 import 'package:foody_licious/core/constant/images.dart';
+import 'package:foody_licious/core/router/app_router.dart';
 import 'package:foody_licious/presentation/view/main/cart/cart_view.dart';
 import 'package:foody_licious/presentation/view/main/home/home_view.dart';
 import 'package:foody_licious/presentation/view/main/history/order_history_view.dart';
@@ -13,6 +14,7 @@ import 'package:foody_licious/presentation/view/authentication/login_view.dart';
 import 'package:foody_licious/presentation/view/onboarding/onboarding_view.dart';
 import 'package:foody_licious/presentation/view/authentication/signup_view.dart';
 import 'package:foody_licious/presentation/view/onboarding/splash_view.dart';
+import 'package:foody_licious/presentation/view/product/menu_item_details_view.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 
@@ -149,15 +151,6 @@ class _MainViewState extends State<MainView> {
           hideNavBarOnScroll: true,
           scrollControllers: _scrollControllers,
         ),
-        // floatingActionButton: IconButton(
-        //   icon: Container(
-        //     padding: const EdgeInsets.all(10),
-        //     decoration: const BoxDecoration(
-        //         shape: BoxShape.circle, color: Color(0xFF9CCD4F)),
-        //     child: Image.asset('assets/icons/notification_text.png'),
-        //   ),
-        //   onPressed: () {},
-        // ),
         onWillPop: (final context) async {
           await showDialog(
             context: context ?? this.context,
@@ -176,9 +169,6 @@ class _MainViewState extends State<MainView> {
           );
           return false;
         },
-        // selectedTabScreenContext: (final context) {
-        //   testContext = context;
-        // },
         backgroundColor: kWhite,
         isVisible: !_hideNavBar,
         animationSettings: const NavBarAnimationSettings(

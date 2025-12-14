@@ -93,12 +93,13 @@ class _RestaurantDetailsViewState extends State<RestaurantDetailsView> {
                         isInitiallyChecked: false,
                         onTap: () {},
                         onSeeDetailsPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const MenuItemDetailsView(),
-                            ),
-                          );
+                          // TODO: Add menu item in MenuItemDetailsView
+                          // Navigator.push(
+                          //   context,
+                          //   MaterialPageRoute(
+                          //     builder: (context) => const MenuItemDetailsView(),
+                          //   ),
+                          // );
                         },
                       );
                     }),
