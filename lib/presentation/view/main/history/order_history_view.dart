@@ -117,12 +117,12 @@ class _OrderHistoryViewState extends State<OrderHistoryView> {
                     hotelName: "Warung Herbal",
                     itemPrice: 7,
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const RestaurantDetailsView(),
-                        ),
-                      );
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //     builder: (context) => const RestaurantDetailsView(),
+                      //   ),
+                      // );
                     },
                     onBuyAgainTap: () {},
                   ),

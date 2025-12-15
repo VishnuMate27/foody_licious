@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:foody_licious/core/constant/colors.dart';
 import 'package:foody_licious/core/constant/images.dart';
+import 'package:foody_licious/core/router/tab_navigator.dart';
 import 'package:foody_licious/domain/entities/menuItem/menuItem.dart';
 import 'package:foody_licious/presentation/widgets/gradient_button.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -73,9 +74,6 @@ class _MenuItemDetailsViewState extends State<MenuItemDetailsView> {
                 "Restaurant Name",
                 style: GoogleFonts.yeonSung(color: kBlack, fontSize: 20),
               ),
-              SizedBox(
-                height: 6.h,
-              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -88,7 +86,7 @@ class _MenuItemDetailsViewState extends State<MenuItemDetailsView> {
                   TextButton(
                     onPressed: () {
                       // View Restaurant Details Screen
-                      
+                      TabNavigator.pushRestaurantDetails(context, "");
                     },
                     child: Text(
                       "view",
@@ -97,9 +95,6 @@ class _MenuItemDetailsViewState extends State<MenuItemDetailsView> {
                     ),
                   )
                 ],
-              ),
-              SizedBox(
-                height: 10.h,
               ),
               Text(
                 "Short description",

@@ -89,12 +89,12 @@ class _CartViewState extends State<CartView> {
                           debugPrint("Delete button tapped");
                         },
                         onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    const RestaurantDetailsView()),
-                          );
+                          // Navigator.push(
+                          //   context,
+                          //   MaterialPageRoute(
+                          //       builder: (context) =>
+                          //           const RestaurantDetailsView()),
+                          // );
                         },
                       ),
                     );

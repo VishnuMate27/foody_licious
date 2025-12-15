@@ -81,7 +81,12 @@ class AppRouter {
           ),
         );
       case restaurantDetails:
-        return MaterialPageRoute(builder: (_) => RestaurantDetailsView());
+        final args = routeSettings.arguments as Map<String, dynamic>;
+        return MaterialPageRoute(
+          builder: (_) => RestaurantDetailsView(
+            restaurantId: args['restaurantId'],
+          ),
+        );
       //order
       case orderConfirmation:
         return MaterialPageRoute(builder: (_) => OrderConfirmationView());

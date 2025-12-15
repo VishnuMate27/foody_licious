@@ -10,7 +10,8 @@ import 'package:foody_licious/core/utils/data.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class RestaurantDetailsView extends StatefulWidget {
-  const RestaurantDetailsView({super.key});
+  final String restaurantId;
+  const RestaurantDetailsView({super.key, required this.restaurantId});
 
   @override
   State<RestaurantDetailsView> createState() => _RestaurantDetailsViewState();
