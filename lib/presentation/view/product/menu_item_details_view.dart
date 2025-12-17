@@ -86,7 +86,10 @@ class _MenuItemDetailsViewState extends State<MenuItemDetailsView> {
                   TextButton(
                     onPressed: () {
                       // View Restaurant Details Screen
-                      TabNavigator.pushRestaurantDetails(context, "");
+                      TabNavigator.pushRestaurantDetails(
+                        context,
+                        widget.menuItem.restaurantId,
+                      );
                     },
                     child: Text(
                       "view",

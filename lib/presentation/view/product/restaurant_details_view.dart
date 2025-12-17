@@ -1,12 +1,11 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:foody_licious/core/constant/colors.dart';
 import 'package:foody_licious/core/constant/images.dart';
-import 'package:foody_licious/presentation/view/product/menu_item_details_view.dart';
+import 'package:foody_licious/domain/usecase/restaurant/get_restaurant_details_usecase.dart';
+import 'package:foody_licious/presentation/bloc/restaurant/restaurant_bloc.dart';
 import 'package:foody_licious/presentation/widgets/menu_item_card.dart';
-import 'package:foody_licious/presentation/widgets/custom_check_box.dart';
-import 'package:foody_licious/core/utils/data.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class RestaurantDetailsView extends StatefulWidget {
@@ -19,96 +18,117 @@ class RestaurantDetailsView extends StatefulWidget {
 
 class _RestaurantDetailsViewState extends State<RestaurantDetailsView> {
   List<bool> isItemCheckedList = List<bool>.generate(15, (index) => false);
+
+  @override
+  void initState() {
+    if (widget.restaurantId != '' || widget.restaurantId.isNotEmpty) {
+      context.read<RestaurantBloc>().add(FetchRestaurantDetails(
+          GetRestaurantDetailsParams(widget.restaurantId)));
+    }
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: kWhite,
-      appBar: AppBar(
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: Image.asset(kBackArrowIcon),
-        ),
-        automaticallyImplyLeading: true,
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 18.w),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(
-                child: Text(
-                  "Restaurant Name",
-                  style: GoogleFonts.yeonSung(color: kTextRed, fontSize: 28),
-                ),
-              ),
-              SizedBox(
-                height: 26.h,
-              ),
-              Center(
-                child: Image.asset(
-                  kRestraurant,
-                  height: 200.h,
-                ),
-              ),
-              SizedBox(
-                height: 30.h,
-              ),
-              Text(
-                "Short description",
-                style: GoogleFonts.yeonSung(color: kBlack, fontSize: 20),
-              ),
-              SizedBox(
-                height: 6.h,
-              ),
-              Text(
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad",
-                style: GoogleFonts.lato(
-                    color: kBlack, fontSize: 14, letterSpacing: 0.5),
-              ),
-              SizedBox(
-                height: 20.h,
-              ),
-              Text(
-                "Menu",
-                style: GoogleFonts.yeonSung(color: kBlack, fontSize: 20),
-              ),
-              SizedBox(
-                height: 6.h,
-              ),
-              SizedBox(
-                height: 200.h,
-                child: ListView.builder(
-                    physics:
-                        ScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-                    shrinkWrap: true,
-                    itemCount: 15,
-                    itemBuilder: (BuildContext context, int index) {
-                      return MenuItemCard.retraurantMenuItem(
-                        itemImageUrl: kMenuPhoto1,
-                        itemName: "Herbal Pancake",
-                        hotelName: "Warung Herbal",
-                        itemPrice: 7,
-                        isInitiallyChecked: false,
-                        onTap: () {},
-                        onSeeDetailsPressed: () {
-                          // TODO: Add menu item in MenuItemDetailsView
-                          // Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(
-                          //     builder: (context) => const MenuItemDetailsView(),
-                          //   ),
-                          // );
-                        },
-                      );
-                    }),
-              ),
-            ],
+    return BlocBuilder<RestaurantBloc, RestaurantState>(
+        builder: (context, state) {
+      if (state is FetchingRestaurantDetails) {
+        return CircularProgressIndicator();
+      } else if (state is RestaurantDetailsFetchSuccess) {
+        return Scaffold(
+          backgroundColor: kWhite,
+          appBar: AppBar(
+            leading: IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: Image.asset(kBackArrowIcon),
+            ),
+            automaticallyImplyLeading: true,
           ),
-        ),
-      ),
-    );
+          body: SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 18.w),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Center(
+                    child: Text(
+                      state.restaurant.name ?? "Restaurant Name",
+                      style:
+                          GoogleFonts.yeonSung(color: kTextRed, fontSize: 28),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 26.h,
+                  ),
+                  Center(
+                    child: Image.network(
+                      state.restaurant.photoUrl ?? kRestraurantImage,
+                      height: 200.h,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 30.h,
+                  ),
+                  Text(
+                    "Short description",
+                    style: GoogleFonts.yeonSung(color: kBlack, fontSize: 20),
+                  ),
+                  SizedBox(
+                    height: 6.h,
+                  ),
+                  Text(
+                    state.restaurant.description ??
+                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad",
+                    style: GoogleFonts.lato(
+                        color: kBlack, fontSize: 14, letterSpacing: 0.5),
+                  ),
+                  SizedBox(
+                    height: 20.h,
+                  ),
+                  Text(
+                    "Menu",
+                    style: GoogleFonts.yeonSung(color: kBlack, fontSize: 20),
+                  ),
+                  SizedBox(
+                    height: 6.h,
+                  ),
+                  SizedBox(
+                    height: 200.h,
+                    child: ListView.builder(
+                        physics: ScrollPhysics(
+                            parent: AlwaysScrollableScrollPhysics()),
+                        shrinkWrap: true,
+                        itemCount: 15,
+                        itemBuilder: (BuildContext context, int index) {
+                          return MenuItemCard.retraurantMenuItem(
+                            itemImageUrl: kMenuPhoto1,
+                            itemName: "Herbal Pancake",
+                            hotelName: "Warung Herbal",
+                            itemPrice: 7,
+                            isInitiallyChecked: false,
+                            onTap: () {},
+                            onSeeDetailsPressed: () {
+                              // TODO: Add menu item in MenuItemDetailsView
+                              // Navigator.push(
+                              //   context,
+                              //   MaterialPageRoute(
+                              //     builder: (context) => const MenuItemDetailsView(),
+                              //   ),
+                              // );
+                            },
+                          );
+                        }),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      } else {
+        return Center(child: Text("Failed to fetch Restaurant Details."));
+      }
+    });
   }
 }

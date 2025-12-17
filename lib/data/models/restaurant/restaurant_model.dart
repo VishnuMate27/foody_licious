@@ -26,7 +26,7 @@ class RestaurantModel extends Restaurant {
 
   factory RestaurantModel.fromJson(Map<String, dynamic> json) {
     return RestaurantModel(
-      id: json['id'] as String,
+      id: json['_id'] as String,
       ownerName: json['ownerName'] as String,
       name: json['name'] as String?,
       email: json['email'] as String?,

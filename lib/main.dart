@@ -6,6 +6,7 @@ import 'package:foody_licious/core/constant/colors.dart';
 import 'package:foody_licious/core/router/app_router.dart';
 import 'package:foody_licious/presentation/bloc/auth/auth_bloc.dart';
 import 'package:foody_licious/presentation/bloc/menuItem/menu_item_bloc.dart';
+import 'package:foody_licious/presentation/bloc/restaurant/restaurant_bloc.dart';
 import 'package:foody_licious/presentation/bloc/user/user_bloc.dart';
 import 'package:foody_licious/presentation/bloc/user/user_event.dart';
 import 'package:foody_licious/core/services/services_locator.dart' as di;
@@ -32,6 +33,7 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(create: (context) => di.sl<PaginationCubit>()),
         BlocProvider(create: (context) => di.sl<MenuItemBloc>()),
+        BlocProvider(create: (context) => di.sl<RestaurantBloc>()),
         BlocProvider(
           create: (context) => di.sl<UserBloc>()..add(CheckUser()),
         ),

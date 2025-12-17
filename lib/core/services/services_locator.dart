@@ -3,11 +3,14 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:foody_licious/data/data_sources/remote/menu_remote_data_source.dart';
+import 'package:foody_licious/data/data_sources/remote/restaurant_remote_data_source.dart';
 import 'package:foody_licious/data/data_sources/remote/user_remote_data_source.dart';
 import 'package:foody_licious/data/repositories/menu_item_repository_impl.dart';
+import 'package:foody_licious/data/repositories/restaurant_repository_impl.dart';
 import 'package:foody_licious/data/repositories/user_repository_impl.dart';
 import 'package:foody_licious/data/services/location_service.dart';
 import 'package:foody_licious/domain/repositories/menu_item_repository.dart';
+import 'package:foody_licious/domain/repositories/restaurant_repository.dart';
 import 'package:foody_licious/domain/repositories/user_repository.dart';
 import 'package:foody_licious/domain/usecase/auth/send_password_reset_email_usecase.dart';
 import 'package:foody_licious/domain/usecase/auth/send_verification_email_usecase.dart';
@@ -24,6 +27,7 @@ import 'package:foody_licious/domain/usecase/auth/verify_phone_number_for_login_
 import 'package:foody_licious/domain/usecase/auth/verify_phone_number_for_registration_usecase.dart';
 import 'package:foody_licious/domain/usecase/auth/wait_for_email_verification_usecase.dart';
 import 'package:foody_licious/domain/usecase/menuItem/get_all_menu_items_usecase.dart';
+import 'package:foody_licious/domain/usecase/restaurant/get_restaurant_details_usecase.dart';
 import 'package:foody_licious/domain/usecase/user/check_user_usecase.dart';
 import 'package:foody_licious/domain/usecase/user/delete_user_usecase.dart';
 import 'package:foody_licious/domain/usecase/user/update_user_location_usecase.dart';
@@ -31,6 +35,7 @@ import 'package:foody_licious/domain/usecase/user/update_user_usecase.dart';
 import 'package:foody_licious/firebase_options.dart';
 import 'package:foody_licious/presentation/bloc/auth/auth_bloc.dart';
 import 'package:foody_licious/presentation/bloc/menuItem/menu_item_bloc.dart';
+import 'package:foody_licious/presentation/bloc/restaurant/restaurant_bloc.dart';
 import 'package:foody_licious/presentation/bloc/user/user_bloc.dart';
 import 'package:foody_licious/presentation/cubit/pagination/pagination_cubit.dart';
 import 'package:get_it/get_it.dart';
@@ -85,7 +90,10 @@ Future<void> init() async {
   );
   sl.registerLazySingleton<AuthRemoteDataSource>(
     () => AuthRemoteDataSourceImpl(
-        firebaseAuth: sl(), client: sl(), googleSignIn: sl(),facebookAuth:sl()),
+        firebaseAuth: sl(),
+        client: sl(),
+        googleSignIn: sl(),
+        facebookAuth: sl()),
   );
 
   //Features - User
@@ -116,7 +124,8 @@ Future<void> init() async {
   // Bloc
   sl.registerFactory(() => MenuItemBloc(sl()));
   // Use cases
-  sl.registerLazySingleton(() => GetAllItemsInRestaurantsOfUsersCityUseCase(sl()));
+  sl.registerLazySingleton(
+      () => GetAllItemsInRestaurantsOfUsersCityUseCase(sl()));
   // Repository
   sl.registerLazySingleton<MenuItemRepository>(
     () => MenuItemRepositoryImpl(
@@ -128,6 +137,23 @@ Future<void> init() async {
   // Data sources
   sl.registerLazySingleton<MenuItemsRemoteDataSource>(
     () => MenuItemsRemoteDataSourceImpl(client: sl()),
+  );
+
+  //Features - Restaurant
+  // Bloc
+  sl.registerFactory(() => RestaurantBloc(sl()));
+  // Use cases
+  sl.registerLazySingleton(() => GetRestaurantDetailsUseCase(sl()));
+  // Repository
+  sl.registerLazySingleton<RestaurantRepository>(
+    () => RestaurantRepositoryImpl(
+      sl(),
+      sl(),
+    ),
+  );
+  // Data sources
+  sl.registerLazySingleton<RestaurantRemoteDataSource>(
+    () => RestaurantRemoteDataSourceImpl(client: sl()),
   );
 
   ///***********************************************
