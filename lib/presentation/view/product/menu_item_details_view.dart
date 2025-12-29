@@ -24,7 +24,7 @@ class _MenuItemDetailsViewState extends State<MenuItemDetailsView> {
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.pop(context);   
           },
           icon: Image.asset(kBackArrowIcon),
         ),

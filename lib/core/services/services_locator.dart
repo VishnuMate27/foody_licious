@@ -26,6 +26,7 @@ import 'package:foody_licious/domain/usecase/auth/sign_up_with_phone_usecase.dar
 import 'package:foody_licious/domain/usecase/auth/verify_phone_number_for_login_usecase.dart';
 import 'package:foody_licious/domain/usecase/auth/verify_phone_number_for_registration_usecase.dart';
 import 'package:foody_licious/domain/usecase/auth/wait_for_email_verification_usecase.dart';
+import 'package:foody_licious/domain/usecase/menuItem/get_all_menu_items_in_restaurant_usecase.dart';
 import 'package:foody_licious/domain/usecase/menuItem/get_all_menu_items_usecase.dart';
 import 'package:foody_licious/domain/usecase/restaurant/get_restaurant_details_usecase.dart';
 import 'package:foody_licious/domain/usecase/user/check_user_usecase.dart';
@@ -122,10 +123,11 @@ Future<void> init() async {
 
   //Features - MenuItem
   // Bloc
-  sl.registerFactory(() => MenuItemBloc(sl()));
+  sl.registerLazySingleton(() => MenuItemBloc(sl(), sl()));
   // Use cases
   sl.registerLazySingleton(
       () => GetAllItemsInRestaurantsOfUsersCityUseCase(sl()));
+  sl.registerLazySingleton(() => GetAllMenuItemsInRestaurantUseCase(sl()));
   // Repository
   sl.registerLazySingleton<MenuItemRepository>(
     () => MenuItemRepositoryImpl(

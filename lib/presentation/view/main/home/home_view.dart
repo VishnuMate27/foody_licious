@@ -191,15 +191,15 @@ class _HomeViewState extends State<HomeView> {
                     return Padding(
                       padding: EdgeInsets.only(bottom: 12.h),
                       child: MenuItemCard(
-                        itemImageUrl: (menuItem.images?.isNotEmpty ?? false)
-                            ? menuItem.images!.first
-                            : "https://img.freepik.com/free-psd/hand-drawn-burger-illustration_23-2151600206.jpg",
-                        itemName: menuItem.name,
-                        hotelName:
-                            menuItem.restaurantName ?? menuItem.restaurantId,
-                        itemPrice: menuItem.price,
-                          onTap: () => TabNavigator.pushMenuItemDetails(context, menuItem)
-                      ),
+                          itemImageUrl: (menuItem.images?.isNotEmpty ?? false)
+                              ? menuItem.images!.first
+                              : "https://img.freepik.com/free-psd/hand-drawn-burger-illustration_23-2151600206.jpg",
+                          itemName: menuItem.name,
+                          hotelName:
+                              menuItem.restaurantName ?? menuItem.restaurantId,
+                          itemPrice: menuItem.price,
+                          onTap: () => TabNavigator.pushMenuItemDetails(
+                              context, menuItem)),
                     );
                   }),
 
@@ -222,8 +222,8 @@ class _HomeViewState extends State<HomeView> {
                 ],
               );
             }
-
-            return const SizedBox.shrink();
+            print("-state is $state");
+            return const Center(child: CircularProgressIndicator());
           },
         ),
       ),

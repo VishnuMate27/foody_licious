@@ -26,3 +26,23 @@ class FetchingAllMenuItemsFailed extends MenuItemState {
   @override
   List<Object?> get props => [failure];
 }
+
+/// FetchingAllMenuItemsInRestaurant
+class FetchingAllMenuItemsInRestaurantLoading extends MenuItemState {
+  @override
+  List<Object?> get props => [];
+}
+
+class FetchingAllMenuItemsInRestaurantSuccess extends MenuItemState {
+  final List<MenuItem> menuItems;
+  FetchingAllMenuItemsInRestaurantSuccess(this.menuItems);
+  @override
+  List<Object?> get props => [menuItems];
+}
+
+class FetchingAllMenuItemsInRestaurantFailed extends MenuItemState {
+  final Failure failure;
+  FetchingAllMenuItemsInRestaurantFailed(this.failure);
+  @override
+  List<Object?> get props => [failure];
+}

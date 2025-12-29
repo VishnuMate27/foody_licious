@@ -28,11 +28,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
+        BlocProvider(create: (context) => di.sl<MenuItemBloc>()),
         BlocProvider(
           create: (_) => NavigationCubit(),
         ),
         BlocProvider(create: (context) => di.sl<PaginationCubit>()),
-        BlocProvider(create: (context) => di.sl<MenuItemBloc>()),
         BlocProvider(create: (context) => di.sl<RestaurantBloc>()),
         BlocProvider(
           create: (context) => di.sl<UserBloc>()..add(CheckUser()),

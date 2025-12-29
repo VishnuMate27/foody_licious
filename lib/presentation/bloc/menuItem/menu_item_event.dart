@@ -6,3 +6,9 @@ class GetAllItemsInRestaurantsOfUsersCity extends MenuItemEvent {
   final GetAllItemsInRestaurantsOfUsersCityParams params;
   GetAllItemsInRestaurantsOfUsersCity(this.params);
 }
+
+class GetMenuItemsInRestaurant extends MenuItemEvent {
+  final GetAllMenuItemsInRestaurantParams params;
+  GetMenuItemsInRestaurant(this.params);
+}
+

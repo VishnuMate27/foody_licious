@@ -6,6 +6,10 @@ import 'package:foody_licious/presentation/view/product/restaurant_details_view.
 import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 
 class TabNavigator {
+  static void pop(BuildContext context) {
+    Navigator.pop(context);
+  }
+
   static void pushMenuItemDetails(
     BuildContext context,
     MenuItem menuItem,
