@@ -1,6 +1,5 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:dartz/dartz.dart';
-import 'package:foody_licious/core/error/exceptions.dart';
 import 'package:foody_licious/core/error/failures.dart';
 import 'package:foody_licious/core/usecase/usecase.dart';
 import 'package:foody_licious/domain/usecase/user/check_user_usecase.dart';

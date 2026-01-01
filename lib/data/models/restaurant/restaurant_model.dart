@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:foody_licious/data/models/user/user_model.dart';
 import 'package:foody_licious/domain/entities/restaurant/restaurant.dart';
 
 RestaurantModel restaurantModelFromJson(String str) =>
@@ -56,48 +57,5 @@ class RestaurantModel extends Restaurant {
       'receivedOrders': receivedOrders,
       'receivedFeedback': receivedFeedback,
     };
-  }
-}
-
-class AddressModel extends Address {
-  const AddressModel({super.addressText, super.city, super.coordinates});
-
-  factory AddressModel.fromJson(Map<String, dynamic> json) {
-    return AddressModel(
-      addressText: json['addressText'] as String?,
-      city: json['city'] as String?,
-      coordinates: CoordinatesModel.fromJson(json['coordinates'] ?? {}),
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = {};
-    if (addressText != null) data['addressText'] = addressText;
-    if (city != null) data['city'] = city;
-    if (coordinates != null) data['coordinates'] = coordinates;
-    return data;
-  }
-}
-
-class CoordinatesModel extends Coordinates {
-  const CoordinatesModel({super.type, super.coordinates});
-
-  factory CoordinatesModel.fromJson(Map<String, dynamic> json) {
-    return CoordinatesModel(
-      type: json['type'] as String?,
-      coordinates:
-          json['coordinates'] != null
-              ? List<double>.from(
-                (json['coordinates'] as List).map((e) => (e as num).toDouble()),
-              )
-              : <double>[],
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = {};
-    if (type != null) data['type'] = type;
-    if (coordinates != null) data['coordinates'] = coordinates;
-    return data;
   }
 }

@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:foody_licious/data/models/restaurant/restaurant_model.dart';
+import 'package:foody_licious/data/models/user/user_model.dart';
 
 class Restaurant extends Equatable {
   final String id;

@@ -1,0 +1,244 @@
+{
+    "message": "Fetched menu items successfully",
+    "menuItems": [
+        {
+            "id": "693866120f0966dedfb943f4",
+            "restaurantId": "1R0AVGdoIGeXxPFs1JGoy9eFois1",
+            "name": "Vada Pav",
+            "description": "Mumbai famous vadapav",
+            "price": 25,
+            "images": [
+                "https://foodylicious.s3.ap-south-1.amazonaws.com/restaurants/1R0AVGdoIGeXxPFs1JGoy9eFois1/menu_items/693866120f0966dedfb943f4/1000101729.jpg"
+            ],
+            "availableQuantity": 15,
+            "ingredients": [
+                "Vada",
+                "Pav"
+            ],
+            "created_at": {
+                "$date": "2025-12-09T18:10:26.674000"
+            },
+            "updated_at": {
+                "$date": "2025-12-09T18:11:44.433000"
+            },
+            "restaurantName": "Anasuya Mata Restaurant"
+        },
+        {
+            "id": "6910bf3bdb83f7f42c810bce",
+            "restaurantId": "pygupNfZONbMeMmBJb2htMxzAR23",
+            "name": "New item",
+            "description": "gv vzzb sbsbzb",
+            "price": 500,
+            "images": [
+                "https://foodylicious.s3.ap-south-1.amazonaws.com/restaurants/pygupNfZONbMeMmBJb2htMxzAR23/menu_items/6910bf3bdb83f7f42c810bce/1000060676.jpg",
+                "https://foodylicious.s3.ap-south-1.amazonaws.com/restaurants/pygupNfZONbMeMmBJb2htMxzAR23/menu_items/6910bf3bdb83f7f42c810bce/1000062675.jpg",
+                "https://foodylicious.s3.ap-south-1.amazonaws.com/restaurants/pygupNfZONbMeMmBJb2htMxzAR23/menu_items/6910bf3bdb83f7f42c810bce/1000087747.jpg"
+            ],
+            "availableQuantity": 90,
+            "ingredients": [
+                "nnj",
+                "jshs",
+                "shhs",
+                "bsvsbs"
+            ],
+            "created_at": {
+                "$date": "2025-11-09T16:20:11.528000"
+            },
+            "updated_at": {
+                "$date": "2025-12-04T17:32:00.224000"
+            },
+            "restaurantName": "Anonymous"
+        },
+        {
+            "id": "69109684db83f7f42c810bcc",
+            "restaurantId": "pygupNfZONbMeMmBJb2htMxzAR23",
+            "name": "Test item 3",
+            "description": "Test Description 3",
+            "price": 150,
+            "images": [
+                "https://foodylicious.s3.ap-south-1.amazonaws.com/restaurants/pygupNfZONbMeMmBJb2htMxzAR23/menu_items/69109684db83f7f42c810bcc/1000055614.jpg"
+            ],
+            "availableQuantity": 0,
+            "ingredients": [
+                "Test1",
+                "Test2",
+                "Test3"
+            ],
+            "created_at": {
+                "$date": "2025-11-09T13:26:28.336000"
+            },
+            "updated_at": {
+                "$date": "2025-11-09T13:26:36.600000"
+            },
+            "restaurantName": "Anonymous"
+        },
+        {
+            "id": "690f1848a488d76986ce8afd",
+            "restaurantId": "pygupNfZONbMeMmBJb2htMxzAR23",
+            "name": "Test item2",
+            "description": "Tesdtt shvs",
+            "price": 80,
+            "images": [
+                "https://foodylicious.s3.ap-south-1.amazonaws.com/restaurants/pygupNfZONbMeMmBJb2htMxzAR23/menu_items/690f1848a488d76986ce8afd/1000060680.jpg"
+            ],
+            "availableQuantity": 50,
+            "ingredients": [
+                "ebsv",
+                "dhbs",
+                "dbsdvvsh",
+                "dbshvsd",
+                "new ingredients"
+            ],
+            "created_at": {
+                "$date": "2025-11-08T10:15:36.940000"
+            },
+            "updated_at": {
+                "$date": "2025-11-08T10:26:28.877000"
+            },
+            "restaurantName": "Anonymous"
+        },
+        {
+            "id": "690f106b5148786be50b3eda",
+            "restaurantId": "pygupNfZONbMeMmBJb2htMxzAR23",
+            "name": "Aaloo Vangayachi bhaji",
+            "description": "Vidarbh famous Spicy Bhaji",
+            "price": 150,
+            "images": [
+                "https://foodylicious.s3.ap-south-1.amazonaws.com/restaurants/pygupNfZONbMeMmBJb2htMxzAR23/menu_items/690f106b5148786be50b3eda/1000087469.jpg"
+            ],
+            "availableQuantity": 0,
+            "ingredients": [
+                "Aaloo",
+                "Vange"
+            ],
+            "created_at": {
+                "$date": "2025-11-08T09:42:03.985000"
+            },
+            "updated_at": {
+                "$date": "2025-11-08T09:55:50.192000"
+            },
+            "restaurantName": "Anonymous"
+        },
+        {
+            "id": "690600f4f3fabd415a4a54e2",
+            "restaurantId": "pygupNfZONbMeMmBJb2htMxzAR23",
+            "name": "Paneer Butter Masala",
+            "description": "Paneer with Butter and masala",
+            "price": 150,
+            "images": [
+                "https://foodylicious.s3.ap-south-1.amazonaws.com/restaurants/pygupNfZONbMeMmBJb2htMxzAR23/menu_items/690600f4f3fabd415a4a54e2/image_1.webp"
+            ],
+            "availableQuantity": 8,
+            "ingredients": [
+                "Paneer",
+                "Butter",
+                "Masala"
+            ],
+            "created_at": {
+                "$date": "2025-11-01T12:45:40.601000"
+            },
+            "updated_at": {
+                "$date": "2025-11-02T08:32:09.225000"
+            },
+            "restaurantName": "Anonymous"
+        },
+        {
+            "id": "6905eefdf3fabd415a4a54e0",
+            "restaurantId": "pygupNfZONbMeMmBJb2htMxzAR23",
+            "name": "Aaloo bonda",
+            "description": "Made from Potato",
+            "price": 80,
+            "images": [
+                "https://foodylicious.s3.ap-south-1.amazonaws.com/restaurants/pygupNfZONbMeMmBJb2htMxzAR23/menu_items/6905eefdf3fabd415a4a54e0/image_1.jpg"
+            ],
+            "availableQuantity": 2,
+            "ingredients": [
+                "Potato",
+                "Gram Flour"
+            ],
+            "created_at": {
+                "$date": "2025-11-01T11:29:01.506000"
+            },
+            "updated_at": {
+                "$date": "2025-11-02T08:33:07.984000"
+            },
+            "restaurantName": "Anonymous"
+        },
+        {
+            "id": "6905eea2f3fabd415a4a54df",
+            "restaurantId": "pygupNfZONbMeMmBJb2htMxzAR23",
+            "name": "Sewagram Wada",
+            "description": "3 pieces of wada Famous in sewagram",
+            "price": 20,
+            "images": [
+                "https://foodylicious.s3.ap-south-1.amazonaws.com/restaurants/pygupNfZONbMeMmBJb2htMxzAR23/menu_items/6905eea2f3fabd415a4a54df/image_1.jpg"
+            ],
+            "availableQuantity": 1,
+            "ingredients": [
+                "Moong Dal",
+                "Udid Dal"
+            ],
+            "created_at": {
+                "$date": "2025-11-01T11:27:30.144000"
+            },
+            "updated_at": {
+                "$date": "2025-11-01T11:52:06.661000"
+            },
+            "restaurantName": "Anonymous"
+        },
+        {
+            "id": "6905edc3f3fabd415a4a54de",
+            "restaurantId": "pygupNfZONbMeMmBJb2htMxzAR23",
+            "name": "Goras Pak",
+            "description": "200 Gram of Goras pak. Cookie made from pure desi cow ghee. Famous dish from wardha.",
+            "price": 120,
+            "images": [
+                "https://foodylicious.s3.ap-south-1.amazonaws.com/restaurants/pygupNfZONbMeMmBJb2htMxzAR23/menu_items/6905edc3f3fabd415a4a54de/image_1.jpg"
+            ],
+            "availableQuantity": 3,
+            "ingredients": [
+                "Whole wheat flour",
+                "Desi ghee"
+            ],
+            "created_at": {
+                "$date": "2025-11-01T11:23:47.985000"
+            },
+            "updated_at": {
+                "$date": "2025-11-02T10:52:55.103000"
+            },
+            "restaurantName": "Anonymous"
+        },
+        {
+            "id": "6905ed15f3fabd415a4a54dd",
+            "restaurantId": "pygupNfZONbMeMmBJb2htMxzAR23",
+            "name": "Tarri poha",
+            "description": "Nagpur's pride dish with spicy curry tarri",
+            "price": 30,
+            "images": [
+                "https://foodylicious.s3.ap-south-1.amazonaws.com/restaurants/pygupNfZONbMeMmBJb2htMxzAR23/menu_items/6905ed15f3fabd415a4a54dd/image_1.jpg"
+            ],
+            "availableQuantity": 1,
+            "ingredients": [
+                "Poha",
+                "Tarri",
+                "Sev",
+                "Onion"
+            ],
+            "created_at": {
+                "$date": "2025-11-01T11:20:53.927000"
+            },
+            "updated_at": {
+                "$date": "2025-11-01T14:36:42.273000"
+            },
+            "restaurantName": "Anonymous"
+        }
+    ],
+    "pagination": {
+        "page": 1,
+        "page_size": 10,
+        "total_items": 13,
+        "total_pages": 2,
+        "has_next": true,
+        "has_prev": false
+    }
+}

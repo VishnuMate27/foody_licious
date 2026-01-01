@@ -1,0 +1,36 @@
+{
+    "message": "Fetched restaurant details successfully",
+    "restaurant": {
+        "_id": "1R0AVGdoIGeXxPFs1JGoy9eFois1",
+        "email": "meflutterdev@gmail.com",
+        "ownerName": "Flutter Dev",
+        "name": "Anasuya Mata Restaurant",
+        "phone": "+91",
+        "address": {
+            "addressText": "",
+            "city": "Mumbai",
+            "coordinates": {
+                "type": "Point",
+                "coordinates": [
+                    20.5401309,
+                    78.8371532
+                ]
+            }
+        },
+        "authProvider": "google",
+        "photoUrl": "https://foodylicious.s3.ap-south-1.amazonaws.com/restaurants/1R0AVGdoIGeXxPFs1JGoy9eFois1/profile_picture/profile.jpg",
+        "description": "Pure Vegetarian Restaurant",
+        "menuItems": [],
+        "receivedOrders": [],
+        "receivedFeedback": [],
+        "created_at": {
+            "$date": "2025-10-17T18:41:18.221Z"
+        },
+        "updated_at": {
+            "$date": "2025-12-09T18:09:12.576Z"
+        },
+        "last_login_at": {
+            "$date": "2025-12-09T18:09:06.094Z"
+        }
+    }
+}
