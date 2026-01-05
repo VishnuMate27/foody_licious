@@ -20,6 +20,8 @@ class MenuItemCard extends StatefulWidget {
 
   final bool isCartItem;
   final num? itemQuantity;
+  final Function()? onIncreaseItemButtonPressed;
+  final Function()? onDecreaseItemButtonPressed;
   final Function()? onDeleteButtonPressed;
 
   final bool isHistoryItem;
@@ -35,6 +37,8 @@ class MenuItemCard extends StatefulWidget {
     this.isInitiallyChecked = false,
     this.isCartItem = false,
     this.itemQuantity,
+    this.onIncreaseItemButtonPressed,
+    this.onDecreaseItemButtonPressed,
     this.onDeleteButtonPressed,
     this.isRestaurantMenuItem = false,
     this.isHistoryItem = false,
@@ -54,6 +58,8 @@ class MenuItemCard extends StatefulWidget {
   })  : showCheckBox = true,
         isCartItem = false,
         itemQuantity = null,
+        onIncreaseItemButtonPressed = null,
+        onDecreaseItemButtonPressed = null,
         onDeleteButtonPressed = null,
         isHistoryItem = false,
         onBuyAgainTap = null,
@@ -72,6 +78,8 @@ class MenuItemCard extends StatefulWidget {
   })  : showCheckBox = true,
         isCartItem = false,
         itemQuantity = null,
+        onIncreaseItemButtonPressed = null,
+        onDecreaseItemButtonPressed = null,
         onDeleteButtonPressed = null,
         isHistoryItem = false,
         onBuyAgainTap = null,
@@ -86,6 +94,8 @@ class MenuItemCard extends StatefulWidget {
     required this.itemQuantity,
     required this.onTap,
     required this.onDeleteButtonPressed,
+    required this.onIncreaseItemButtonPressed,
+    required this.onDecreaseItemButtonPressed,
   })  : isCartItem = true,
         showCheckBox = false,
         isInitiallyChecked = false,
@@ -107,6 +117,8 @@ class MenuItemCard extends StatefulWidget {
         showCheckBox = false,
         isInitiallyChecked = false,
         itemQuantity = null,
+        onIncreaseItemButtonPressed = null,
+        onDecreaseItemButtonPressed = null,
         onDeleteButtonPressed = null,
         onSeeDetailsPressed = null,
         isRestaurantMenuItem = false;
@@ -289,7 +301,7 @@ class _MenuItemCardState extends State<MenuItemCard> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SizedBox(width: 10.w),
-            Image.asset(widget.itemImageUrl, width: 64.h, height: 64.h),
+            Image.network(widget.itemImageUrl, width: 64.h, height: 64.h),
             SizedBox(width: 20.w),
             Expanded(
               child: Column(
@@ -298,6 +310,7 @@ class _MenuItemCardState extends State<MenuItemCard> {
                 children: [
                   Text(
                     widget.itemName,
+                    overflow: TextOverflow.ellipsis,
                     style: GoogleFonts.yeonSung(
                       color: kBlack,
                       fontSize: 15,
@@ -305,6 +318,7 @@ class _MenuItemCardState extends State<MenuItemCard> {
                   ),
                   Text(
                     widget.hotelName,
+                    overflow: TextOverflow.ellipsis,
                     style: GoogleFonts.lato(
                       color: kTextSecondary,
                       fontSize: 14,
@@ -329,11 +343,7 @@ class _MenuItemCardState extends State<MenuItemCard> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          if (quantity > 1) quantity--;
-                        });
-                      },
+                      onTap: widget.onDecreaseItemButtonPressed,
                       child: Container(
                         decoration: BoxDecoration(
                           color: kGreen.withAlpha(51),
@@ -350,7 +360,7 @@ class _MenuItemCardState extends State<MenuItemCard> {
                     ),
                     SizedBox(width: 10.w),
                     Text(
-                      "$quantity",
+                      "${widget.itemQuantity}",
                       style: GoogleFonts.lato(
                         color: kTextSecondary,
                         fontSize: 16,
@@ -358,11 +368,7 @@ class _MenuItemCardState extends State<MenuItemCard> {
                     ),
                     SizedBox(width: 10.w),
                     GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          quantity++;
-                        });
-                      },
+                      onTap: widget.onIncreaseItemButtonPressed,
                       child: Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8.r),

@@ -43,3 +43,9 @@ class LocationPermissionDeniedFailure extends Failure {}
 class LocationPermissionPermanentlyDeniedFailure extends Failure {}
 
 class RestaurantNotExistsFailure extends Failure {}
+
+class MenuItemNotExistsFailure extends Failure {}
+
+class MenuItemOutOfStockFailure extends Failure {}
+
+class CartNotExistsFailure extends Failure {}

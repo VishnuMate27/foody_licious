@@ -5,6 +5,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:foody_licious/core/constant/colors.dart';
 import 'package:foody_licious/core/constant/images.dart';
 import 'package:foody_licious/core/router/app_router.dart';
+import 'package:foody_licious/domain/usecase/cart/get_all_cart_item_usecase.dart';
+import 'package:foody_licious/presentation/bloc/cart/cart_bloc.dart';
+import 'package:foody_licious/presentation/cubit/pagination/pagination_cubit.dart';
 import 'package:foody_licious/presentation/view/main/cart/cart_view.dart';
 import 'package:foody_licious/presentation/view/main/home/home_view.dart';
 import 'package:foody_licious/presentation/view/main/history/order_history_view.dart';
@@ -169,6 +172,22 @@ class _MainViewState extends State<MainView> {
           );
           return false;
         },
+        onItemSelected: (index) {
+          if (index == 1) {
+            // Cart tab
+            final paginationCubit = context.read<PaginationCubit>();
+            paginationCubit.reset(); // 🔴 REQUIRED
+            context.read<CartBloc>().add(
+                  GetAllCartItem(
+                    GetAllCartItemParams(
+                      page: 1,
+                      limit: 10,
+                    ),
+                  ),
+                );
+          }
+        },
+
         backgroundColor: kWhite,
         isVisible: !_hideNavBar,
         animationSettings: const NavBarAnimationSettings(
