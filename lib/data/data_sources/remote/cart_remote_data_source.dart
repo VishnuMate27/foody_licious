@@ -105,8 +105,7 @@ class CartRemoteDataSourceImpl extends CartRemoteDataSource {
 
   Future<Unit> sendDeleteItemInCartRequest(
       DeleteItemInCartParams params) async {
-    final requestBody = ({
-      "cartId": params.cartId,
+    final requestBody = json.encode({
       "menuItemId": params.menuItemId,
       "userId": params.userId
     });
