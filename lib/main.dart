@@ -12,7 +12,7 @@ import 'package:foody_licious/presentation/bloc/user/user_bloc.dart';
 import 'package:foody_licious/presentation/bloc/user/user_event.dart';
 import 'package:foody_licious/core/services/services_locator.dart' as di;
 import 'package:foody_licious/presentation/cubit/pagination/pagination_cubit.dart';
-import 'cubit/navigation_cubit.dart';
+import 'presentation/cubit/navigation/navigation_cubit.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

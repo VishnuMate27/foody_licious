@@ -5,7 +5,7 @@ import 'package:foody_licious/core/constant/colors.dart';
 import 'package:foody_licious/core/constant/images.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../../cubit/navigation_cubit.dart';
+import '../../cubit/navigation/navigation_cubit.dart';
 import '../main/main_view.dart';
 import '../main/home/home_view.dart';
 

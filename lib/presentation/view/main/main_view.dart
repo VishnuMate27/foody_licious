@@ -21,7 +21,7 @@ import 'package:foody_licious/presentation/view/product/menu_item_details_view.d
 import 'package:google_fonts/google_fonts.dart';
 import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 
-import '../../../cubit/navigation_cubit.dart';
+import '../../cubit/navigation/navigation_cubit.dart';
 
 class MainView extends StatefulWidget {
   const MainView({
