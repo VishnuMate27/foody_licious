@@ -1,0 +1,40 @@
+{
+    "message": "Fetched cart items successfully",
+    "cartItems": [
+        {
+            "menuItemId": "6905ec15f3fabd415a4a54db",
+            "quantity": 3,
+            "price": 15,
+            "totalPrice": 45,
+            "menuItem": {
+                "id": "6905ec15f3fabd415a4a54db",
+                "restaurantId": "pygupNfZONbMeMmBJb2htMxzAR23",
+                "name": "Bhakri",
+                "description": "Jowar Bhakri",
+                "price": 15,
+                "images": [
+                    "https://foodylicious.s3.ap-south-1.amazonaws.com/restaurants/pygupNfZONbMeMmBJb2htMxzAR23/menu_items/6905ec15f3fabd415a4a54db/image_1.jpg"
+                ],
+                "availableQuantity": 0,
+                "ingredients": [
+                    "Jowar Aata"
+                ],
+                "created_at": {
+                    "$date": "2025-11-01T11:16:37.088000"
+                },
+                "updated_at": {
+                    "$date": "2025-11-01T14:30:30.444000"
+                },
+                "restaurantName": "Anonymous"
+            }
+        }
+    ],
+    "pagination": {
+        "page": 1,
+        "page_size": 1,
+        "total_items": 2,
+        "total_pages": 2,
+        "has_next": true,
+        "has_prev": false
+    }
+}

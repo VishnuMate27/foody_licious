@@ -1,0 +1,30 @@
+{
+    "message": "Item added to cart successfully",
+    "cart": {
+        "id": "695ab4fe60ec5006c280c1c7",
+        "restaurantId": "1R0AVGdoIGeXxPFs1JGoy9eFois1",
+        "userId": "iaqoMindJiPQAa6UHreLq4ielM22",
+        "items": [
+            {
+                "menuItemId": "6905ec15f3fabd415a4a54db",
+                "quantity": 2,
+                "price": 15,
+                "totalPrice": 30
+            },
+            {
+                "menuItemId": "693866120f0966dedfb943f4",
+                "quantity": 1,
+                "price": 25,
+                "totalPrice": 25
+            }
+        ],
+        "totalAmount": 55,
+        "status": "active",
+        "createdAt": {
+            "$date": "2026-01-04T18:44:14.956000"
+        },
+        "updatedAt": {
+            "$date": "2026-01-14T18:55:52.607000"
+        }
+    }
+}

@@ -1,3 +1,7 @@
+import 'package:foody_licious/data/models/cart/cart_item_model.dart';
+import 'package:foody_licious/data/models/cart/cart_item_response_model.dart';
+import 'package:foody_licious/data/models/cart/cart_items_response_model.dart';
+import 'package:foody_licious/data/models/cart/cart_model.dart';
 import 'package:foody_licious/data/models/menuItem/menu_item_model.dart';
 import 'package:foody_licious/data/models/menuItem/menu_items_response_model.dart';
 import 'package:foody_licious/data/models/restaurant/restaurant_model.dart';
@@ -5,12 +9,18 @@ import 'package:foody_licious/data/models/restaurant/restaurant_response_model.d
 import 'package:foody_licious/data/models/user/authentication_response_model.dart';
 import 'package:foody_licious/data/models/user/user_model.dart';
 import 'package:foody_licious/data/models/user/user_response_model.dart';
+import 'package:foody_licious/domain/entities/cart/cartItem.dart';
 import 'package:foody_licious/domain/entities/menuItem/menuItem.dart';
 import 'package:foody_licious/domain/usecase/auth/send_password_reset_email_usecase.dart';
 import 'package:foody_licious/domain/usecase/auth/sign_in_with_email_usecase.dart';
 import 'package:foody_licious/domain/usecase/auth/sign_in_with_phone_usecase.dart';
 import 'package:foody_licious/domain/usecase/auth/sign_up_with_email_usecase.dart';
 import 'package:foody_licious/domain/usecase/auth/sign_up_with_phone_usecase.dart';
+import 'package:foody_licious/domain/usecase/cart/add_item_to_cart_usecase.dart';
+import 'package:foody_licious/domain/usecase/cart/decrease_item_quantity_usecase.dart';
+import 'package:foody_licious/domain/usecase/cart/delete_item_in_cart_usecase.dart';
+import 'package:foody_licious/domain/usecase/cart/get_all_cart_item_usecase.dart';
+import 'package:foody_licious/domain/usecase/cart/increase_item_quantity_usecase.dart';
 import 'package:foody_licious/domain/usecase/menuItem/get_all_menu_items_in_restaurant_usecase.dart';
 import 'package:foody_licious/domain/usecase/menuItem/get_all_menu_items_usecase.dart';
 import 'package:foody_licious/domain/usecase/restaurant/get_restaurant_details_usecase.dart';
@@ -86,34 +96,113 @@ var tGetAllMenuItemsInRestaurantParams = GetAllMenuItemsInRestaurantParams(
   page: 1,
   limit: 10,
 );
-var tRestaurantResponseModel = RestaurantResponseModel(restaurant: tRestaurantModel);
-
-
-
+var tRestaurantResponseModel =
+    RestaurantResponseModel(restaurant: tRestaurantModel);
 
 // MenuItem
 const tMenuItemModel = MenuItemModel(
-  id: '6905ed15f3fabd415a4a54dd',
-  restaurantId: 'pygupNfZONbMeMmBJb2htMxzAR23',
-  name: 'Tarri poha',
-  description: 'Nagpur\'s pride dish with spicy curry tarri',
-  price: 30,
-  availableQuantity: 1,
-  images: ["https://foodylicious.s3.ap-south-1.amazonaws.com/restaurants/pygupNfZONbMeMmBJb2htMxzAR23/menu_items/6905ed15f3fabd415a4a54dd/image_1.jpg"],
-  ingredients: ["Poha", "Tarri", "Sev", "Onion"]
-);
+    id: '6905ed15f3fabd415a4a54dd',
+    restaurantId: 'pygupNfZONbMeMmBJb2htMxzAR23',
+    name: 'Tarri poha',
+    description: 'Nagpur\'s pride dish with spicy curry tarri',
+    price: 30,
+    availableQuantity: 1,
+    images: [
+      "https://foodylicious.s3.ap-south-1.amazonaws.com/restaurants/pygupNfZONbMeMmBJb2htMxzAR23/menu_items/6905ed15f3fabd415a4a54dd/image_1.jpg"
+    ],
+    ingredients: [
+      "Poha",
+      "Tarri",
+      "Sev",
+      "Onion"
+    ]);
 
 const tMenuItem = MenuItem(
-  id: '6905ed15f3fabd415a4a54dd',
-  restaurantId: 'pygupNfZONbMeMmBJb2htMxzAR23',
-  name: 'Tarri poha',
-  description: 'Nagpur\'s pride dish with spicy curry tarri',
-  price: 30,
-  availableQuantity: 1,
-  images: ["https://foodylicious.s3.ap-south-1.amazonaws.com/restaurants/pygupNfZONbMeMmBJb2htMxzAR23/menu_items/6905ed15f3fabd415a4a54dd/image_1.jpg"],
-  ingredients: ["Poha", "Tarri", "Sev", "Onion"]
-);
+    id: '6905ed15f3fabd415a4a54dd',
+    restaurantId: 'pygupNfZONbMeMmBJb2htMxzAR23',
+    name: 'Tarri poha',
+    description: 'Nagpur\'s pride dish with spicy curry tarri',
+    price: 30,
+    availableQuantity: 1,
+    images: [
+      "https://foodylicious.s3.ap-south-1.amazonaws.com/restaurants/pygupNfZONbMeMmBJb2htMxzAR23/menu_items/6905ed15f3fabd415a4a54dd/image_1.jpg"
+    ],
+    ingredients: [
+      "Poha",
+      "Tarri",
+      "Sev",
+      "Onion"
+    ]);
 
 var tMenuItemsResponseModel = MenuItemsResponseModel(menuItems: [
   tMenuItemModel,
 ]);
+
+// CartModel
+var tCartModel = CartModel(
+    id: '6958105007cded6646018078',
+    restaurantId: 'pygupNfZONbMeMmBJb2htMxzAR23',
+    userId: 'qK3kv062JvQ2NOZrRZYhtl8wX7v2',
+    items: [],
+    totalAmount: 2200,
+    status: 'active');
+
+var tCartItem = CartItem(
+    menuItemId: '6905ec15f3fabd415a4a54db',
+    quantity: 26,
+    price: 15,
+    totalPrice: 390);
+
+var tCartItemModel = CartItemModel(
+    menuItemId: '6905ec15f3fabd415a4a54db',
+    quantity: 26,
+    price: 15,
+    totalPrice: 390);
+
+// var tCartResponseModel = CartResponseModel(
+//   cartItems: [tCartItemModel]
+// );
+
+var tCartItemResponseModel = CartItemResponseModel(cartItem: tCartItemModel);
+
+var tCartItemsResponseModel =
+    CartItemsResponseModel(cartItems: [tCartItemModel]);
+
+var tGetAllCartItemParams =
+    GetAllCartItemParams(userId: '6905ed15f3fabd415a4a54dd', page: 1, limit: 1);
+
+var tAddItemToCartParams = AddItemToCartParams(
+  menuItemId: "693866120f0966dedfb943f4",
+  restaurantId: "1R0AVGdoIGeXxPFs1JGoy9eFois1",
+  userId: "iaqoMindJiPQAa6UHreLq4ielM22",
+);
+
+var tDeleteItemInCartParams = DeleteItemInCartParams(
+  menuItemId: "693866120f0966dedfb943f4",
+  cartId: "69590f62d131470bcb38f7c7",
+  userId: "iaqoMindJiPQAa6UHreLq4ielM22",
+);
+
+var tIncreaseItemQuantityParams = IncreaseItemQuantityParams(
+  menuItemId: "693866120f0966dedfb943f4",
+  cartId: "69590f62d131470bcb38f7c7",
+  userId: "iaqoMindJiPQAa6UHreLq4ielM22",
+);
+
+var tDecreaseItemQuantityParams = DecreaseItemQuantityParams(
+  menuItemId: "693866120f0966dedfb943f4",
+  cartId: "69590f62d131470bcb38f7c7",
+  userId: "iaqoMindJiPQAa6UHreLq4ielM22",
+);
+
+var tIncreasedQuantityCartItem = CartItem(
+    menuItemId: '6905ec15f3fabd415a4a54db',
+    quantity: 27,
+    price: 15,
+    totalPrice: 390);
+
+var tDecreasedQuantityCartItem = CartItem(
+    menuItemId: '6905ec15f3fabd415a4a54db',
+    quantity: 25,
+    price: 15,
+    totalPrice: 390);
