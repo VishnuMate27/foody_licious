@@ -9,7 +9,7 @@ import 'package:foody_licious/domain/usecase/restaurant/get_restaurant_details_u
 class RestaurantRepositoryImpl implements RestaurantRepository {
   final RestaurantRemoteDataSource remoteDataSource;
   final NetworkInfo networkInfo;
-  RestaurantRepositoryImpl(this.remoteDataSource, this.networkInfo);
+  RestaurantRepositoryImpl({required this.remoteDataSource,required this.networkInfo});
   @override
   Future<Either<Failure, Restaurant>> getRestaurantDetails(
       GetRestaurantDetailsParams params) async {

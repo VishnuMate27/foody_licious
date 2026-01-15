@@ -158,8 +158,8 @@ Future<void> init() async {
   // Repository
   sl.registerLazySingleton<RestaurantRepository>(
     () => RestaurantRepositoryImpl(
-      sl(),
-      sl(),
+      remoteDataSource: sl(),
+      networkInfo: sl(),
     ),
   );
   // Data sources
