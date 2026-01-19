@@ -188,6 +188,23 @@ void main() {
       );
     });
 
+    test('should throw CartLockedFailure on 405', () async {
+      // Arrange
+      when(() => mockHttpClient.post(
+            any(),
+            headers: any(named: 'headers'),
+            body: requestBody,
+          )).thenAnswer((_) async => http.Response('Error', 405));
+
+      final result = dataSource.addItemToCart(tAddItemToCartParams);
+
+      // Act & Assert
+      expect(
+        result,
+        throwsA(isA<CartLockedFailure>()),
+      );
+    });
+
     test('should throw MenuItemNotExistsFailure on 404', () async {
       // Arrange
       when(() => mockHttpClient.post(
@@ -286,6 +303,23 @@ void main() {
       );
     });
 
+    test('should throw CartLockedFailure on 405', () async {
+      // Arrange
+      when(() => mockHttpClient.delete(
+            any(),
+            headers: any(named: 'headers'),
+            body: requestBody,
+          )).thenAnswer((_) async => http.Response('Error', 405));
+
+      final result = dataSource.deleteItemInCart(tDeleteItemInCartParams);
+
+      // Act & Assert
+      expect(
+        result,
+        throwsA(isA<CartLockedFailure>()),
+      );
+    });
+
     test('should throw ServerFailure on non-200 other than 400/401/404',
         () async {
       // Arrange
@@ -341,7 +375,8 @@ void main() {
             body: requestBody,
           )).thenAnswer((_) async => http.Response('Error', 400));
 
-      final result = dataSource.increaseItemQuantity(tIncreaseItemQuantityParams);
+      final result =
+          dataSource.increaseItemQuantity(tIncreaseItemQuantityParams);
 
       // Act & Assert
       expect(
@@ -358,7 +393,8 @@ void main() {
             body: requestBody,
           )).thenAnswer((_) async => http.Response('Error', 404));
 
-      final result = dataSource.increaseItemQuantity(tIncreaseItemQuantityParams);
+      final result =
+          dataSource.increaseItemQuantity(tIncreaseItemQuantityParams);
 
       // Act & Assert
       expect(
@@ -366,7 +402,25 @@ void main() {
         throwsA(isA<MenuItemNotExistsFailure>()),
       );
     });
-    
+
+    test('should throw CartLockedFailure on 405', () async {
+      // Arrange
+      when(() => mockHttpClient.put(
+            any(),
+            headers: any(named: 'headers'),
+            body: requestBody,
+          )).thenAnswer((_) async => http.Response('Error', 405));
+
+      final result =
+          dataSource.increaseItemQuantity(tIncreaseItemQuantityParams);
+
+      // Act & Assert
+      expect(
+        result,
+        throwsA(isA<CartLockedFailure>()),
+      );
+    });
+
     test('should throw MenuItemOutOfStockFailure on 409', () async {
       // Arrange
       when(() => mockHttpClient.put(
@@ -375,7 +429,8 @@ void main() {
             body: requestBody,
           )).thenAnswer((_) async => http.Response('Error', 409));
 
-      final result = dataSource.increaseItemQuantity(tIncreaseItemQuantityParams);
+      final result =
+          dataSource.increaseItemQuantity(tIncreaseItemQuantityParams);
 
       // Act & Assert
       expect(
@@ -383,7 +438,7 @@ void main() {
         throwsA(isA<MenuItemOutOfStockFailure>()),
       );
     });
-    
+
     test('should throw ServerFailure on non-200 other than 400/401/404',
         () async {
       // Arrange
@@ -393,7 +448,8 @@ void main() {
             body: requestBody,
           )).thenAnswer((_) async => http.Response('Error', 500));
 
-      final result = dataSource.increaseItemQuantity(tIncreaseItemQuantityParams);
+      final result =
+          dataSource.increaseItemQuantity(tIncreaseItemQuantityParams);
 
       // Act & Assert
       expect(
@@ -401,7 +457,6 @@ void main() {
         throwsA(isA<ServerFailure>()),
       );
     });
- 
   });
 
   group('decreaseItemQuantity', () {
@@ -440,7 +495,8 @@ void main() {
             body: requestBody,
           )).thenAnswer((_) async => http.Response('Error', 400));
 
-      final result = dataSource.decreaseItemQuantity(tDecreaseItemQuantityParams);
+      final result =
+          dataSource.decreaseItemQuantity(tDecreaseItemQuantityParams);
 
       // Act & Assert
       expect(
@@ -457,7 +513,8 @@ void main() {
             body: requestBody,
           )).thenAnswer((_) async => http.Response('Error', 404));
 
-      final result = dataSource.decreaseItemQuantity(tDecreaseItemQuantityParams);
+      final result =
+          dataSource.decreaseItemQuantity(tDecreaseItemQuantityParams);
 
       // Act & Assert
       expect(
@@ -465,7 +522,25 @@ void main() {
         throwsA(isA<MenuItemNotExistsFailure>()),
       );
     });
-    
+
+    test('should throw CartLockedFailure on 405', () async {
+      // Arrange
+      when(() => mockHttpClient.put(
+            any(),
+            headers: any(named: 'headers'),
+            body: requestBody,
+          )).thenAnswer((_) async => http.Response('Error', 405));
+
+      final result =
+          dataSource.decreaseItemQuantity(tDecreaseItemQuantityParams);
+
+      // Act & Assert
+      expect(
+        result,
+        throwsA(isA<CartLockedFailure>()),
+      );
+    });
+
     test('should throw MenuItemOutOfStockFailure on 409', () async {
       // Arrange
       when(() => mockHttpClient.put(
@@ -474,7 +549,8 @@ void main() {
             body: requestBody,
           )).thenAnswer((_) async => http.Response('Error', 409));
 
-      final result = dataSource.decreaseItemQuantity(tDecreaseItemQuantityParams);
+      final result =
+          dataSource.decreaseItemQuantity(tDecreaseItemQuantityParams);
 
       // Act & Assert
       expect(
@@ -482,7 +558,7 @@ void main() {
         throwsA(isA<MenuItemOutOfStockFailure>()),
       );
     });
-    
+
     test('should throw ServerFailure on non-200 other than 400/401/404',
         () async {
       // Arrange
@@ -492,7 +568,8 @@ void main() {
             body: requestBody,
           )).thenAnswer((_) async => http.Response('Error', 500));
 
-      final result = dataSource.decreaseItemQuantity(tDecreaseItemQuantityParams);
+      final result =
+          dataSource.decreaseItemQuantity(tDecreaseItemQuantityParams);
 
       // Act & Assert
       expect(
@@ -500,6 +577,5 @@ void main() {
         throwsA(isA<ServerFailure>()),
       );
     });
- 
   });
 }
