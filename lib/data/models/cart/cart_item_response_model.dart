@@ -10,17 +10,22 @@ String cartItemResponseModelToJson(CartItemResponseModel data) =>
 
 class CartItemResponseModel {
   final CartItemModel? cartItem;
-  const CartItemResponseModel({required this.cartItem});
+
+  const CartItemResponseModel({this.cartItem});
 
   factory CartItemResponseModel.fromJson(Map<String, dynamic> json) {
     return CartItemResponseModel(
-      cartItem: CartItemModel.fromJson(
-        json['cartItem'],
-      ),
+      cartItem: json['cartItem'] == null
+          ? null
+          : CartItemModel.fromJson(
+              json['cartItem'] as Map<String, dynamic>,
+            ),
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {"cartItem": cartItem};
+    return {
+      "cartItem": cartItem?.toJson(),
+    };
   }
 }
