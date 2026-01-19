@@ -1,13 +1,14 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:foody_licious/core/constant/colors.dart';
 import 'package:foody_licious/core/constant/images.dart';
+import 'package:foody_licious/core/extension/failure_extension.dart';
 import 'package:foody_licious/core/router/tab_navigator.dart';
 import 'package:foody_licious/domain/entities/menuItem/menuItem.dart';
 import 'package:foody_licious/domain/usecase/cart/add_item_to_cart_usecase.dart';
-import 'package:foody_licious/domain/usecase/cart/decrease_item_quantity_usecase.dart';
 import 'package:foody_licious/presentation/bloc/cart/cart_bloc.dart';
 import 'package:foody_licious/presentation/widgets/gradient_button.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -23,8 +24,19 @@ class MenuItemDetailsView extends StatefulWidget {
 class _MenuItemDetailsViewState extends State<MenuItemDetailsView> {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<CartBloc, CartState>(builder: (context, state) {
-      return Scaffold(
+    return BlocListener<CartBloc, CartState>(
+      listener: (BuildContext context, CartState state) {
+        if (state is AddItemToCartSuccess) {
+          EasyLoading.showSuccess("Item added to cart successfully!");
+        } else if (state is AddItemToCartFailed) {
+          EasyLoading.showError(
+            state.failure.toMessage(
+              defaultMessage: "Failed to add item to cart!",
+            ),
+          );
+        }
+      },
+      child: Scaffold(
         backgroundColor: kWhite,
         appBar: AppBar(
           leading: IconButton(
@@ -140,9 +152,8 @@ class _MenuItemDetailsViewState extends State<MenuItemDetailsView> {
                       context.read<CartBloc>().add(
                             AddItemToCart(
                               AddItemToCartParams(
-                                menuItemId: widget.menuItem.id,
-                                restaurantId: widget.menuItem.restaurantId
-                              ),
+                                  menuItemId: widget.menuItem.id,
+                                  restaurantId: widget.menuItem.restaurantId),
                             ),
                           );
                     },
@@ -152,7 +163,7 @@ class _MenuItemDetailsViewState extends State<MenuItemDetailsView> {
             ),
           ),
         ),
-      );
-    });
+      ),
+    );
   }
 }

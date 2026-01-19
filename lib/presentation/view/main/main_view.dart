@@ -27,10 +27,12 @@ class MainView extends StatefulWidget {
   const MainView({
     required this.menuScreenContext,
     this.navigationTabIndex = 0,
+    this.hideNavBar = false,
     final Key? key,
   }) : super(key: key);
   final BuildContext menuScreenContext;
   final int navigationTabIndex;
+  final bool hideNavBar;
 
   @override
   _MainViewState createState() => _MainViewState();
@@ -38,7 +40,6 @@ class MainView extends StatefulWidget {
 
 class _MainViewState extends State<MainView> {
   late PersistentTabController _controller;
-  late bool _hideNavBar;
   final List<ScrollController> _scrollControllers = [
     ScrollController(),
     ScrollController(),
@@ -50,7 +51,6 @@ class _MainViewState extends State<MainView> {
   void initState() {
     super.initState();
     _controller = PersistentTabController(initialIndex: 0);
-    _hideNavBar = false;
   }
 
   @override
@@ -189,7 +189,7 @@ class _MainViewState extends State<MainView> {
         },
 
         backgroundColor: kWhite,
-        isVisible: !_hideNavBar,
+        isVisible: !widget.hideNavBar,
         animationSettings: const NavBarAnimationSettings(
           navBarItemAnimation: ItemAnimationSettings(
             // Navigation Bar's items animation properties.

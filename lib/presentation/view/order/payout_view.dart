@@ -6,8 +6,6 @@ import 'package:foody_licious/core/constant/images.dart';
 import 'package:foody_licious/presentation/widgets/input_text_form_field.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import 'order_confirmation_view.dart';
-
 class PayoutView extends StatefulWidget {
   const PayoutView({super.key});
 

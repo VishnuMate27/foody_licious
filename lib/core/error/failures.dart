@@ -49,3 +49,5 @@ class MenuItemNotExistsFailure extends Failure {}
 class MenuItemOutOfStockFailure extends Failure {}
 
 class CartNotExistsFailure extends Failure {}
+
+class CartLockedFailure extends Failure {}

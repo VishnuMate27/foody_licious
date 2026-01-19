@@ -96,6 +96,8 @@ class CartRemoteDataSourceImpl extends CartRemoteDataSource {
       throw CredentialFailure();
     } else if (response.statusCode == 404) {
       throw MenuItemNotExistsFailure();
+    } else if (response.statusCode == 405) {
+      throw CartLockedFailure();
     } else if (response.statusCode == 409) {
       throw MenuItemOutOfStockFailure();
     } else {
@@ -105,10 +107,8 @@ class CartRemoteDataSourceImpl extends CartRemoteDataSource {
 
   Future<Unit> sendDeleteItemInCartRequest(
       DeleteItemInCartParams params) async {
-    final requestBody = json.encode({
-      "menuItemId": params.menuItemId,
-      "userId": params.userId
-    });
+    final requestBody =
+        json.encode({"menuItemId": params.menuItemId, "userId": params.userId});
 
     final response = await client.delete(
       Uri.parse("$kBaseUrl/api/users/cart/deleteItem"),
@@ -126,6 +126,8 @@ class CartRemoteDataSourceImpl extends CartRemoteDataSource {
       throw MenuItemNotExistsFailure();
       // TODO: Implement this
       // throw CartNotExistsFailure();
+    } else if (response.statusCode == 405) {
+      throw CartLockedFailure();
     } else {
       throw ServerFailure();
     }
@@ -152,6 +154,8 @@ class CartRemoteDataSourceImpl extends CartRemoteDataSource {
       throw MenuItemNotExistsFailure();
       // TODO: Implement this
       // throw CartNotExistsFailure();
+    } else if (response.statusCode == 405) {
+      throw CartLockedFailure();
     } else if (response.statusCode == 409) {
       throw MenuItemOutOfStockFailure();
     } else {
@@ -180,6 +184,8 @@ class CartRemoteDataSourceImpl extends CartRemoteDataSource {
       throw MenuItemNotExistsFailure();
       // TODO: Implement this
       // throw CartNotExistsFailure();
+    } else if (response.statusCode == 405) {
+      throw CartLockedFailure();
     } else if (response.statusCode == 409) {
       throw MenuItemOutOfStockFailure();
     } else {

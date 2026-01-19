@@ -4,6 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:foody_licious/core/constant/colors.dart';
 import 'package:foody_licious/core/constant/images.dart';
+import 'package:foody_licious/core/extension/failure_extension.dart';
+import 'package:foody_licious/core/router/app_router.dart';
 import 'package:foody_licious/domain/usecase/cart/decrease_item_quantity_usecase.dart';
 import 'package:foody_licious/domain/usecase/cart/delete_item_in_cart_usecase.dart';
 import 'package:foody_licious/domain/usecase/cart/get_all_cart_item_usecase.dart';
@@ -11,7 +13,6 @@ import 'package:foody_licious/domain/usecase/cart/increase_item_quantity_usecase
 import 'package:foody_licious/presentation/bloc/cart/cart_bloc.dart';
 import 'package:foody_licious/presentation/cubit/pagination/pagination_cubit.dart';
 import 'package:foody_licious/presentation/view/product/menu_item_details_view.dart';
-import 'package:foody_licious/presentation/view/product/restaurant_details_view.dart';
 import 'package:foody_licious/presentation/view/order/payout_view.dart';
 import 'package:foody_licious/presentation/widgets/gradient_button.dart';
 import 'package:foody_licious/presentation/widgets/menu_item_card.dart';
@@ -136,15 +137,27 @@ class _CartViewState extends State<CartView> {
                           current is DeleteItemInCartSuccess ||
                           current is GetAllCartItemSuccess,
                       listener: (context, state) {
-                        if (state is IncreaseItemQuantityFailed ||
-                            state is DecreaseItemQuantityFailed) {
+                        if (state is IncreaseItemQuantityFailed) {
                           EasyLoading.showError(
-                              "Failed to update item quantity");
+                            state.failure.toMessage(
+                              defaultMessage:
+                                  "Failed to increase item quantity!",
+                            ),
+                          );
+                        } else if (state is DecreaseItemQuantityFailed) {
+                          EasyLoading.showError(
+                            state.failure.toMessage(
+                              defaultMessage:
+                                  "Failed to decrease item quantity!",
+                            ),
+                          );
                         } else if (state is DeleteItemInCartSuccess) {
                           EasyLoading.showSuccess(
                               "Cart Item Deleted Successfully!");
                         } else if (state is DeleteItemInCartFailed) {
-                          EasyLoading.showError("Failed to delete cart item!");
+                          state.failure.toMessage(
+                            defaultMessage: "Failed to delete cart item!",
+                          );
                         } else if (state is GetAllCartItemSuccess) {
                           // determine whether there are more items based on page size
                           // if totalItems >= currentPage * pageSize => probably has more
