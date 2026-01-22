@@ -4,11 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:foody_licious/core/constant/colors.dart';
 import 'package:foody_licious/core/constant/images.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 import '../../cubit/navigation/navigation_cubit.dart';
-import '../main/main_view.dart';
-import '../main/home/home_view.dart';
-
 class OrderConfirmationView extends StatefulWidget {
   const OrderConfirmationView({super.key});
 

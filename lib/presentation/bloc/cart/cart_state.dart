@@ -28,6 +28,27 @@ class GetAllCartItemFailed extends CartState {
   List<Object> get props => [];
 }
 
+// GetCartPricingDetails
+class GetCartPricingDetailsLoading extends CartState {
+  @override
+  List<Object> get props => [];
+}
+
+class GetCartPricingDetailsSuccess extends CartState {
+  final CartPricingDetails cartPricingDetails;
+  GetCartPricingDetailsSuccess(this.cartPricingDetails);
+  @override
+  List<Object> get props => [cartPricingDetails];
+}
+
+class GetCartPricingDetailsFailed extends CartState {
+  final Failure failure;
+  GetCartPricingDetailsFailed(this.failure);
+  @override
+  List<Object> get props => [];
+}
+
+
 // AddItemToCart
 class AddItemToCartLoading extends CartState {
   @override

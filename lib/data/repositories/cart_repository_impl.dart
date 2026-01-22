@@ -4,11 +4,13 @@ import 'package:foody_licious/core/network/network_info.dart';
 import 'package:foody_licious/data/data_sources/local/user_local_data_source.dart';
 import 'package:foody_licious/data/data_sources/remote/cart_remote_data_source.dart';
 import 'package:foody_licious/domain/entities/cart/cartItem.dart';
+import 'package:foody_licious/domain/entities/cart/cartPricing.dart';
 import 'package:foody_licious/domain/repositories/cart_repository.dart';
 import 'package:foody_licious/domain/usecase/cart/add_item_to_cart_usecase.dart';
 import 'package:foody_licious/domain/usecase/cart/decrease_item_quantity_usecase.dart';
 import 'package:foody_licious/domain/usecase/cart/delete_item_in_cart_usecase.dart';
 import 'package:foody_licious/domain/usecase/cart/get_all_cart_item_usecase.dart';
+import 'package:foody_licious/domain/usecase/cart/get_cart_pricing_details_usecase.dart';
 import 'package:foody_licious/domain/usecase/cart/increase_item_quantity_usecase.dart';
 
 class CartRepositoryImpl extends CartRepository {
@@ -34,6 +36,24 @@ class CartRepositoryImpl extends CartRepository {
         params,
       );
       return Right(remoteResponse.cartItems);
+    } on Failure catch (failure) {
+      return Left(failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, CartPricingDetails>> getCartPricingDetails(
+      GetCartPricingDetailsParams params) async {
+    if (!await networkInfo.isConnected) {
+      return Left(NetworkFailure());
+    }
+    try {
+      final user = await userLocalDataSource.getUser();
+      params.userId = user.id;
+      final remoteResponse = await cartRemoteDataSource.getCartPricingDetails(
+        params,
+      );
+      return Right(remoteResponse.cartPricingDetails!);
     } on Failure catch (failure) {
       return Left(failure);
     }

@@ -9,6 +9,7 @@ import 'package:foody_licious/core/router/app_router.dart';
 import 'package:foody_licious/domain/usecase/cart/decrease_item_quantity_usecase.dart';
 import 'package:foody_licious/domain/usecase/cart/delete_item_in_cart_usecase.dart';
 import 'package:foody_licious/domain/usecase/cart/get_all_cart_item_usecase.dart';
+import 'package:foody_licious/domain/usecase/cart/get_cart_pricing_details_usecase.dart';
 import 'package:foody_licious/domain/usecase/cart/increase_item_quantity_usecase.dart';
 import 'package:foody_licious/presentation/bloc/cart/cart_bloc.dart';
 import 'package:foody_licious/presentation/cubit/pagination/pagination_cubit.dart';
@@ -282,6 +283,11 @@ class _CartViewState extends State<CartView> {
                 GradientButton(
                   buttonText: "Continue",
                   onTap: () {
+                    context.read<CartBloc>().add(
+                          GetCartPricingDetails(
+                            GetCartPricingDetailsParams(),
+                          ),
+                        );
                     showBottomSheet(context, () {
                       Navigator.pop(context);
                       Navigator.push(
@@ -305,102 +311,141 @@ class _CartViewState extends State<CartView> {
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
-        return Container(
-          height: 240.h,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(28.r),
-            image: DecorationImage(
-                image: AssetImage(kBottomSheetBackground), fit: BoxFit.cover),
-          ),
-          child: Padding(
-            padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 20.w),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Sub-Total",
-                      style:
-                          GoogleFonts.lato(color: kTextOnPrimary, fontSize: 14),
-                    ),
-                    Text(
-                      "120\$",
-                      style:
-                          GoogleFonts.lato(color: kTextOnPrimary, fontSize: 14),
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Delivery Charge",
-                      style:
-                          GoogleFonts.lato(color: kTextOnPrimary, fontSize: 14),
-                    ),
-                    Text(
-                      "10\$",
-                      style:
-                          GoogleFonts.lato(color: kTextOnPrimary, fontSize: 14),
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Discount",
-                      style:
-                          GoogleFonts.lato(color: kTextOnPrimary, fontSize: 14),
-                    ),
-                    Text(
-                      "20\$",
-                      style:
-                          GoogleFonts.lato(color: kTextOnPrimary, fontSize: 14),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 10.h,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Total",
-                      style: GoogleFonts.yeonSung(
-                          color: kTextOnPrimary, fontSize: 18),
-                    ),
-                    Text(
-                      "150\$",
-                      style: GoogleFonts.yeonSung(
-                          color: kTextOnPrimary, fontSize: 18),
-                    ),
-                  ],
-                ),
-                GestureDetector(
-                  onTap: onProceedTap,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                      color: kTextOnPrimary,
-                    ),
-                    height: 57.h,
-                    child: Center(
-                      child: Text(
-                        "Proceed",
-                        style:
-                            GoogleFonts.yeonSung(color: kTextRed, fontSize: 20),
-                      ),
+        return BlocBuilder<CartBloc, CartState>(
+            buildWhen: (previous, current) =>
+                (current is GetCartPricingDetailsLoading) ||
+                (current is GetCartPricingDetailsSuccess) ||
+                (current is GetCartPricingDetailsFailed),
+            builder: (context, state) {
+              if (state is GetCartPricingDetailsLoading) {
+                return CircularProgressIndicator();
+              } else if (state is GetCartPricingDetailsSuccess) {
+                return Container(
+                  height: 240.h,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(28.r),
+                    image: DecorationImage(
+                        image: AssetImage(kBottomSheetBackground),
+                        fit: BoxFit.cover),
+                  ),
+                  child: Padding(
+                    padding:
+                        EdgeInsets.symmetric(vertical: 10.h, horizontal: 20.w),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Sub-Total",
+                              style: GoogleFonts.lato(
+                                  color: kTextOnPrimary, fontSize: 14),
+                            ),
+                            Text(
+                              "₹${state.cartPricingDetails.totalCartAmount}",
+                              style: GoogleFonts.lato(
+                                  color: kTextOnPrimary, fontSize: 14),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Delivery Charge",
+                              style: GoogleFonts.lato(
+                                  color: kTextOnPrimary, fontSize: 14),
+                            ),
+                            Text(
+                              "₹${state.cartPricingDetails.deliveryCharges}",
+                              style: GoogleFonts.lato(
+                                  color: kTextOnPrimary, fontSize: 14),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "GST (3% on sub total)",
+                              style: GoogleFonts.lato(
+                                  color: kTextOnPrimary, fontSize: 14),
+                            ),
+                            Text(
+                              "₹${state.cartPricingDetails.gstCharges}",
+                              style: GoogleFonts.lato(
+                                  color: kTextOnPrimary, fontSize: 14),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Platform fees (1% on sub total)",
+                              style: GoogleFonts.lato(
+                                  color: kTextOnPrimary, fontSize: 14),
+                            ),
+                            Text(
+                              "₹${state.cartPricingDetails.platformFees}",
+                              style: GoogleFonts.lato(
+                                  color: kTextOnPrimary, fontSize: 14),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 10.h,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Total",
+                              style: GoogleFonts.yeonSung(
+                                  color: kTextOnPrimary, fontSize: 18),
+                            ),
+                            Text(
+                              "₹${state.cartPricingDetails.grandTotalAmount}",
+                              style: GoogleFonts.yeonSung(
+                                  color: kTextOnPrimary, fontSize: 18),
+                            ),
+                          ],
+                        ),
+                        GestureDetector(
+                          onTap: onProceedTap,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                              color: kTextOnPrimary,
+                            ),
+                            height: 57.h,
+                            child: Center(
+                              child: Text(
+                                "Proceed",
+                                style: GoogleFonts.yeonSung(
+                                    color: kTextRed, fontSize: 20),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                ),
-              ],
-            ),
-          ),
-        );
+                );
+              } else {
+                return Container(
+                  height: 240.h,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(28.r),
+                    image: DecorationImage(
+                        image: AssetImage(kBottomSheetBackground),
+                        fit: BoxFit.cover),
+                  ),
+                  child: Text("Failed to fetch the pricing details"),
+                );
+              }
+            });
       },
     );
   }

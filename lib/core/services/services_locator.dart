@@ -33,6 +33,7 @@ import 'package:foody_licious/domain/usecase/cart/add_item_to_cart_usecase.dart'
 import 'package:foody_licious/domain/usecase/cart/decrease_item_quantity_usecase.dart';
 import 'package:foody_licious/domain/usecase/cart/delete_item_in_cart_usecase.dart';
 import 'package:foody_licious/domain/usecase/cart/get_all_cart_item_usecase.dart';
+import 'package:foody_licious/domain/usecase/cart/get_cart_pricing_details_usecase.dart';
 import 'package:foody_licious/domain/usecase/cart/increase_item_quantity_usecase.dart';
 import 'package:foody_licious/domain/usecase/menuItem/get_all_menu_items_in_restaurant_usecase.dart';
 import 'package:foody_licious/domain/usecase/menuItem/get_all_menu_items_usecase.dart';
@@ -169,9 +170,10 @@ Future<void> init() async {
 
   //Features - Cart
   // Bloc
-  sl.registerFactory(() => CartBloc(sl(), sl(), sl(), sl(), sl()));
+  sl.registerFactory(() => CartBloc(sl(), sl(), sl(), sl(), sl(),sl()));
   // Use cases
   sl.registerLazySingleton(() => GetAllCartItemUseCase(sl()));
+  sl.registerLazySingleton(() => GetCartPricingDetailsUseCase(sl()));
   sl.registerLazySingleton(() => AddItemToCartUseCase(sl()));
   sl.registerLazySingleton(() => DeleteItemInCartUseCase(sl()));
   sl.registerLazySingleton(() => IncreaseItemQuantityUseCase(sl()));

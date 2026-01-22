@@ -4,29 +4,35 @@ import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:foody_licious/domain/entities/cart/cartItem.dart';
+import 'package:foody_licious/domain/entities/cart/cartPricing.dart';
 import 'package:foody_licious/domain/usecase/cart/add_item_to_cart_usecase.dart';
 import 'package:foody_licious/domain/usecase/cart/decrease_item_quantity_usecase.dart';
 import 'package:foody_licious/domain/usecase/cart/delete_item_in_cart_usecase.dart';
 import 'package:foody_licious/domain/usecase/cart/get_all_cart_item_usecase.dart';
+import 'package:foody_licious/domain/usecase/cart/get_cart_pricing_details_usecase.dart';
 import 'package:foody_licious/domain/usecase/cart/increase_item_quantity_usecase.dart';
 import '../../../core/error/failures.dart';
 part 'cart_event.dart';
 part 'cart_state.dart';
 
 class CartBloc extends Bloc<CartEvent, CartState> {
+  List<CartItem> _cachedCartItems = [];
   final GetAllCartItemUseCase _getAllCartItemUseCase;
+  final GetCartPricingDetailsUseCase _getCartPricingDetailsUseCase;
   final AddItemToCartUseCase _addItemToCartUseCase;
   final DeleteItemInCartUseCase _deleteItemInCartUseCase;
   final IncreaseItemQuantityUseCase _increaseItemQuantityUseCase;
   final DecreaseItemQuantityUseCase _decreaseItemQuantityUseCase;
   CartBloc(
       this._getAllCartItemUseCase,
+      this._getCartPricingDetailsUseCase,
       this._addItemToCartUseCase,
       this._deleteItemInCartUseCase,
       this._increaseItemQuantityUseCase,
       this._decreaseItemQuantityUseCase)
       : super(CartInitial()) {
     on<GetAllCartItem>(_onGetAllCartItem);
+    on<GetCartPricingDetails>(_onGetCartPricingDetails);
     on<AddItemToCart>(_onAddItemToCart);
     on<DeleteItemInCart>(_onDeleteItemInCart);
     on<IncreaseItemQuantity>(_onIncreaseItemQuantity);
@@ -51,12 +57,42 @@ class CartBloc extends Bloc<CartEvent, CartState> {
               ? newItems
               : [...currentState.cartItems, ...newItems];
           emit(GetAllCartItemSuccess(updatedList));
+          _cachedCartItems = updatedList;
         } else {
           emit(GetAllCartItemSuccess(newItems));
+          _cachedCartItems = newItems;
         }
       });
     } catch (e) {
       emit(GetAllCartItemFailed(ExceptionFailure(e.toString())));
+    }
+  }
+
+  FutureOr<void> _onGetCartPricingDetails(
+      GetCartPricingDetails event, Emitter<CartState> emit) async {
+    try {
+      emit(GetCartPricingDetailsLoading());
+      final result = await _getCartPricingDetailsUseCase(event.params);
+      result.fold(
+        (failure) {
+          emit(GetCartPricingDetailsFailed(failure));
+
+          // 🔁 Restore cart state
+          if (_cachedCartItems.isNotEmpty) {
+            emit(GetAllCartItemSuccess(_cachedCartItems));
+          }
+        },
+        (cartPricingDetails) {
+          emit(GetCartPricingDetailsSuccess(cartPricingDetails));
+
+          // 🔁 Restore cart state AFTER success
+          if (_cachedCartItems.isNotEmpty) {
+            emit(GetAllCartItemSuccess(_cachedCartItems));
+          }
+        },
+      );
+    } catch (e) {
+      emit(GetCartPricingDetailsFailed(ExceptionFailure(e.toString())));
     }
   }
 

@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:foody_licious/core/constant/colors.dart';
 import 'package:foody_licious/core/constant/images.dart';
+import 'package:foody_licious/core/router/app_router.dart';
+import 'package:foody_licious/presentation/view/order/order_confirmation_view.dart';
 import 'package:foody_licious/presentation/widgets/input_text_form_field.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -146,7 +148,12 @@ class _PayoutViewState extends State<PayoutView> {
               ),
               GestureDetector(
                 onTap: () {
-                  print("Save Information tapped");
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => OrderConfirmationView(),
+                    ),
+                  );
                 },
                 child: Container(
                   decoration: BoxDecoration(

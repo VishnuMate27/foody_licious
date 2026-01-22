@@ -8,6 +8,11 @@ class GetAllCartItem extends CartEvent {
   GetAllCartItem(this.params);
 }
 
+class GetCartPricingDetails extends CartEvent {
+  final GetCartPricingDetailsParams params;
+  GetCartPricingDetails(this.params);
+}
+
 class AddItemToCart extends CartEvent {
   final AddItemToCartParams params;
   AddItemToCart(this.params);
