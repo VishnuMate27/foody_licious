@@ -2,6 +2,8 @@ import 'package:foody_licious/data/models/cart/cart_item_model.dart';
 import 'package:foody_licious/data/models/cart/cart_item_response_model.dart';
 import 'package:foody_licious/data/models/cart/cart_items_response_model.dart';
 import 'package:foody_licious/data/models/cart/cart_model.dart';
+import 'package:foody_licious/data/models/cart/cart_pricing_details_model.dart';
+import 'package:foody_licious/data/models/cart/cart_pricing_details_response_model.dart';
 import 'package:foody_licious/data/models/menuItem/menu_item_model.dart';
 import 'package:foody_licious/data/models/menuItem/menu_items_response_model.dart';
 import 'package:foody_licious/data/models/restaurant/restaurant_model.dart';
@@ -10,6 +12,7 @@ import 'package:foody_licious/data/models/user/authentication_response_model.dar
 import 'package:foody_licious/data/models/user/user_model.dart';
 import 'package:foody_licious/data/models/user/user_response_model.dart';
 import 'package:foody_licious/domain/entities/cart/cartItem.dart';
+import 'package:foody_licious/domain/entities/cart/cartPricing.dart';
 import 'package:foody_licious/domain/entities/menuItem/menuItem.dart';
 import 'package:foody_licious/domain/usecase/auth/send_password_reset_email_usecase.dart';
 import 'package:foody_licious/domain/usecase/auth/sign_in_with_email_usecase.dart';
@@ -20,11 +23,13 @@ import 'package:foody_licious/domain/usecase/cart/add_item_to_cart_usecase.dart'
 import 'package:foody_licious/domain/usecase/cart/decrease_item_quantity_usecase.dart';
 import 'package:foody_licious/domain/usecase/cart/delete_item_in_cart_usecase.dart';
 import 'package:foody_licious/domain/usecase/cart/get_all_cart_item_usecase.dart';
+import 'package:foody_licious/domain/usecase/cart/get_cart_pricing_details_usecase.dart';
 import 'package:foody_licious/domain/usecase/cart/increase_item_quantity_usecase.dart';
 import 'package:foody_licious/domain/usecase/menuItem/get_all_menu_items_in_restaurant_usecase.dart';
 import 'package:foody_licious/domain/usecase/menuItem/get_all_menu_items_usecase.dart';
 import 'package:foody_licious/domain/usecase/restaurant/get_restaurant_details_usecase.dart';
 import 'package:foody_licious/domain/usecase/user/update_user_usecase.dart';
+import 'package:foody_licious/presentation/bloc/cart/cart_bloc.dart';
 
 //user
 const tUserModel = UserModel(
@@ -153,11 +158,27 @@ var tCartItem = CartItem(
     price: 15,
     totalPrice: 390);
 
+var tCartPricingDetails = CartPricingDetails(
+  totalCartAmount: 1055.0,
+  deliveryCharges: 40.0,
+  gstCharges: 52.75,
+  platformFees: 10.55,
+  grandTotalAmount: 1158.3,
+);
+
 var tCartItemModel = CartItemModel(
     menuItemId: '6905ec15f3fabd415a4a54db',
     quantity: 26,
     price: 15,
     totalPrice: 390);
+
+var tCartPricingDetailsModel = CartPricingDetailsModel(
+  totalCartAmount: 1055.0,
+  deliveryCharges: 40.0,
+  gstCharges: 52.75,
+  platformFees: 10.55,
+  grandTotalAmount: 1158.3,
+);
 
 // var tCartResponseModel = CartResponseModel(
 //   cartItems: [tCartItemModel]
@@ -168,8 +189,15 @@ var tCartItemResponseModel = CartItemResponseModel(cartItem: tCartItemModel);
 var tCartItemsResponseModel =
     CartItemsResponseModel(cartItems: [tCartItemModel]);
 
+var tCartPricingDetailsResponseModel = CartPricingDetailsResponseModel(
+    cartPricingDetails: tCartPricingDetailsModel);
+
 var tGetAllCartItemParams =
     GetAllCartItemParams(userId: '6905ed15f3fabd415a4a54dd', page: 1, limit: 1);
+
+var tGetCartPricingDetailsParams = GetCartPricingDetailsParams(
+  userId: "iaqoMindJiPQAa6UHreLq4ielM22",
+);
 
 var tAddItemToCartParams = AddItemToCartParams(
   menuItemId: "693866120f0966dedfb943f4",

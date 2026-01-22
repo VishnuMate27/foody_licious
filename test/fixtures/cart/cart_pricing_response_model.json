@@ -1,0 +1,11 @@
+{
+    "message": "Fetched cart pricing details successfully",
+    "cartId": "695ab4fe60ec5006c280c1c7",
+    "pricing": {
+        "totalCartAmount": 30,
+        "gstCharges": 1.5,
+        "platformFees": 0.3,
+        "deliveryCharges": 40,
+        "grandTotalAmount": 71.8
+    }
+}

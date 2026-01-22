@@ -7,6 +7,7 @@ import 'package:foody_licious/domain/usecase/cart/add_item_to_cart_usecase.dart'
 import 'package:foody_licious/domain/usecase/cart/decrease_item_quantity_usecase.dart';
 import 'package:foody_licious/domain/usecase/cart/delete_item_in_cart_usecase.dart';
 import 'package:foody_licious/domain/usecase/cart/get_all_cart_item_usecase.dart';
+import 'package:foody_licious/domain/usecase/cart/get_cart_pricing_details_usecase.dart';
 import 'package:foody_licious/domain/usecase/cart/increase_item_quantity_usecase.dart';
 import 'package:foody_licious/presentation/bloc/cart/cart_bloc.dart';
 import 'package:mocktail/mocktail.dart';
@@ -20,6 +21,9 @@ class MockDeleteItemInCartUseCase extends Mock
 
 class MockGetAllCartItemUseCase extends Mock implements GetAllCartItemUseCase {}
 
+class MockGetCartPricingDetailsUseCase extends Mock
+    implements GetCartPricingDetailsUseCase {}
+
 class MockIncreaseItemQuantityUseCase extends Mock
     implements IncreaseItemQuantityUseCase {}
 
@@ -30,12 +34,14 @@ void main() {
   group('CartBloc', () {
     late CartBloc cartBloc;
     late MockGetAllCartItemUseCase mockGetAllCartItemUseCase;
+    late MockGetCartPricingDetailsUseCase mockGetCartPricingDetailsUseCase;
     late MockAddItemToCartUseCase mockAddItemToCartUseCase;
     late MockDeleteItemInCartUseCase mockDeleteItemInCartUseCase;
     late MockIncreaseItemQuantityUseCase mockIncreaseItemQuantityUseCase;
     late MockDecreaseItemQuantityUseCase mockDecreaseItemQuantityUseCase;
     setUp(() {
       mockGetAllCartItemUseCase = MockGetAllCartItemUseCase();
+      mockGetCartPricingDetailsUseCase = MockGetCartPricingDetailsUseCase();
       mockAddItemToCartUseCase = MockAddItemToCartUseCase();
       mockDeleteItemInCartUseCase = MockDeleteItemInCartUseCase();
       mockIncreaseItemQuantityUseCase = MockIncreaseItemQuantityUseCase();
@@ -44,6 +50,7 @@ void main() {
 
       cartBloc = CartBloc(
           mockGetAllCartItemUseCase,
+          mockGetCartPricingDetailsUseCase,
           mockAddItemToCartUseCase,
           mockDeleteItemInCartUseCase,
           mockIncreaseItemQuantityUseCase,
@@ -53,6 +60,93 @@ void main() {
     test('initial state should be CartInitial', () {
       expect(cartBloc.state, CartInitial());
     });
+
+    // _onGetCartPricingDetails
+    // blocTest<CartBloc, CartState>(
+    //   'emits [GetCartPricingDetailsLoading, GetAllCartItemSuccess] when GetCartPricingDetails is added',
+    //   build: () {
+    //     when(() => mockGetCartPricingDetailsUseCase(tGetCartPricingDetailsParams))
+    //         .thenAnswer((_) async => Right(tCartPricingDetails));
+    //     return cartBloc;
+    //   },
+    //   seed: () => GetAllCartItemSuccess(tCartItemsResponseModel.cartItems),
+    //   act: (bloc) => bloc.add(GetCartPricingDetails(tGetCartPricingDetailsParams)),
+    //   expect: () => [
+    //     GetCartPricingDetailsLoading(),
+    //     GetCartPricingDetailsSuccess(tCartPricingDetails),
+    //     GetAllCartItemSuccess(tCartItemsResponseModel.cartItems)
+    //   ],
+    // );
+
+    blocTest<CartBloc, CartState>(
+      'emits [GetCartPricingDetailsLoading, GetCartPricingDetailsSuccess] when GetCartPricingDetails succeeds',
+      build: () {
+        when(() =>
+                mockGetCartPricingDetailsUseCase(tGetCartPricingDetailsParams))
+            .thenAnswer((_) async => Right(tCartPricingDetails));
+        return cartBloc;
+      },
+      seed: () => GetAllCartItemSuccess(tCartItemsResponseModel.cartItems),
+      act: (bloc) =>
+          bloc.add(GetCartPricingDetails(tGetCartPricingDetailsParams)),
+      expect: () => [
+        GetCartPricingDetailsLoading(),
+        GetCartPricingDetailsSuccess(tCartPricingDetails),
+      ],
+      verify: (_) {
+        verify(() =>
+                mockGetCartPricingDetailsUseCase(tGetCartPricingDetailsParams))
+            .called(1);
+      },
+    );
+
+    blocTest<CartBloc, CartState>(
+      'emits [GetCartPricingDetailsLoading, GetCartPricingDetailsFailed] on GetAllCartItem error',
+      build: () {
+        when(() =>
+                mockGetCartPricingDetailsUseCase(tGetCartPricingDetailsParams))
+            .thenAnswer((_) async => Left(CredentialFailure()));
+        return cartBloc;
+      },
+      act: (bloc) =>
+          bloc.add(GetCartPricingDetails(tGetCartPricingDetailsParams)),
+      expect: () => [
+        GetCartPricingDetailsLoading(),
+        GetCartPricingDetailsFailed(CredentialFailure())
+      ],
+    );
+
+    blocTest<CartBloc, CartState>(
+      'emits [GetCartPricingDetailsLoading, GetCartPricingDetailsFailed] on GetAllCartItem error',
+      build: () {
+        when(() =>
+                mockGetCartPricingDetailsUseCase(tGetCartPricingDetailsParams))
+            .thenAnswer((_) async => Left(CartNotExistsFailure()));
+        return cartBloc;
+      },
+      act: (bloc) =>
+          bloc.add(GetCartPricingDetails(tGetCartPricingDetailsParams)),
+      expect: () => [
+        GetCartPricingDetailsLoading(),
+        GetCartPricingDetailsFailed(CartNotExistsFailure())
+      ],
+    );
+
+    blocTest<CartBloc, CartState>(
+      'emits [GetCartPricingDetailsLoading, GetCartPricingDetailsFailed] on GetAllCartItem error',
+      build: () {
+        when(() =>
+                mockGetCartPricingDetailsUseCase(tGetCartPricingDetailsParams))
+            .thenAnswer((_) async => Left(ServerFailure()));
+        return cartBloc;
+      },
+      act: (bloc) =>
+          bloc.add(GetCartPricingDetails(tGetCartPricingDetailsParams)),
+      expect: () => [
+        GetCartPricingDetailsLoading(),
+        GetCartPricingDetailsFailed(ServerFailure())
+      ],
+    );
 
     // _onGetAllCartItem
     blocTest<CartBloc, CartState>(
@@ -375,7 +469,6 @@ void main() {
       ],
     );
 
-
     blocTest<CartBloc, CartState>(
       'emits [DecreaseItemQuantityFailed, GetAllCartItemSuccess] on DecreaseItemQuantity is error',
       build: () {
@@ -407,6 +500,5 @@ void main() {
         GetAllCartItemSuccess([tCartItemModel])
       ],
     );
-
   });
 }

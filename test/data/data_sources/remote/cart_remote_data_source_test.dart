@@ -7,6 +7,7 @@ import 'package:foody_licious/core/error/failures.dart';
 import 'package:foody_licious/data/data_sources/remote/cart_remote_data_source.dart';
 import 'package:foody_licious/data/models/cart/cart_item_response_model.dart';
 import 'package:foody_licious/data/models/cart/cart_items_response_model.dart';
+import 'package:foody_licious/data/models/cart/cart_pricing_details_response_model.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:http/http.dart' as http;
 import '../../../fixtures/constant_objects.dart';
@@ -101,6 +102,83 @@ void main() {
           )).thenAnswer((_) async => http.Response('Error', 500));
 
       final result = dataSource.getAllCartItem(tGetAllCartItemParams);
+
+      // Act & Assert
+      expect(
+        result,
+        throwsA(isA<ServerFailure>()),
+      );
+    });
+  });
+
+  group('getCartPricingDetails', () {
+    test('should perform a POST request to correct URL with params', () async {
+      // Arrange
+      final fakeResponse = fixture('cart/cart_pricing_response_model.json');
+
+      when(() => mockHttpClient.get(
+            Uri.parse(
+                '$kBaseUrlTest/api/users/cart/getCartPricingDetails?userId=${tGetCartPricingDetailsParams.userId}'),
+            headers: {'Content-Type': 'application/json'},
+          )).thenAnswer((_) async => http.Response(fakeResponse, 200));
+
+      // Act
+      final result =
+          await dataSource.getCartPricingDetails(tGetCartPricingDetailsParams);
+
+      // Assert
+      verify(() => mockHttpClient.get(
+            Uri.parse(
+                '$kBaseUrlTest/api/users/cart/getCartPricingDetails?userId=${tGetCartPricingDetailsParams.userId}'),
+            headers: {'Content-Type': 'application/json'},
+          ));
+      expect(result, isA<CartPricingDetailsResponseModel>());
+    });
+
+    test('should throw CredentialFailure on 400', () async {
+      // Arrange
+      when(() => mockHttpClient.get(
+            any(),
+            headers: any(named: 'headers'),
+          )).thenAnswer((_) async => http.Response('Error', 400));
+
+      final result =
+           dataSource.getCartPricingDetails(tGetCartPricingDetailsParams);
+
+      // Act & Assert
+      expect(
+        result,
+        throwsA(isA<CredentialFailure>()),
+      );
+    });
+
+    test('should throw CartNotExistsFailure on 404', () async {
+      // Arrange
+      when(() => mockHttpClient.get(
+            any(),
+            headers: any(named: 'headers'),
+          )).thenAnswer((_) async => http.Response('Error', 404));
+
+      final result =
+           dataSource.getCartPricingDetails(tGetCartPricingDetailsParams);
+
+      // Act & Assert
+      expect(
+        result,
+        throwsA(isA<CartNotExistsFailure>()),
+      );
+    });
+
+    test('should throw ServerFailure on non-200 other than 400/401/404',
+        () async {
+      // Arrange
+      when(() => mockHttpClient.get(
+            any(),
+            headers: any(named: 'headers'),
+          )).thenAnswer((_) async => http.Response('Error', 500));
+
+      final result =
+           dataSource.getCartPricingDetails(tGetCartPricingDetailsParams);
 
       // Act & Assert
       expect(
