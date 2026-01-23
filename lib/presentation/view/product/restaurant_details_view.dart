@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -127,8 +128,14 @@ class _RestaurantDetailsViewState extends State<RestaurantDetailsView> {
                             ),
                             SizedBox(height: 26.h),
                             Center(
-                              child: Image.network(
-                                state.restaurant.photoUrl ?? kRestraurantImage,
+                              child: CachedNetworkImage(
+                                imageUrl: state.restaurant.photoUrl ??
+                                    kRestraurantImage,
+                                fit: BoxFit.cover,
+                                placeholder: (_, __) =>
+                                    const CircularProgressIndicator(),
+                                errorWidget: (_, __, ___) =>
+                                    const Icon(Icons.broken_image),
                                 height: 200.h,
                               ),
                             ),
