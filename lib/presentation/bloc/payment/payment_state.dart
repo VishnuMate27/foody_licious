@@ -1,15 +1,21 @@
 part of 'payment_bloc.dart';
 
-abstract class PaymentState extends Equatable {
+abstract class PaymentState extends Equatable {}
+
+class PaymentInitial extends PaymentState {
   @override
-  List<Object?> get props => throw UnimplementedError();
+  List<Object> get props => [];
 }
 
-class PaymentInitial extends PaymentState {}
+class CompletePaymentLoading extends PaymentState {
+  @override
+  List<Object> get props => [];
+}
 
-class CompletePaymentLoading extends PaymentState {}
-
-class CompletePaymentSuccess extends PaymentState {}
+class CompletePaymentSuccess extends PaymentState {
+  @override
+  List<Object> get props => [];
+}
 
 // ignore: must_be_immutable
 class CompletePaymentFailed extends PaymentState {

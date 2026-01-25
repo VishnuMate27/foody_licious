@@ -31,6 +31,7 @@ import 'package:foody_licious/domain/usecase/checkout/cancel_checkout_usecase.da
 import 'package:foody_licious/domain/usecase/checkout/place_order_usecase.dart';
 import 'package:foody_licious/domain/usecase/menuItem/get_all_menu_items_in_restaurant_usecase.dart';
 import 'package:foody_licious/domain/usecase/menuItem/get_all_menu_items_usecase.dart';
+import 'package:foody_licious/domain/usecase/payment/complete_payment_usecase.dart';
 import 'package:foody_licious/domain/usecase/restaurant/get_restaurant_details_usecase.dart';
 import 'package:foody_licious/domain/usecase/user/update_user_usecase.dart';
 import 'package:foody_licious/presentation/bloc/cart/cart_bloc.dart';
@@ -264,3 +265,9 @@ var tCancelCheckoutParams = CancelCheckoutParams(
   orderId: "697616918de1a0053cef2b81",
 );
 
+// Payment
+
+var tPaymentParams = PaymentParams(
+  paymentId: "6976744d473a6a3e3ffc6e78",
+  paymentMode: "COD",
+);
