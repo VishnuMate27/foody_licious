@@ -7,6 +7,7 @@ import 'package:foody_licious/presentation/view/feedback/feedback_view.dart';
 import 'package:foody_licious/presentation/view/main/main_view.dart';
 import 'package:foody_licious/presentation/view/notification/notification_view.dart';
 import 'package:foody_licious/presentation/view/onboarding/splash_view.dart';
+import 'package:foody_licious/presentation/view/order/payment_view.dart';
 import 'package:foody_licious/presentation/view/product/menu_item_details_view.dart';
 import 'package:foody_licious/presentation/view/product/restaurant_details_view.dart';
 
@@ -32,6 +33,7 @@ class AppRouter {
   //order
   static const String orderConfirmation = '/order-confirmation';
   static const String payout = '/payout';
+  static const String payment = '/payment';
   //feedback
   static const String feedback = '/feedback';
   //notification
@@ -92,6 +94,14 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => OrderConfirmationView());
       case payout:
         return MaterialPageRoute(builder: (_) => PayoutView());
+      case payment:
+        final args = routeSettings.arguments as Map<String, dynamic>;
+        return MaterialPageRoute(
+          builder: (_) => PaymentView(
+            orderId: args['restaurantId'],
+            paymentId: args['paymentId'],
+          ),
+        );
       //feedback
       case feedback:
         return MaterialPageRoute(builder: (_) => FeedbackView());

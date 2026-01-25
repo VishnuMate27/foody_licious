@@ -51,3 +51,34 @@ class MenuItemOutOfStockFailure extends Failure {}
 class CartNotExistsFailure extends Failure {}
 
 class CartLockedFailure extends Failure {}
+
+// Checkout
+
+class CartEmptyFailure extends Failure {}
+
+class OldOrderPendingFailure extends Failure {}
+
+class CartLockFailed extends Failure {}
+
+class OrderNotFound extends Failure {}
+
+class OrderStatusNotPendingPayment extends Failure {}
+
+class PaymentStatusAlreadySuccess extends Failure {}
+
+class OldPaymentStatusAlreadyPending extends Failure {}
+
+class PaymentRequestNotFound extends Failure {}
+
+class PaymentStatusIsNotPending extends Failure {}
+
+class PaymentStatusIsNotSelected extends Failure {}
+
+class FailedToUpdatePaymentMode extends Failure {}
+
+// ignore: must_be_immutable
+class BusinessExceptionFailure extends Failure {
+  String? failureMessage;
+  BusinessExceptionFailure(this.failureMessage);
+}
+

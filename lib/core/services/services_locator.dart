@@ -3,15 +3,18 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:foody_licious/data/data_sources/remote/cart_remote_data_source.dart';
+import 'package:foody_licious/data/data_sources/remote/checkout_remote_data_source.dart';
 import 'package:foody_licious/data/data_sources/remote/menu_remote_data_source.dart';
 import 'package:foody_licious/data/data_sources/remote/restaurant_remote_data_source.dart';
 import 'package:foody_licious/data/data_sources/remote/user_remote_data_source.dart';
 import 'package:foody_licious/data/repositories/cart_repository_impl.dart';
+import 'package:foody_licious/data/repositories/checkout_repository_impl.dart';
 import 'package:foody_licious/data/repositories/menu_item_repository_impl.dart';
 import 'package:foody_licious/data/repositories/restaurant_repository_impl.dart';
 import 'package:foody_licious/data/repositories/user_repository_impl.dart';
 import 'package:foody_licious/data/services/location_service.dart';
 import 'package:foody_licious/domain/repositories/cart_repository.dart';
+import 'package:foody_licious/domain/repositories/checkout_repository.dart';
 import 'package:foody_licious/domain/repositories/menu_item_repository.dart';
 import 'package:foody_licious/domain/repositories/restaurant_repository.dart';
 import 'package:foody_licious/domain/repositories/user_repository.dart';
@@ -35,6 +38,8 @@ import 'package:foody_licious/domain/usecase/cart/delete_item_in_cart_usecase.da
 import 'package:foody_licious/domain/usecase/cart/get_all_cart_item_usecase.dart';
 import 'package:foody_licious/domain/usecase/cart/get_cart_pricing_details_usecase.dart';
 import 'package:foody_licious/domain/usecase/cart/increase_item_quantity_usecase.dart';
+import 'package:foody_licious/domain/usecase/checkout/place_order_usecase.dart';
+import 'package:foody_licious/domain/usecase/checkout/cancel_checkout_usecase.dart';
 import 'package:foody_licious/domain/usecase/menuItem/get_all_menu_items_in_restaurant_usecase.dart';
 import 'package:foody_licious/domain/usecase/menuItem/get_all_menu_items_usecase.dart';
 import 'package:foody_licious/domain/usecase/restaurant/get_restaurant_details_usecase.dart';
@@ -45,6 +50,7 @@ import 'package:foody_licious/domain/usecase/user/update_user_usecase.dart';
 import 'package:foody_licious/firebase_options.dart';
 import 'package:foody_licious/presentation/bloc/auth/auth_bloc.dart';
 import 'package:foody_licious/presentation/bloc/cart/cart_bloc.dart';
+import 'package:foody_licious/presentation/bloc/checkout/checkout_bloc.dart';
 import 'package:foody_licious/presentation/bloc/menuItem/menu_item_bloc.dart';
 import 'package:foody_licious/presentation/bloc/restaurant/restaurant_bloc.dart';
 import 'package:foody_licious/presentation/bloc/user/user_bloc.dart';
@@ -71,7 +77,6 @@ Future<void> init() async {
   );
 
   await dotenv.load(fileName: "assets/utils/.env");
-
   //Features - Auth
   // Bloc
   sl.registerFactory(() => AuthBloc(sl(), sl(), sl(), sl(), sl(), sl(), sl(),
@@ -170,7 +175,7 @@ Future<void> init() async {
 
   //Features - Cart
   // Bloc
-  sl.registerFactory(() => CartBloc(sl(), sl(), sl(), sl(), sl(),sl()));
+  sl.registerFactory(() => CartBloc(sl(), sl(), sl(), sl(), sl(), sl()));
   // Use cases
   sl.registerLazySingleton(() => GetAllCartItemUseCase(sl()));
   sl.registerLazySingleton(() => GetCartPricingDetailsUseCase(sl()));
@@ -189,6 +194,25 @@ Future<void> init() async {
   // Data sources
   sl.registerLazySingleton<CartRemoteDataSource>(
     () => CartRemoteDataSourceImpl(client: sl()),
+  );
+
+  //Features - Checkout
+  // Bloc
+  sl.registerFactory(() => CheckoutBloc(sl(),sl()));
+  // Use cases
+  sl.registerLazySingleton(() => PlaceOrderUseCase(sl()));
+  sl.registerLazySingleton(() => CancelCheckoutUseCase(sl()));
+  // Repository
+  sl.registerLazySingleton<CheckoutRepository>(
+    () => CheckoutRepositoryImpl(
+      checkoutRemoteDataSource: sl(),
+      userLocalDataSource: sl(),
+      networkInfo: sl(),
+    ),
+  );
+  // Data sources
+  sl.registerLazySingleton<CheckoutRemoteDataSource>(
+    () => CheckoutRemoteDataSourceImpl(client: sl()),
   );
 
   ///***********************************************

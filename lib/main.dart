@@ -6,6 +6,7 @@ import 'package:foody_licious/core/constant/colors.dart';
 import 'package:foody_licious/core/router/app_router.dart';
 import 'package:foody_licious/presentation/bloc/auth/auth_bloc.dart';
 import 'package:foody_licious/presentation/bloc/cart/cart_bloc.dart';
+import 'package:foody_licious/presentation/bloc/checkout/checkout_bloc.dart';
 import 'package:foody_licious/presentation/bloc/menuItem/menu_item_bloc.dart';
 import 'package:foody_licious/presentation/bloc/restaurant/restaurant_bloc.dart';
 import 'package:foody_licious/presentation/bloc/user/user_bloc.dart';
@@ -42,6 +43,7 @@ class MyApp extends StatelessWidget {
           create: (context) => di.sl<AuthBloc>()..add(AuthCheck()),
         ),
         BlocProvider(create: (context) => di.sl<CartBloc>()),
+        BlocProvider(create: (context) => di.sl<CheckoutBloc>()),
       ],
       child: ScreenUtilInit(
         designSize: const Size(360, 800),
