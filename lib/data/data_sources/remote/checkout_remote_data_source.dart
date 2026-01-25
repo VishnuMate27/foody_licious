@@ -62,15 +62,15 @@ class CheckoutRemoteDataSourceImpl extends CheckoutRemoteDataSource {
         case 'CART_NOT_FOUND':
           throw CartNotExistsFailure();
         case 'CART_LOCK_FAILED':
-          throw CartLockFailed();
+          throw CartLockFailedFailure();
         case 'ORDER_NOT_FOUND':
-          throw OrderNotFound();
+          throw OrderNotFoundFailure();
         case 'ORDER_STATUS_NOT_PENDING_PAYMENT':
-          throw OrderStatusNotPendingPayment();
+          throw OrderStatusNotPendingPaymentFailure();
         case 'PAYMENT_STATUS_ALREADY_SUCCESS':
-          throw PaymentStatusAlreadySuccess();
+          throw PaymentStatusAlreadySuccessFailure();
         case 'OLD_PAYMENT_STATUS_ALREADY_PENDING':
-          throw OldPaymentStatusAlreadyPending();    
+          throw OldPaymentStatusAlreadyPendingFailure();
         default:
           throw BusinessExceptionFailure(body['message']);
       }
@@ -103,13 +103,13 @@ class CheckoutRemoteDataSourceImpl extends CheckoutRemoteDataSource {
 
       switch (body['error_code']) {
         case 'PAYMENT_REQUEST_NOT_FOUND':
-          throw PaymentRequestNotFound();
+          throw PaymentRequestNotFoundFailure();
         case 'PAYMENT_STATUS_IS_NOT_PENDING':
-          throw PaymentStatusIsNotPending();
+          throw PaymentStatusIsNotPendingFailure();
         case 'PAYMENT_STATUS_IS_NOT_SELECTED':
-          throw PaymentStatusIsNotSelected();
+          throw PaymentStatusIsNotSelectedFailure();
         case 'FAILED_TO_UPDATE_PAYMENT_MODE':
-          throw FailedToUpdatePaymentMode();
+          throw FailedToUpdatePaymentModeFailure();
         default:
           throw BusinessExceptionFailure(body['message']);
       }

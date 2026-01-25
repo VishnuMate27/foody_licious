@@ -58,27 +58,26 @@ class CartEmptyFailure extends Failure {}
 
 class OldOrderPendingFailure extends Failure {}
 
-class CartLockFailed extends Failure {}
+class CartLockFailedFailure extends Failure {}
 
-class OrderNotFound extends Failure {}
+class OrderNotFoundFailure extends Failure {}
 
-class OrderStatusNotPendingPayment extends Failure {}
+class OrderStatusNotPendingPaymentFailure extends Failure {}
 
-class PaymentStatusAlreadySuccess extends Failure {}
+class PaymentStatusAlreadySuccessFailure extends Failure {}
 
-class OldPaymentStatusAlreadyPending extends Failure {}
+class OldPaymentStatusAlreadyPendingFailure extends Failure {}
 
-class PaymentRequestNotFound extends Failure {}
+class PaymentRequestNotFoundFailure extends Failure {}
 
-class PaymentStatusIsNotPending extends Failure {}
+class PaymentStatusIsNotPendingFailure extends Failure {}
 
-class PaymentStatusIsNotSelected extends Failure {}
+class PaymentStatusIsNotSelectedFailure extends Failure {}
 
-class FailedToUpdatePaymentMode extends Failure {}
+class FailedToUpdatePaymentModeFailure extends Failure {}
 
 // ignore: must_be_immutable
 class BusinessExceptionFailure extends Failure {
   String? failureMessage;
   BusinessExceptionFailure(this.failureMessage);
 }
-

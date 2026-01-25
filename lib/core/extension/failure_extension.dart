@@ -97,40 +97,40 @@ extension FailureMessage on Failure {
       return "Cart does not exist.";
     }
 
-    if (this is CartLockFailed) {
+    if (this is CartLockFailedFailure) {
       return "Failed to lock cart.";
     }
 
-    if (this is OrderNotFound) {
+    if (this is OrderNotFoundFailure) {
       return "Order not found.";
     }
 
-    if (this is OrderStatusNotPendingPayment) {
+    if (this is OrderStatusNotPendingPaymentFailure) {
       return "Order status is not PENDING_PAYMENT.";
     }
 
-    if (this is PaymentStatusAlreadySuccess) {
+    if (this is PaymentStatusAlreadySuccessFailure) {
       return "Payment status is already success!";
     }
 
-    if (this is OldPaymentStatusAlreadyPending) {
+    if (this is OldPaymentStatusAlreadyPendingFailure) {
       return "Payment status is already pending! You can retry after old payment window is expired!";
     }
 
     // Payment
-    if (this is PaymentRequestNotFound) {
+    if (this is PaymentRequestNotFoundFailure) {
       return "Payment request not found.";
     }
 
-    if (this is PaymentStatusIsNotPending) {
+    if (this is PaymentStatusIsNotPendingFailure) {
       return "Payment status is not PENDING.";
     }
 
-    if (this is PaymentStatusIsNotSelected) {
+    if (this is PaymentStatusIsNotSelectedFailure) {
       return "Payment mode is not NOT_SELECTED";
     }
 
-    if (this is FailedToUpdatePaymentMode) {
+    if (this is FailedToUpdatePaymentModeFailure) {
       return "Failed to update payment mode.";
     }
 
