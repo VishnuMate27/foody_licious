@@ -4,6 +4,7 @@ import 'package:foody_licious/data/models/cart/cart_items_response_model.dart';
 import 'package:foody_licious/data/models/cart/cart_model.dart';
 import 'package:foody_licious/data/models/cart/cart_pricing_details_model.dart';
 import 'package:foody_licious/data/models/cart/cart_pricing_details_response_model.dart';
+import 'package:foody_licious/data/models/checkout/place_order_model.dart';
 import 'package:foody_licious/data/models/menuItem/menu_item_model.dart';
 import 'package:foody_licious/data/models/menuItem/menu_items_response_model.dart';
 import 'package:foody_licious/data/models/restaurant/restaurant_model.dart';
@@ -13,6 +14,7 @@ import 'package:foody_licious/data/models/user/user_model.dart';
 import 'package:foody_licious/data/models/user/user_response_model.dart';
 import 'package:foody_licious/domain/entities/cart/cartItem.dart';
 import 'package:foody_licious/domain/entities/cart/cartPricing.dart';
+import 'package:foody_licious/domain/entities/checkout/place_order_details.dart';
 import 'package:foody_licious/domain/entities/menuItem/menuItem.dart';
 import 'package:foody_licious/domain/usecase/auth/send_password_reset_email_usecase.dart';
 import 'package:foody_licious/domain/usecase/auth/sign_in_with_email_usecase.dart';
@@ -25,6 +27,8 @@ import 'package:foody_licious/domain/usecase/cart/delete_item_in_cart_usecase.da
 import 'package:foody_licious/domain/usecase/cart/get_all_cart_item_usecase.dart';
 import 'package:foody_licious/domain/usecase/cart/get_cart_pricing_details_usecase.dart';
 import 'package:foody_licious/domain/usecase/cart/increase_item_quantity_usecase.dart';
+import 'package:foody_licious/domain/usecase/checkout/cancel_checkout_usecase.dart';
+import 'package:foody_licious/domain/usecase/checkout/place_order_usecase.dart';
 import 'package:foody_licious/domain/usecase/menuItem/get_all_menu_items_in_restaurant_usecase.dart';
 import 'package:foody_licious/domain/usecase/menuItem/get_all_menu_items_usecase.dart';
 import 'package:foody_licious/domain/usecase/restaurant/get_restaurant_details_usecase.dart';
@@ -234,3 +238,29 @@ var tDecreasedQuantityCartItem = CartItem(
     quantity: 25,
     price: 15,
     totalPrice: 390);
+
+// checkout
+
+var tPlaceOrderModel = PlaceOrderModel(
+  orderId: "697616918de1a0053cef2b81",
+  paymentId: "697616928de1a0053cef2b82",
+  amount: 474.6,
+);
+
+var tPlaceOrderParams = PlaceOrderParams(
+  userId: "qK3kv062JvQ2NOZrRZYhtl8wX7v2",
+  name: "Vishnu Email",
+  address: "test address, Mumbai",
+  phone: "+919607778479",
+);
+
+var tPlaceOrderDetails = PlaceOrderDetails(
+  orderId: "697616918de1a0053cef2b81",
+  paymentId: "697616928de1a0053cef2b82",
+  amount: 474.6,
+);
+
+var tCancelCheckoutParams = CancelCheckoutParams(
+  orderId: "697616918de1a0053cef2b81",
+);
+

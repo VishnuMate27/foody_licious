@@ -5,17 +5,20 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:foody_licious/data/data_sources/remote/cart_remote_data_source.dart';
 import 'package:foody_licious/data/data_sources/remote/checkout_remote_data_source.dart';
 import 'package:foody_licious/data/data_sources/remote/menu_remote_data_source.dart';
+import 'package:foody_licious/data/data_sources/remote/payment_remote_data_source.dart';
 import 'package:foody_licious/data/data_sources/remote/restaurant_remote_data_source.dart';
 import 'package:foody_licious/data/data_sources/remote/user_remote_data_source.dart';
 import 'package:foody_licious/data/repositories/cart_repository_impl.dart';
 import 'package:foody_licious/data/repositories/checkout_repository_impl.dart';
 import 'package:foody_licious/data/repositories/menu_item_repository_impl.dart';
+import 'package:foody_licious/data/repositories/payment_repository_impl.dart';
 import 'package:foody_licious/data/repositories/restaurant_repository_impl.dart';
 import 'package:foody_licious/data/repositories/user_repository_impl.dart';
 import 'package:foody_licious/data/services/location_service.dart';
 import 'package:foody_licious/domain/repositories/cart_repository.dart';
 import 'package:foody_licious/domain/repositories/checkout_repository.dart';
 import 'package:foody_licious/domain/repositories/menu_item_repository.dart';
+import 'package:foody_licious/domain/repositories/payment_repository.dart';
 import 'package:foody_licious/domain/repositories/restaurant_repository.dart';
 import 'package:foody_licious/domain/repositories/user_repository.dart';
 import 'package:foody_licious/domain/usecase/auth/send_password_reset_email_usecase.dart';
@@ -42,6 +45,7 @@ import 'package:foody_licious/domain/usecase/checkout/place_order_usecase.dart';
 import 'package:foody_licious/domain/usecase/checkout/cancel_checkout_usecase.dart';
 import 'package:foody_licious/domain/usecase/menuItem/get_all_menu_items_in_restaurant_usecase.dart';
 import 'package:foody_licious/domain/usecase/menuItem/get_all_menu_items_usecase.dart';
+import 'package:foody_licious/domain/usecase/payment/complete_payment_usecase.dart';
 import 'package:foody_licious/domain/usecase/restaurant/get_restaurant_details_usecase.dart';
 import 'package:foody_licious/domain/usecase/user/check_user_usecase.dart';
 import 'package:foody_licious/domain/usecase/user/delete_user_usecase.dart';
@@ -52,6 +56,7 @@ import 'package:foody_licious/presentation/bloc/auth/auth_bloc.dart';
 import 'package:foody_licious/presentation/bloc/cart/cart_bloc.dart';
 import 'package:foody_licious/presentation/bloc/checkout/checkout_bloc.dart';
 import 'package:foody_licious/presentation/bloc/menuItem/menu_item_bloc.dart';
+import 'package:foody_licious/presentation/bloc/payment/payment_bloc.dart';
 import 'package:foody_licious/presentation/bloc/restaurant/restaurant_bloc.dart';
 import 'package:foody_licious/presentation/bloc/user/user_bloc.dart';
 import 'package:foody_licious/presentation/cubit/pagination/pagination_cubit.dart';
@@ -214,6 +219,24 @@ Future<void> init() async {
   sl.registerLazySingleton<CheckoutRemoteDataSource>(
     () => CheckoutRemoteDataSourceImpl(client: sl()),
   );
+
+  //Features - Payment
+  // Bloc
+  sl.registerFactory(() => PaymentBloc(sl()));
+  // Use cases
+  sl.registerLazySingleton(() => CompletePaymentUseCase(sl()));
+  // Repository
+  sl.registerLazySingleton<PaymentRepository>(
+    () => PaymentRepositoryImpl(
+      paymentRemoteDataSource: sl(),
+      networkInfo: sl(),
+    ),
+  );
+  // Data sources
+  sl.registerLazySingleton<PaymentRemoteDataSource>(
+    () => PaymentRemoteDataSourceImpl(client: sl()),
+  );
+
 
   ///***********************************************
   ///! Core

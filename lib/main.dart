@@ -8,6 +8,7 @@ import 'package:foody_licious/presentation/bloc/auth/auth_bloc.dart';
 import 'package:foody_licious/presentation/bloc/cart/cart_bloc.dart';
 import 'package:foody_licious/presentation/bloc/checkout/checkout_bloc.dart';
 import 'package:foody_licious/presentation/bloc/menuItem/menu_item_bloc.dart';
+import 'package:foody_licious/presentation/bloc/payment/payment_bloc.dart';
 import 'package:foody_licious/presentation/bloc/restaurant/restaurant_bloc.dart';
 import 'package:foody_licious/presentation/bloc/user/user_bloc.dart';
 import 'package:foody_licious/presentation/bloc/user/user_event.dart';
@@ -44,6 +45,7 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(create: (context) => di.sl<CartBloc>()),
         BlocProvider(create: (context) => di.sl<CheckoutBloc>()),
+        BlocProvider(create: (context) => di.sl<PaymentBloc>()),
       ],
       child: ScreenUtilInit(
         designSize: const Size(360, 800),

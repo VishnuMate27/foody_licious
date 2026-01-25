@@ -6,7 +6,10 @@ import 'package:foody_licious/core/constant/colors.dart';
 import 'package:foody_licious/core/constant/images.dart';
 import 'package:foody_licious/core/extension/failure_extension.dart';
 import 'package:foody_licious/domain/usecase/checkout/cancel_checkout_usecase.dart';
+import 'package:foody_licious/domain/usecase/payment/complete_payment_usecase.dart';
 import 'package:foody_licious/presentation/bloc/checkout/checkout_bloc.dart';
+import 'package:foody_licious/presentation/bloc/payment/payment_bloc.dart';
+import 'package:foody_licious/presentation/view/order/order_confirmation_view.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class PaymentView extends StatefulWidget {
@@ -20,6 +23,7 @@ class PaymentView extends StatefulWidget {
 }
 
 class _PaymentViewState extends State<PaymentView> {
+  final String selectedPaymentMode = "COD";
   @override
   void initState() {
     super.initState();
@@ -27,20 +31,44 @@ class _PaymentViewState extends State<PaymentView> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<CheckoutBloc, CheckoutState>(
-      listener: (context, state) {
-        if (state is CancelCheckoutFailed) {
-          EasyLoading.showError(
-            state.failure
-                .toMessage(defaultMessage: "Failed to cancel checkout!"),
-          );
-        } else if (state is CancelCheckoutLoading) {
-          EasyLoading.show(status: "Canceling Checkout...");
-        } else if (state is CancelCheckoutSuccess) {
-          EasyLoading.dismiss();
-          Navigator.pop(context);
-        }
-      },
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<CheckoutBloc, CheckoutState>(
+          listener: (context, state) {
+            if (state is CancelCheckoutFailed) {
+              EasyLoading.showError(
+                state.failure
+                    .toMessage(defaultMessage: "Failed to cancel checkout!"),
+              );
+            } else if (state is CancelCheckoutLoading) {
+              EasyLoading.show(status: "Canceling Checkout...");
+            } else if (state is CancelCheckoutSuccess) {
+              EasyLoading.dismiss();
+              Navigator.pop(context);
+            }
+          },
+        ),
+        BlocListener<PaymentBloc, PaymentState>(
+          listener: (context, state) {
+            if (state is CompletePaymentFailed) {
+              EasyLoading.showError(
+                state.failure
+                    .toMessage(defaultMessage: "Failed to complete payment!"),
+              );
+            } else if (state is CompletePaymentLoading) {
+              EasyLoading.show(status: "Processing Payment...");
+            } else if (state is CompletePaymentSuccess) {
+              EasyLoading.dismiss();
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => OrderConfirmationView(),
+                ),
+              );
+            }
+          },
+        )
+      ],
       child: PopScope(
         canPop: false,
         child: Scaffold(
@@ -112,7 +140,16 @@ class _PaymentViewState extends State<PaymentView> {
                     height: 38.h,
                   ),
                   GestureDetector(
-                    onTap: () {},
+                    onTap: () {
+                      context.read<PaymentBloc>().add(
+                            CompletePayment(
+                              PaymentParams(
+                                paymentId: widget.paymentId,
+                                paymentMode: selectedPaymentMode,
+                              ),
+                            ),
+                          );
+                    },
                     child: Container(
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(15),
