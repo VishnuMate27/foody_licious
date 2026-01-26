@@ -102,14 +102,14 @@ class CheckoutRemoteDataSourceImpl extends CheckoutRemoteDataSource {
       final body = json.decode(response.body);
 
       switch (body['error_code']) {
-        case 'PAYMENT_REQUEST_NOT_FOUND':
-          throw PaymentRequestNotFoundFailure();
-        case 'PAYMENT_STATUS_IS_NOT_PENDING':
-          throw PaymentStatusIsNotPendingFailure();
-        case 'PAYMENT_STATUS_IS_NOT_SELECTED':
-          throw PaymentStatusIsNotSelectedFailure();
-        case 'FAILED_TO_UPDATE_PAYMENT_MODE':
-          throw FailedToUpdatePaymentModeFailure();
+        case 'ORDER_STATUS_NOT_PENDING_PAYMENT':
+          throw OrderStatusNotPendingPaymentFailure();
+        case 'PAYMENT_DELETE_FAILED':
+          throw PaymentDeleteFailedFailure();
+        case 'ORDER_DELETE_FAILED':
+          throw OrderDeleteFailedFailure();
+        case 'CART_UNLOCK_FAILED':
+          throw CartUnlockFailedFailure();
         default:
           throw BusinessExceptionFailure(body['message']);
       }

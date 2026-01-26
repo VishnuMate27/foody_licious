@@ -101,6 +101,10 @@ extension FailureMessage on Failure {
       return "Failed to lock cart.";
     }
 
+    if (this is CartUnlockFailedFailure) {
+      return "Failed to unlock cart.";
+    }
+
     if (this is OrderNotFoundFailure) {
       return "Order not found.";
     }
@@ -132,6 +136,14 @@ extension FailureMessage on Failure {
 
     if (this is FailedToUpdatePaymentModeFailure) {
       return "Failed to update payment mode.";
+    }
+
+    if (this is PaymentDeleteFailedFailure) {
+      return "Failed to delete payment.";
+    }
+
+    if (this is OrderDeleteFailedFailure) {
+      return "Failed to delete order.";
     }
 
     if (this is BusinessExceptionFailure) {

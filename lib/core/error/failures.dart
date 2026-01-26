@@ -60,6 +60,8 @@ class OldOrderPendingFailure extends Failure {}
 
 class CartLockFailedFailure extends Failure {}
 
+class CartUnlockFailedFailure extends Failure {}
+
 class OrderNotFoundFailure extends Failure {}
 
 class OrderStatusNotPendingPaymentFailure extends Failure {}
@@ -75,6 +77,10 @@ class PaymentStatusIsNotPendingFailure extends Failure {}
 class PaymentStatusIsNotSelectedFailure extends Failure {}
 
 class FailedToUpdatePaymentModeFailure extends Failure {}
+
+class PaymentDeleteFailedFailure extends Failure {}
+
+class OrderDeleteFailedFailure extends Failure {}
 
 // ignore: must_be_immutable
 class BusinessExceptionFailure extends Failure {
