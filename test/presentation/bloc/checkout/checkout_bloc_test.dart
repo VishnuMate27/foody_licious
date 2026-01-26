@@ -287,12 +287,11 @@ void main() {
       ],
     );
 
-////
     blocTest<CheckoutBloc, CheckoutState>(
       'emits [CancelCheckoutLoading, CancelCheckoutFailed] on CancelCheckout error',
       build: () {
         when(() => mockCancelCheckoutUseCase(tCancelCheckoutParams))
-            .thenAnswer((_) async => Left(PaymentRequestNotFoundFailure()));
+            .thenAnswer((_) async => Left(OrderStatusNotPendingPaymentFailure()));
         return checkoutBloc;
       },
       act: (bloc) => bloc.add(CancelCheckout(tCancelCheckoutParams)),
@@ -302,7 +301,7 @@ void main() {
       },
       expect: () => [
         CancelCheckoutLoading(),
-        CancelCheckoutFailed(PaymentRequestNotFoundFailure()),
+        CancelCheckoutFailed(OrderStatusNotPendingPaymentFailure()),
       ],
     );
 
@@ -310,7 +309,7 @@ void main() {
       'emits [CancelCheckoutLoading, CancelCheckoutFailed] on CancelCheckout error',
       build: () {
         when(() => mockCancelCheckoutUseCase(tCancelCheckoutParams))
-            .thenAnswer((_) async => Left(PaymentStatusIsNotPendingFailure()));
+            .thenAnswer((_) async => Left(PaymentDeleteFailedFailure()));
         return checkoutBloc;
       },
       act: (bloc) => bloc.add(CancelCheckout(tCancelCheckoutParams)),
@@ -320,7 +319,7 @@ void main() {
       },
       expect: () => [
         CancelCheckoutLoading(),
-        CancelCheckoutFailed(PaymentStatusIsNotPendingFailure()),
+        CancelCheckoutFailed(PaymentDeleteFailedFailure()),
       ],
     );
 
@@ -328,7 +327,7 @@ void main() {
       'emits [CancelCheckoutLoading, CancelCheckoutFailed] on CancelCheckout error',
       build: () {
         when(() => mockCancelCheckoutUseCase(tCancelCheckoutParams))
-            .thenAnswer((_) async => Left(PaymentStatusIsNotSelectedFailure()));
+            .thenAnswer((_) async => Left(OrderDeleteFailedFailure()));
         return checkoutBloc;
       },
       act: (bloc) => bloc.add(CancelCheckout(tCancelCheckoutParams)),
@@ -338,7 +337,7 @@ void main() {
       },
       expect: () => [
         CancelCheckoutLoading(),
-        CancelCheckoutFailed(PaymentStatusIsNotSelectedFailure()),
+        CancelCheckoutFailed(OrderDeleteFailedFailure()),
       ],
     );
 
@@ -346,7 +345,7 @@ void main() {
       'emits [CancelCheckoutLoading, CancelCheckoutFailed] on CancelCheckout error',
       build: () {
         when(() => mockCancelCheckoutUseCase(tCancelCheckoutParams))
-            .thenAnswer((_) async => Left(FailedToUpdatePaymentModeFailure()));
+            .thenAnswer((_) async => Left(CartUnlockFailedFailure()));
         return checkoutBloc;
       },
       act: (bloc) => bloc.add(CancelCheckout(tCancelCheckoutParams)),
@@ -356,7 +355,7 @@ void main() {
       },
       expect: () => [
         CancelCheckoutLoading(),
-        CancelCheckoutFailed(FailedToUpdatePaymentModeFailure()),
+        CancelCheckoutFailed(CartUnlockFailedFailure()),
       ],
     );
 

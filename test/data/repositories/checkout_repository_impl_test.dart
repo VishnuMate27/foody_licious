@@ -421,13 +421,13 @@ void main() {
 
       // Business Failure Case
       test(
-        'Should return Left(Failure) when remoteDataSource.cancelCheckout throws PaymentRequestNotFoundFailure',
+        'Should return Left(Failure) when remoteDataSource.cancelCheckout throws OrderStatusNotPendingPaymentFailure',
         () async {
           // arrange
 
           when(() => mockCheckoutRemoteDataSource
                   .cancelCheckout(tCancelCheckoutParams))
-              .thenThrow(PaymentRequestNotFoundFailure());
+              .thenThrow(OrderStatusNotPendingPaymentFailure());
 
           // act
           final result = await repository.cancelCheckout(tCancelCheckoutParams);
@@ -436,18 +436,18 @@ void main() {
               .cancelCheckout(tCancelCheckoutParams)).called(1);
 
           // assert
-          expect(result, Left(PaymentRequestNotFoundFailure()));
+          expect(result, Left(OrderStatusNotPendingPaymentFailure()));
         },
       );
 
       test(
-        'Should return Left(Failure) when remoteDataSource.cancelCheckout throws PaymentStatusIsNotPendingFailure',
+        'Should return Left(Failure) when remoteDataSource.cancelCheckout throws PaymentDeleteFailedFailure',
         () async {
           // arrange
 
           when(() => mockCheckoutRemoteDataSource
                   .cancelCheckout(tCancelCheckoutParams))
-              .thenThrow(PaymentStatusIsNotPendingFailure());
+              .thenThrow(PaymentDeleteFailedFailure());
 
           // act
           final result = await repository.cancelCheckout(tCancelCheckoutParams);
@@ -456,18 +456,18 @@ void main() {
               .cancelCheckout(tCancelCheckoutParams)).called(1);
 
           // assert
-          expect(result, Left(PaymentStatusIsNotPendingFailure()));
+          expect(result, Left(PaymentDeleteFailedFailure()));
         },
       );
 
       test(
-        'Should return Left(Failure) when remoteDataSource.cancelCheckout throws PaymentRequestNotFoundFailure',
+        'Should return Left(Failure) when remoteDataSource.cancelCheckout throws OrderDeleteFailedFailure',
         () async {
           // arrange
 
           when(() => mockCheckoutRemoteDataSource
                   .cancelCheckout(tCancelCheckoutParams))
-              .thenThrow(PaymentStatusIsNotPendingFailure());
+              .thenThrow(OrderDeleteFailedFailure());
 
           // act
           final result = await repository.cancelCheckout(tCancelCheckoutParams);
@@ -476,18 +476,18 @@ void main() {
               .cancelCheckout(tCancelCheckoutParams)).called(1);
 
           // assert
-          expect(result, Left(PaymentStatusIsNotPendingFailure()));
+          expect(result, Left(OrderDeleteFailedFailure()));
         },
       );
 
       test(
-        'Should return Left(Failure) when remoteDataSource.cancelCheckout throws PaymentStatusIsNotSelectedFailure',
+        'Should return Left(Failure) when remoteDataSource.cancelCheckout throws CartUnlockFailedFailure',
         () async {
           // arrange
 
           when(() => mockCheckoutRemoteDataSource
                   .cancelCheckout(tCancelCheckoutParams))
-              .thenThrow(PaymentStatusIsNotSelectedFailure());
+              .thenThrow(CartUnlockFailedFailure());
 
           // act
           final result = await repository.cancelCheckout(tCancelCheckoutParams);
@@ -496,27 +496,7 @@ void main() {
               .cancelCheckout(tCancelCheckoutParams)).called(1);
 
           // assert
-          expect(result, Left(PaymentStatusIsNotSelectedFailure()));
-        },
-      );
-
-      test(
-        'Should return Left(Failure) when remoteDataSource.cancelCheckout throws FailedToUpdatePaymentModeFailure',
-        () async {
-          // arrange
-
-          when(() => mockCheckoutRemoteDataSource
-                  .cancelCheckout(tCancelCheckoutParams))
-              .thenThrow(FailedToUpdatePaymentModeFailure());
-
-          // act
-          final result = await repository.cancelCheckout(tCancelCheckoutParams);
-
-          verify(() => mockCheckoutRemoteDataSource
-              .cancelCheckout(tCancelCheckoutParams)).called(1);
-
-          // assert
-          expect(result, Left(FailedToUpdatePaymentModeFailure()));
+          expect(result, Left(CartUnlockFailedFailure()));
         },
       );
 

@@ -485,15 +485,15 @@ void main() {
 
     // BusinessExceptionFailure Cases
     test(
-        'should throw PaymentRequestNotFoundFailure on 409 and error code=PAYMENT_REQUEST_NOT_FOUND',
+        'should throw OrderStatusNotPendingPaymentFailure on 409 and error code=PAYMENT_REQUEST_NOT_FOUND',
         () async {
       final requestBody = json.encode({
         "orderId": tCancelCheckoutParams.orderId,
       });
 
       var tCartLockedRequestJson = json.encode({
-        "error_code": "PAYMENT_REQUEST_NOT_FOUND",
-        "message": "Payment request not found."
+        "error_code": "ORDER_STATUS_NOT_PENDING_PAYMENT",
+        "message": "Order status is not PENDING_PAYMENT."
       });
       when(() => mockHttpClient.post(
                 any(),
@@ -511,20 +511,20 @@ void main() {
           )).called(1);
       expect(
         result,
-        throwsA(isA<PaymentRequestNotFoundFailure>()),
+        throwsA(isA<OrderStatusNotPendingPaymentFailure>()),
       );
     });
 
     test(
-        'should throw PaymentStatusIsNotPendingFailure on 409 and error code=PAYMENT_STATUS_IS_NOT_PENDING',
+        'should throw PaymentDeleteFailedFailure on 409 and error code=PAYMENT_DELETE_FAILED',
         () async {
       final requestBody = json.encode({
         "orderId": tCancelCheckoutParams.orderId,
       });
 
       var tCartLockedRequestJson = json.encode({
-        "error_code": "PAYMENT_STATUS_IS_NOT_PENDING",
-        "message": "Payment mode is not NOT_SELECTED"
+        "error_code": "PAYMENT_DELETE_FAILED",
+        "message": "Failed to delete payment."
       });
       when(() => mockHttpClient.post(
                 any(),
@@ -542,20 +542,20 @@ void main() {
           )).called(1);
       expect(
         result,
-        throwsA(isA<PaymentStatusIsNotPendingFailure>()),
+        throwsA(isA<PaymentDeleteFailedFailure>()),
       );
     });
 
     test(
-        'should throw PaymentStatusIsNotSelectedFailure on 409 and error code=PAYMENT_STATUS_IS_NOT_SELECTED',
+        'should throw OrderDeleteFailedFailure on 409 and error code=ORDER_DELETE_FAILED',
         () async {
       final requestBody = json.encode({
         "orderId": tCancelCheckoutParams.orderId,
       });
 
       var tCartLockedRequestJson = json.encode({
-        "error_code": "PAYMENT_STATUS_IS_NOT_SELECTED",
-        "message": "Failed to update payment mode to {paymentMode}"
+        "error_code": "ORDER_DELETE_FAILED",
+        "message": "Failed to delete order."
       });
       when(() => mockHttpClient.post(
                 any(),
@@ -573,20 +573,20 @@ void main() {
           )).called(1);
       expect(
         result,
-        throwsA(isA<PaymentStatusIsNotSelectedFailure>()),
+        throwsA(isA<OrderDeleteFailedFailure>()),
       );
     });
 
     test(
-        'should throw FailedToUpdatePaymentModeFailure on 409 and error code=FAILED_TO_UPDATE_PAYMENT_MODE',
+        'should throw CartUnlockFailedFailure on 409 and error code=CART_UNLOCK_FAILED',
         () async {
       final requestBody = json.encode({
         "orderId": tCancelCheckoutParams.orderId,
       });
 
       var tCartLockedRequestJson = json.encode({
-        "error_code": "FAILED_TO_UPDATE_PAYMENT_MODE",
-        "message": "Cart not found"
+        "error_code": "CART_UNLOCK_FAILED",
+        "message": "Failed to unlock cart."
       });
       when(() => mockHttpClient.post(
                 any(),
@@ -604,7 +604,7 @@ void main() {
           )).called(1);
       expect(
         result,
-        throwsA(isA<FailedToUpdatePaymentModeFailure>()),
+        throwsA(isA<CartUnlockFailedFailure>()),
       );
     });
 
